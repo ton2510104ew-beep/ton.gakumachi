@@ -1,41 +1,473 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>削除済み</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #f5f7fb;
-      color: #243548;
-      font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
-    }
-    .box {
-      background: #fff;
-      border: 1px solid #e1e7ef;
-      border-radius: 18px;
-      padding: 32px 40px;
-      box-shadow: 0 8px 24px rgba(36, 53, 72, 0.08);
-      text-align: center;
-    }
-    h1 {
-      margin: 0;
-      font-size: clamp(1.5rem, 3vw, 2.4rem);
-    }
-    p {
-      margin: 12px 0 0;
-      color: #5d7186;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>福井県 企業情報一覧</title>
+<style>
+:root {
+  --bg-1: #eef6ff;
+  --bg-2: #f9f4ee;
+  --primary: #1f5d8c;
+  --primary-dark: #123f62;
+  --accent: #f0a35d;
+  --accent-soft: #fff1e1;
+  --card: #ffffff;
+  --text: #233447;
+  --muted: #58718a;
+  --line: #dfeaf5;
+  --shadow: rgba(23, 58, 94, 0.12);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  margin: 0;
+  padding: 32px 18px;
+  color: var(--text);
+}
+main {
+  max-width: 900px;
+  margin: 0 auto;
+}
+h1 {
+  color: var(--primary-dark);
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 3vw, 2.6rem);
+  letter-spacing: 0.04em;
+}
+p {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+input, select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: rgba(31, 93, 140, 0.5);
+  box-shadow: 0 0 0 4px rgba(31, 93, 140, 0.12);
+}
+input {
+  margin-bottom: 14px;
+}
+select {
+  margin-bottom: 18px;
+}
+#count {
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 18px;
+}
+.company {
+  background: var(--card);
+  padding: 18px 18px 10px;
+  margin-bottom: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 20px var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.company:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(23, 58, 94, 0.14);
+}
+.company button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: linear-gradient(180deg, #f8fbff 0%, #edf5ff 100%);
+  color: var(--primary-dark);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  padding: 12px 14px;
+  border-radius: 12px;
+}
+.company button:hover {
+  background: linear-gradient(180deg, #edf5ff 0%, #e4f0ff 100%);
+}
+.detail {
+  line-height: 1.8;
+  margin-top: 12px;
+  padding: 14px 12px 6px;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(240,163,93,0.05), rgba(255,255,255,0));
+  border-radius: 10px;
+}
+.detail p {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 0.98rem;
+}
+[hidden] {
+  display: none;
+}
+</style>
 </head>
 <body>
-  <div class="box">
-    <h1>削除しました</h1>
-    <p>このページは現在表示を停止しています。</p>
-  </div>
+<main>
+  <h1>福井県 企業情報一覧</h1>
+  <p>福井県に関係する企業を検索できます。</p>
+  <input
+    id="search"
+    type="text"
+    placeholder="企業名・住所・キーワードで検索"
+  >
+  <select id="industry">
+    <option value="">すべての業種</option>
+    <option value="IT">IT・情報通信</option>
+    <option value="金融">金融</option>
+    <option value="小売">小売・流通</option>
+    <option value="その他">その他</option>
+  </select>
+  <p id="count"></p>
+  <div id="list"></div>
+</main>
+<script>
+const companies = [
+  {
+    name: "jig.jp",
+    industry: "IT",
+    address: "福井県鯖江市",
+    info: "ソフトウェア・情報通信"
+  },
+  {
+    name: "福井銀行",
+    industry: "金融",
+    address: "福井県福井市",
+    info: "銀行・金融サービス"
+  },
+  {
+    name: "ゲンキー",
+    industry: "小売",
+    address: "福井県を含む複数地域",
+    info: "ドラッグストア"
+  },
+  {
+    name: "株式会社PLANT",
+    industry: "その他",
+    address: "〒919-0521 福井県坂井市坂井町下新庄15号8番地の1",
+    info: "事業者情報"
+  },
+  {
+    name: "株式会社ジャクエツ",
+    industry: "その他",
+    address: "東京本社／東京都港区高輪4-24-50 福井本社／福井県敦賀市若葉町2-1770",
+    info: "保育教材、遊具、園児服などの企画・製造・販売。あそびを通じた人が集う空間の総合プロデュース。設立1949年1月（創業：1916年9月）。"
+  },
+  {
+    name: "清川メッキ工業株式会社",
+    industry: "その他",
+    address: "福井県福井市和田中1-414",
+    info: "その他メーカー"
+  },
+  {
+    name: "勝山ファーマ株式会社",
+    industry: "その他",
+    address: "福井県勝山市猪野口37字2番1号",
+    info: "化粧品・医薬品"
+  },
+  {
+    name: "エルシーコープ株式会社",
+    industry: "その他",
+    address: "福井県坂井市丸岡町小黒74字2番地1",
+    info: "生活協同組合"
+  },
+  {
+    name: "株式会社SHINDO",
+    industry: "その他",
+    address: "福井県あわら市伊井11-1-1",
+    info: "繊維"
+  },
+  {
+    name: "株式会社ミルコン",
+    industry: "その他",
+    address: "福井県福井市長本町202",
+    info: "設計"
+  },
+  {
+    name: "株式会社伝食",
+    industry: "その他",
+    address: "福井県敦賀市田結27-1-2",
+    info: "通信販売・ネット販売"
+  },
+  {
+    name: "興和江守株式会社",
+    industry: "その他",
+    address: "福井県福井市毛矢一丁目6番23号",
+    info: "専門商社"
+  },
+  {
+    name: "ネッツトヨタ福井株式会社",
+    industry: "その他",
+    address: "福井県福井市今市町58-12",
+    info: "自動車関連"
+  },
+  {
+    name: "株式会社サンワコン",
+    industry: "その他",
+    address: "福井県福井市花堂北1-7-25",
+    info: "建設コンサルタント"
+  },
+  {
+    name: "松文産業株式会社",
+    industry: "その他",
+    address: "福井県勝山市旭町1丁目1番56号",
+    info: "繊維"
+  },
+  {
+    name: "株式会社ミタス",
+    industry: "その他",
+    address: "福井県福井市問屋町4丁目901",
+    info: "医療用機器・医療関連"
+  },
+  {
+    name: "株式会社永和システムマネジメント",
+    industry: "IT",
+    address: "福井県福井市問屋町3-111",
+    info: "ソフトウェア・情報処理"
+  },
+  {
+    name: "アイテック株式会社",
+    industry: "その他",
+    address: "福井県鯖江市神中町2-6-8",
+    info: "鉱業・金属製品・鉄鋼"
+  },
+  {
+    name: "株式会社TOKO",
+    industry: "その他",
+    address: "福井県鯖江市熊田町1-100",
+    info: "住宅・建材・エクステリア"
+  },
+  {
+    name: "井上商事株式会社",
+    industry: "その他",
+    address: "福井県福井市日之出2-1-6",
+    info: "住宅・建材・エクステリア"
+  },
+  {
+    name: "カラヤ株式会社",
+    industry: "その他",
+    address: "福井県越前市中央2丁目6-5",
+    info: "鉱業・金属製品・鉄鋼"
+  },
+  {
+    name: "カラヤエンジニアリング株式会社",
+    industry: "その他",
+    address: "福井県坂井市坂井町下関13-9-1",
+    info: "非鉄金属"
+  },
+  {
+    name: "倉茂電工株式会社",
+    industry: "その他",
+    address: "福井県越前市下平吹町10-9",
+    info: "鉱業・金属製品・鉄鋼"
+  },
+  {
+    name: "大信トラスト株式会社",
+    industry: "その他",
+    address: "福井県越前市小野谷町14-1-1",
+    info: "半導体・電子・電気機器"
+  },
+  {
+    name: "株式会社福岡",
+    industry: "その他",
+    address: "福井県鯖江市定次町27-1-2",
+    info: "建設・土木"
+  },
+  {
+    name: "広撚株式会社",
+    industry: "その他",
+    address: "福井県福井市毛矢1-2-7",
+    info: "専門商社"
+  },
+  {
+    name: "福井都市ガス株式会社",
+    industry: "その他",
+    address: "福井県福井市飯塚町20-1-5",
+    info: "電力・ガス・エネルギー"
+  },
+  {
+    name: "手賀精工株式会社",
+    industry: "その他",
+    address: "福井県鯖江市有定町1-6-14",
+    info: "鉱業・金属製品・鉄鋼"
+  },
+  {
+    name: "冨田工業株式会社",
+    industry: "その他",
+    address: "福井県坂井市丸岡町北横地46号4番地1",
+    info: "建設・土木"
+  },
+  {
+    name: "株式会社平和ITC",
+    industry: "IT",
+    address: "福井県福井市渕1丁目1704番地",
+    info: "建設コンサルタント"
+  },
+  {
+    name: "株式会社山田組",
+    industry: "その他",
+    address: "福井県越前市松森町7番地",
+    info: "建設・土木"
+  },
+  {
+    name: "株式会社ダイナテック",
+    industry: "その他",
+    address: "福井県福井市問屋町1丁目20番地",
+    info: "設備工事"
+  },
+  {
+    name: "株式会社文珠四郎管工商会",
+    industry: "その他",
+    address: "福井県福井市松本1-56-10",
+    info: "建設・土木"
+  },
+  {
+    name: "株式会社進士鐵工",
+    industry: "その他",
+    address: "福井県坂井市春江町正蓮花18-41",
+    info: "鉱業・金属製品・鉄鋼"
+  },
+  {
+    name: "前田電気株式会社",
+    industry: "その他",
+    address: "福井県大野市中保第21号12番地",
+    info: "設備工事"
+  },
+  {
+    name: "河上電機株式会社",
+    industry: "その他",
+    address: "福井県越前市芝原4丁目5-10",
+    info: "設備工事"
+  },
+  {
+    name: "株式会社三和テクノ",
+    industry: "その他",
+    address: "福井県あわら市古屋石塚22-111-1",
+    info: "精密機器"
+  },
+  {
+    name: "ノーク・ホームズ株式会社",
+    industry: "その他",
+    address: "福井県福井市御幸2丁目18番18号",
+    info: "建設・土木"
+  },
+  {
+    name: "株式会社三工光学",
+    industry: "その他",
+    address: "福井県鯖江市北野町2丁目13番12号",
+    info: "日用品・雑貨"
+  },
+  {
+    name: "福井日野自動車株式会社",
+    industry: "その他",
+    address: "福井県福井市大和田1-501",
+    info: "自動車関連"
+  },
+  {
+    name: "株式会社コバード",
+    industry: "その他",
+    address: "福井県坂井市春江町藤鷲塚36",
+    info: "重電・産業用電気機器"
+  },
+  {
+    name: "株式会社ウノコーポレーション",
+    industry: "その他",
+    address: "福井県越前市家久町105-27",
+    info: "鉱業・金属製品・鉄鋼"
+  },
+  {
+    name: "クリーンガス福井株式会社",
+    industry: "その他",
+    address: "福井県福井市花堂東1丁目17番25号",
+    info: "電力・ガス・エネルギー"
+  },
+  {
+    name: "武生特殊鋼材株式会社",
+    industry: "その他",
+    address: "福井県越前市四郎丸町21-2-1",
+    info: "鉱業・金属製品・鉄鋼"
+  },
+  {
+    name: "有限会社増米商店",
+    industry: "小売",
+    address: "福井県敦賀市松島町18-10",
+    info: "専門店（食品関連）"
+  },
+  {
+    name: "みのる産業株式会社",
+    industry: "その他",
+    address: "福井県福井市三尾町第29号2番地8",
+    info: "専門商社"
+  }
+];
+const search = document.getElementById("search");
+const industry = document.getElementById("industry");
+const list = document.getElementById("list");
+const count = document.getElementById("count");
+function showCompanies() {
+  const keyword = search.value.trim().toLowerCase();
+  const selected = industry.value;
+  const filtered = companies.filter(company => {
+    const text = (
+      company.name + company.address + company.info
+    ).toLowerCase();
+    return text.includes(keyword) &&
+      (!selected || company.industry === selected);
+  });
+  list.replaceChildren();
+  count.textContent =
+    filtered.length + "社の企業が見つかりました";
+  filtered.forEach(company => {
+    const card = document.createElement("div");
+    card.className = "company";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "＋ " + company.name;
+    button.setAttribute("aria-expanded", "false");
+    const detail = document.createElement("div");
+    detail.className = "detail";
+    detail.hidden = true;
+    const address = document.createElement("p");
+    address.textContent = "所在地：" + company.address;
+    const type = document.createElement("p");
+    type.textContent = "業種：" + company.industry;
+    const info = document.createElement("p");
+    /* 修正済み：企業情報 */
+    info.textContent = "企業情報：" + company.info;
+    detail.append(address, type, info);
+    button.addEventListener("click", () => {
+      detail.hidden = !detail.hidden;
+      button.textContent =
+        (detail.hidden ? "＋ " : "－ ") + company.name;
+      button.setAttribute(
+        "aria-expanded",
+        String(!detail.hidden)
+      );
+    });
+    card.append(button, detail);
+    list.append(card);
+  });
+}
+search.addEventListener("input", showCompanies);
+industry.addEventListener("change", showCompanies);
+showCompanies();
+</script>
 </body>
 </html>
+
