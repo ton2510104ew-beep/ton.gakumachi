@@ -131,8 +131,7 @@ select { margin-bottom: 18px; }
   <h1>福井県 企業情報一覧</h1>
   <p>福井県に関係する企業を検索できます。</p>
 
-  <input id="search" type="text"
-    placeholder="企業名・住所・キーワードで検索">
+  <input id="search" type="text" placeholder="企業名・住所・キーワードで検索">
 
   <select id="industry">
     <option value="">すべての業種</option>
@@ -176,7 +175,7 @@ const companies = [
     name: "株式会社ジャクエツ",
     industry: "その他",
     address: "東京本社／東京都港区高輪4-24-50 福井本社／福井県敦賀市若葉町2-1770",
-    info: "保育教材、遊具、園児服などの企画・製造・販売。あそびを通じた人が集う空間の総合プロデュース。設立1949年1月（創業：1916年9月）。代表取締役 徳本 達郎。従業員数610名（2026年8月現在）。資本金9,000万円。企業採用ホームページ：https://www.jakuets.co.jp/"
+    info: "保育教材、遊具、園児服などの企画・製造・販売。あそびを通じた人が集う空間の総合プロデュース。設立1949年1月（創業：1916年9月）。"
   }
 ];
 
@@ -190,12 +189,8 @@ function showCompanies() {
   const selected = industry.value;
 
   const filtered = companies.filter(company => {
-    const text = (
-      company.name + company.address + company.info
-    ).toLowerCase();
-
-    return text.includes(keyword) &&
-      (!selected || company.industry === selected);
+    const text = (company.name + company.address + company.info).toLowerCase();
+    return text.includes(keyword) && (!selected || company.industry === selected);
   });
 
   list.replaceChildren();
@@ -206,6 +201,7 @@ function showCompanies() {
     card.className = "company";
 
     const button = document.createElement("button");
+    button.type = "button";
     button.textContent = "＋ " + company.name;
 
     const detail = document.createElement("div");
@@ -225,8 +221,8 @@ function showCompanies() {
 
     button.addEventListener("click", () => {
       detail.hidden = !detail.hidden;
-      button.textContent =
-        (detail.hidden ? "＋ " : "－ ") + company.name;
+      button.textContent = (detail.hidden ? "＋ " : "－ ") + company.name;
+      button.setAttribute("aria-expanded", String(!detail.hidden));
     });
 
     card.append(button, detail);
