@@ -463,6 +463,11 @@
       border-radius: 0;
       position: relative;
       z-index: 1;
+      transition: transform 0.18s ease;
+    }
+
+    .company button:hover {
+      transform: scale(1.01);
     }
 
     .company .detail {
@@ -472,12 +477,27 @@
       line-height: 1.8;
       position: relative;
       z-index: 1;
+      overflow: hidden;
+      animation: detailOpen 0.28s ease;
     }
 
     .company .detail p {
       margin: 10px 0 0;
       color: var(--text);
       font-size: 0.95rem;
+    }
+
+    @keyframes detailOpen {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 220px;
+      }
     }
 
     .bubble-burst {
@@ -487,12 +507,12 @@
       width: 12px;
       height: 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.88);
+      background: rgba(255,255,255,0.9);
       border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 14px rgba(255,255,255,0.35);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 18px rgba(255,255,255,0.4);
       pointer-events: none;
       transform: translate(-50%, -50%) scale(1);
-      animation: bubbleBurst 600ms ease-out forwards;
+      animation: bubbleBurst 540ms ease-out forwards;
       z-index: 10;
     }
 
@@ -502,12 +522,12 @@
         transform: translate(-50%, -50%) scale(1);
       }
       35% {
-        opacity: 0.95;
-        transform: translate(-50%, -50%) scale(1.8);
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(1.9);
       }
       100% {
         opacity: 0;
-        transform: translate(calc(-50% + var(--tx, 0px)), calc(-50% + var(--ty, 0px))) scale(0.15);
+        transform: translate(calc(-50% + var(--tx, 0px)), calc(-50% + var(--ty, 0px))) scale(0.18);
       }
     }
 
@@ -649,7 +669,7 @@
       burst.style.setProperty("--x", x + "px");
       burst.style.setProperty("--y", y + "px");
       const angle = (Math.random() * 360) * Math.PI / 180;
-      const distance = 18 + Math.random() * 30;
+      const distance = 14 + Math.random() * 30;
       burst.style.setProperty("--tx", (Math.cos(angle) * distance).toFixed(2) + "px");
       burst.style.setProperty("--ty", (Math.sin(angle) * distance).toFixed(2) + "px");
       event.currentTarget.appendChild(burst);
@@ -694,7 +714,8 @@
 
         detail.append(address, type, info);
 
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (event) => {
+          createBurst(event);
           detail.hidden = !detail.hidden;
           button.innerHTML = `<span>${detail.hidden ? "＋" : "－"} ${company.name}</span><span>${company.industry}</span>`;
           button.setAttribute("aria-expanded", String(!detail.hidden));
@@ -737,7 +758,7 @@
       const text = input.toLowerCase();
 
       if (text.includes("人と") || text.includes("話す") || text.includes("接客") || text.includes("営業")) {
-        return "人��話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業が候補として多くあります。";
+        return "人と話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業が候補として多くあります。";
       }
 
       if (text.includes("pc") || text.includes("it") || text.includes("技術") || text.includes("コンピューター") || text.includes("パソコン")) {
