@@ -6,18 +6,23 @@
   <title>福井県 企業情報一覧</title>
   <style>
     :root {
-      --bg-1: #eef6ff;
-      --bg-2: #f9f4ee;
-      --primary: #1f5d8c;
-      --primary-dark: #123f62;
-      --accent: #f0a35d;
-      --accent-soft: #fff1e1;
-      --card: rgba(255,255,255,0.58);
-      --card-strong: rgba(255,255,255,0.8);
-      --text: #233447;
-      --muted: #58718a;
-      --line: rgba(124, 176, 220, 0.72);
-      --shadow: rgba(23, 58, 94, 0.12);
+      --bg-1: #eefcf9;
+      --bg-2: #e9f9fb;
+      --bg-3: #dff8f1;
+      --primary: #61c6c0;
+      --primary-deep: #2a8a8a;
+      --primary-dark: #1a4d5a;
+      --accent: #bfeae2;
+      --accent-2: #dff7fb;
+      --card: rgba(255, 255, 255, 0.56);
+      --card-strong: rgba(255, 255, 255, 0.78);
+      --text: #234c54;
+      --muted: #5d7b7d;
+      --line: rgba(111, 191, 195, 0.7);
+      --shadow: rgba(42, 117, 124, 0.12);
+      --bubble: rgba(255,255,255,0.5);
+      --bubble-strong: rgba(255,255,255,0.78);
+      --success: #69c7ad;
     }
 
     * { box-sizing: border-box; }
@@ -28,41 +33,53 @@
       overflow-x: hidden;
       font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
       background:
-        radial-gradient(circle at 15% 10%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 22%),
-        radial-gradient(circle at 82% 15%, rgba(162, 210, 255, 0.2) 0%, rgba(162, 210, 255, 0) 18%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        radial-gradient(circle at 15% 12%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%),
+        radial-gradient(circle at 82% 18%, rgba(176, 245, 236, 0.28) 0%, rgba(176, 245, 236, 0) 18%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 40%, var(--bg-3) 100%);
       margin: 0;
-      padding: 32px 18px 48px;
+      padding: 32px 18px 52px;
       color: var(--text);
     }
 
-    body::before {
+    body::before,
+    body::after {
       content: "";
       position: fixed;
-      inset: -8% -10% -10% -10%;
-      z-index: 0;
+      inset: 0;
       pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
       background:
-        radial-gradient(circle at 10% 18%, rgba(255,255,255,0.88) 0 4%, transparent 4.5%),
-        radial-gradient(circle at 28% 42%, rgba(255,255,255,0.76) 0 5%, transparent 5.6%),
-        radial-gradient(circle at 68% 18%, rgba(255,255,255,0.78) 0 4%, transparent 4.6%),
-        radial-gradient(circle at 57% 68%, rgba(255,255,255,0.72) 0 5.5%, transparent 6.2%),
-        radial-gradient(circle at 88% 44%, rgba(255,255,255,0.75) 0 3.5%, transparent 4.1%),
-        radial-gradient(circle at 36% 82%, rgba(255,255,255,0.75) 0 4.2%, transparent 4.8%);
-      filter: blur(2px);
-      opacity: 0.9;
+        radial-gradient(circle at 10% 18%, rgba(255,255,255,0.9) 0 5%, transparent 5.5%),
+        radial-gradient(circle at 24% 44%, rgba(255,255,255,0.82) 0 6%, transparent 6.7%),
+        radial-gradient(circle at 62% 25%, rgba(255,255,255,0.78) 0 4.8%, transparent 5.5%),
+        radial-gradient(circle at 58% 72%, rgba(255,255,255,0.86) 0 4.5%, transparent 5.2%),
+        radial-gradient(circle at 86% 38%, rgba(255,255,255,0.8) 0 5.2%, transparent 6.1%),
+        radial-gradient(circle at 36% 82%, rgba(255,255,255,0.85) 0 4.8%, transparent 5.5%);
+      filter: blur(3px);
+      opacity: 1;
+    }
+
+    body::after {
+      background:
+        radial-gradient(circle at 18% 10%, rgba(163, 233, 238, 0.22) 0 9%, transparent 9.6%),
+        radial-gradient(circle at 72% 12%, rgba(163, 233, 238, 0.18) 0 8%, transparent 8.8%),
+        radial-gradient(circle at 82% 70%, rgba(201, 248, 232, 0.2) 0 10%, transparent 10.8%);
+      filter: blur(6px);
     }
 
     main {
       position: relative;
       z-index: 1;
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
     }
 
     .hero {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.08fr 0.92fr;
       gap: 24px;
       align-items: stretch;
       margin-bottom: 28px;
@@ -71,12 +88,12 @@
     .hero-card,
     .chat-card,
     .panel {
-      background: rgba(255,255,255,0.3);
-      border: 2px solid rgba(255,255,255,0.82);
-      border-radius: 32px;
-      box-shadow: 0 14px 28px rgba(92, 128, 173, 0.12), inset 0 0 18px rgba(255,255,255,0.18);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(255,255,255,0.34);
+      border: 2px solid rgba(255,255,255,0.85);
+      border-radius: 34px;
+      box-shadow: 0 18px 30px rgba(55, 128, 133, 0.1), inset 0 0 20px rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .hero-card {
@@ -88,19 +105,19 @@
     .hero-card::before {
       content: "";
       position: absolute;
-      right: -40px;
-      top: -50px;
-      width: 230px;
-      height: 230px;
+      right: -54px;
+      top: -48px;
+      width: 260px;
+      height: 260px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 199, 227, 0.8), rgba(255, 199, 227, 0));
+      background: radial-gradient(circle, rgba(171, 240, 233, 0.78), rgba(171, 240, 233, 0));
     }
 
     .eyebrow {
       display: inline-block;
-      background: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.72);
       color: var(--primary-dark);
-      border: 1px solid rgba(124, 176, 220, 0.6);
+      border: 1px solid rgba(111, 191, 195, 0.75);
       border-radius: 999px;
       padding: 8px 14px;
       font-size: 0.78rem;
@@ -111,9 +128,9 @@
     h1 {
       color: var(--primary-dark);
       margin: 16px 0 12px;
-      font-size: clamp(2.1rem, 4vw, 3.4rem);
+      font-size: clamp(2.1rem, 4vw, 3.6rem);
       letter-spacing: 0.04em;
-      text-shadow: 0 4px 12px rgba(255,255,255,0.7);
+      text-shadow: 0 4px 12px rgba(255,255,255,0.75);
       line-height: 1.1;
     }
 
@@ -147,15 +164,15 @@
     }
 
     .btn.primary {
-      background: linear-gradient(135deg, var(--primary), #6ab4ff);
+      background: linear-gradient(135deg, var(--primary), #8ee2d7);
       color: white;
-      box-shadow: 0 10px 22px rgba(31, 93, 140, 0.2);
+      box-shadow: 0 12px 22px rgba(62, 141, 145, 0.24);
     }
 
     .btn.secondary {
-      background: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.66);
       color: var(--primary-dark);
-      border: 1px solid rgba(124, 176, 220, 0.8);
+      border: 1px solid rgba(111, 191, 195, 0.8);
     }
 
     .stats {
@@ -167,8 +184,8 @@
 
     .stat {
       padding: 14px 10px;
-      background: rgba(255,255,255,0.3);
-      border: 1px solid rgba(124, 176, 220, 0.65);
+      background: rgba(255,255,255,0.32);
+      border: 1px solid rgba(111, 191, 195, 0.65);
       border-radius: 18px;
       text-align: center;
     }
@@ -211,7 +228,7 @@
       align-items: center;
       gap: 8px;
       font-size: 0.8rem;
-      color: #1b9e76;
+      color: #1e8f7a;
       font-weight: 700;
     }
 
@@ -220,14 +237,14 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: #62d0a5;
-      box-shadow: 0 0 0 6px rgba(98, 208, 165, 0.15);
+      background: var(--success);
+      box-shadow: 0 0 0 6px rgba(105, 199, 173, 0.18);
     }
 
     .messages {
       flex: 1;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(124, 176, 220, 0.6);
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(111, 191, 195, 0.6);
       border-radius: 24px;
       padding: 16px 14px;
       display: flex;
@@ -244,7 +261,7 @@
       border-radius: 18px;
       line-height: 1.6;
       font-size: 0.94rem;
-      box-shadow: 0 8px 18px rgba(31,88,142,0.06);
+      box-shadow: 0 8px 18px rgba(41,116,124,0.06);
     }
 
     .message.bot {
@@ -256,7 +273,7 @@
 
     .message.user {
       align-self: flex-end;
-      background: linear-gradient(135deg, rgba(94,180,255,0.22), rgba(255,196,229,0.26));
+      background: linear-gradient(135deg, rgba(122, 219, 215, 0.28), rgba(185, 234, 233, 0.26));
       color: var(--primary-dark);
       border-top-right-radius: 8px;
     }
@@ -271,8 +288,8 @@
     .chip {
       padding: 8px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(124, 176, 220, 0.7);
-      background: rgba(255,255,255,0.58);
+      border: 1px solid rgba(111, 191, 195, 0.72);
+      background: rgba(255,255,255,0.62);
       color: var(--primary-dark);
       cursor: pointer;
       font-size: 0.8rem;
@@ -289,7 +306,7 @@
       flex: 1;
       width: 100%;
       padding: 14px 16px;
-      border: 1px solid rgba(124, 176, 220, 0.7);
+      border: 1px solid rgba(111, 191, 195, 0.7);
       border-radius: 999px;
       background: rgba(255,255,255,0.7);
       font-size: 0.96rem;
@@ -298,14 +315,14 @@
     }
 
     .composer input:focus {
-      box-shadow: 0 0 0 4px rgba(31, 93, 140, 0.1);
+      box-shadow: 0 0 0 4px rgba(97, 198, 192, 0.12);
     }
 
     .composer button {
       min-width: 100px;
       border: none;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--primary), #7ec3ff);
+      background: linear-gradient(135deg, var(--primary), #9ae3d8);
       color: white;
       font-weight: 700;
       cursor: pointer;
@@ -329,10 +346,11 @@
     }
 
     .job-card {
-      background: linear-gradient(135deg, rgba(255,255,255,0.75), rgba(222,242,255,0.72));
-      border: 1px solid rgba(124, 176, 220, 0.7);
+      background: linear-gradient(135deg, rgba(255,255,255,0.76), rgba(224,250,248,0.78));
+      border: 1px solid rgba(111, 191, 195, 0.7);
       border-radius: 22px;
       padding: 16px;
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.26);
     }
 
     .job-card h3 {
@@ -359,8 +377,8 @@
       display: inline-block;
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.68);
-      border: 1px solid rgba(124, 176, 220, 0.5);
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(111, 191, 195, 0.56);
       color: var(--primary-dark);
       font-size: 0.72rem;
       font-weight: 700;
@@ -378,8 +396,8 @@
       font-size: 16px;
       border: 1px solid rgba(255,255,255,0.9);
       border-radius: 999px;
-      background: rgba(255,255,255,0.38);
-      box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 8px 18px rgba(87, 125, 160, 0.08), 0 0 0 1px rgba(31,93,140,0.05);
+      background: rgba(255,255,255,0.46);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 8px 18px rgba(51, 123, 130, 0.08), 0 0 0 1px rgba(48, 121, 127, 0.04);
       color: var(--text);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
@@ -389,15 +407,15 @@
     .search-box input:focus,
     .search-box select:focus {
       outline: none;
-      border-color: rgba(31, 93, 140, 0.45);
-      box-shadow: 0 0 0 4px rgba(31,93,140,0.12), 0 8px 18px rgba(87, 125, 160, 0.1), inset 0 1px 2px rgba(255,255,255,0.8);
+      border-color: rgba(52, 126, 128, 0.5);
+      box-shadow: 0 0 0 4px rgba(97, 198, 192, 0.12), 0 8px 18px rgba(51, 123, 130, 0.1), inset 0 1px 2px rgba(255,255,255,0.8);
       transform: translateY(-1px);
     }
 
     #count {
       margin: 10px 0 0;
       font-weight: 700;
-      color: var(--primary);
+      color: var(--primary-deep);
     }
 
     .company-list {
@@ -407,17 +425,30 @@
     }
 
     .company {
-      background: rgba(255,255,255,0.32);
-      border-radius: 26px;
-      border: 2px solid rgba(255,255,255,0.8);
-      box-shadow: 0 8px 18px rgba(92, 128, 173, 0.08), inset 0 0 18px rgba(255,255,255,0.18);
+      background: linear-gradient(180deg, rgba(255,255,255,0.52), rgba(228,247,248,0.68));
+      border-radius: 30px;
+      border: 2px solid rgba(255,255,255,0.88);
+      box-shadow: 0 14px 20px rgba(80, 158, 160, 0.08), inset 0 0 18px rgba(255,255,255,0.30);
       overflow: hidden;
+      position: relative;
+    }
+
+    .company::before {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      right: -18px;
+      top: -18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.55);
     }
 
     .company button {
       width: 100%;
       border: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.56), rgba(228,238,249,0.48));
+      background: transparent;
       color: var(--primary-dark);
       display: flex;
       justify-content: space-between;
@@ -427,15 +458,19 @@
       font-weight: 700;
       text-align: left;
       cursor: pointer;
-      padding: 14px 16px;
+      padding: 16px 18px;
       border-radius: 0;
+      position: relative;
+      z-index: 1;
     }
 
     .company .detail {
       padding: 0 18px 16px;
-      border-top: 1px solid rgba(124, 176, 220, 0.64);
-      background: rgba(255,255,255,0.18);
+      border-top: 1px solid rgba(111, 191, 195, 0.62);
+      background: rgba(255,255,255,0.14);
       line-height: 1.8;
+      position: relative;
+      z-index: 1;
     }
 
     .company .detail p {
