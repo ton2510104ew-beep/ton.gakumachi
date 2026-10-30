@@ -197,6 +197,14 @@ input:focus, select:focus {
     0 18px 32px rgba(22, 55, 77, 0.12);
 }
 
+.company.is-open {
+  border-color: rgba(30, 93, 141, 0.38);
+  box-shadow:
+    inset 0 2px 10px rgba(255,255,255,0.78),
+    inset 0 -8px 12px rgba(168, 202, 235, 0.22),
+    0 18px 32px rgba(22, 55, 77, 0.12);
+}
+
 .company button {
   position: relative;
   z-index: 1;
@@ -215,6 +223,18 @@ input:focus, select:focus {
   cursor: pointer;
   letter-spacing: 0.01em;
   border-radius: 999px;
+  transition: background-color 0.2s ease, transform 0.12s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.company button:active {
+  transform: scale(0.995);
+}
+
+.company button:focus-visible {
+  outline: 3px solid rgba(30, 93, 141, 0.2);
+  outline-offset: 2px;
 }
 
 .company button span:first-child {
@@ -250,15 +270,30 @@ input:focus, select:focus {
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
+.company.is-open .chevron {
+  transform: rotate(180deg);
+}
+
 .company button:hover .chevron {
   background: rgba(30, 93, 141, 0.1);
 }
 
 .detail {
-  margin: 0;
-  padding: 0 18px 18px;
-  border-top: 1px solid rgba(222, 235, 245, 0.9);
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 18px;
+  border-top: 0 solid rgba(222, 235, 245, 0.9);
   background: linear-gradient(180deg, rgba(240,163,93,0.05), rgba(255,255,255,0.12));
+  transition: max-height 0.32s ease, opacity 0.22s ease, padding 0.22s ease, border-top-width 0.22s ease;
+}
+
+.company.is-open .detail {
+  max-height: 360px;
+  opacity: 1;
+  padding: 0 18px 18px;
+  border-top-width: 1px;
 }
 
 .detail-inner {
@@ -314,6 +349,10 @@ input:focus, select:focus {
   }
 
   .detail {
+    padding: 0 14px;
+  }
+
+  .company.is-open .detail {
     padding: 0 14px 14px;
   }
 
@@ -645,6 +684,14 @@ const industry = document.getElementById("industry");
 const list = document.getElementById("list");
 const count = document.getElementById("count");
 
+function setCardState(card, detail, button, open) {
+  card.classList.toggle("is-open", open);
+  button.setAttribute("aria-expanded", String(open));
+  button.querySelector(".chevron").textContent = open ? "－" : "＋";
+  detail.style.maxHeight = open ? detail.scrollHeight + "px" : "0px";
+  detail.style.opacity = open ? "1" : "0";
+}
+
 function showCompanies() {
   const keyword = search.value.trim().toLowerCase();
   const selected = industry.value;
@@ -668,7 +715,7 @@ function showCompanies() {
 
     const detail = document.createElement("div");
     detail.className = "detail";
-    detail.hidden = true;
+    detail.hidden = false;
 
     const inner = document.createElement("div");
     inner.className = "detail-inner";
@@ -686,14 +733,13 @@ function showCompanies() {
     detail.append(inner);
 
     button.addEventListener("click", () => {
-      const open = !detail.hidden;
-      detail.hidden = open;
-      button.setAttribute("aria-expanded", String(!open));
-      button.querySelector(".chevron").textContent = open ? "＋" : "－";
+      const isOpen = card.classList.contains("is-open");
+      setCardState(card, detail, button, !isOpen);
     });
 
     card.append(button, detail);
     list.append(card);
+    setCardState(card, detail, button, false);
   });
 }
 
