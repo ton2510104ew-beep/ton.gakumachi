@@ -113,18 +113,6 @@
       background: radial-gradient(circle, rgba(171, 240, 233, 0.78), rgba(171, 240, 233, 0));
     }
 
-    .eyebrow {
-      display: inline-block;
-      background: rgba(255,255,255,0.72);
-      color: var(--primary-dark);
-      border: 1px solid rgba(111, 191, 195, 0.75);
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
     h1 {
       color: var(--primary-dark);
       margin: 16px 0 12px;
@@ -150,6 +138,7 @@
     }
 
     .btn {
+      position: relative;
       border: 0;
       border-radius: 999px;
       padding: 14px 20px;
@@ -157,6 +146,8 @@
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: visible;
+      isolation: isolate;
     }
 
     .btn:hover {
@@ -286,6 +277,7 @@
     }
 
     .chip {
+      position: relative;
       padding: 8px 12px;
       border-radius: 999px;
       border: 1px solid rgba(111, 191, 195, 0.72);
@@ -294,6 +286,8 @@
       cursor: pointer;
       font-size: 0.8rem;
       font-weight: 700;
+      overflow: visible;
+      isolation: isolate;
     }
 
     .composer {
@@ -326,6 +320,9 @@
       color: white;
       font-weight: 700;
       cursor: pointer;
+      position: relative;
+      overflow: visible;
+      isolation: isolate;
     }
 
     .panel {
@@ -351,6 +348,9 @@
       border-radius: 22px;
       padding: 16px;
       box-shadow: inset 0 0 18px rgba(255,255,255,0.26);
+      position: relative;
+      overflow: visible;
+      isolation: isolate;
     }
 
     .job-card h3 {
@@ -431,6 +431,7 @@
       box-shadow: 0 14px 20px rgba(80, 158, 160, 0.08), inset 0 0 18px rgba(255,255,255,0.30);
       overflow: hidden;
       position: relative;
+      isolation: isolate;
     }
 
     .company::before {
@@ -479,12 +480,41 @@
       font-size: 0.95rem;
     }
 
+    .bubble-burst {
+      position: absolute;
+      left: var(--x, 50%);
+      top: var(--y, 50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 14px rgba(255,255,255,0.35);
+      pointer-events: none;
+      transform: translate(-50%, -50%) scale(1);
+      animation: bubbleBurst 600ms ease-out forwards;
+      z-index: 10;
+    }
+
+    @keyframes bubbleBurst {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      35% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(1.8);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--tx, 0px)), calc(-50% + var(--ty, 0px))) scale(0.15);
+      }
+    }
+
     [hidden] { display: none; }
 
     @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
+      .hero { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 600px) {
@@ -500,8 +530,7 @@
   <main>
     <section class="hero">
       <div class="hero-card">
-        <div class="eyebrow">AIが一緒に考える</div>
-        <h1>自分に合う仕事を、<br>泡のように見つけよう</h1>
+        <h1>自分に合う仕事を見つけよう</h1>
         <p class="lead">
           仕事探しは不安で、何から始めればいいかわからないことがあります。<br>
           まずは気持ちや興味を話してみてください。AIがあなたに合いそうな職種や福井県での候補を一緒に整理します。
@@ -524,7 +553,7 @@
         </div>
 
         <div class="messages" id="messages" aria-live="polite">
-          <div class="message bot">こんにちは！あなたの性格や好きなことを教えてくれると、ぴったりの仕事を一緒に探せます。たとえば「人と話すのが好き」「PCが得意」「福井で働きたい」など、どんなことでも大丈夫です。</div>
+          <div class="message bot">こんにちは！あなたの性格や好きなことを教えてくれると、ぴったりの仕事を一緒に探せます。たとえば「人と話すのが好き」「デザインに興味がある」など、気軽に教えてください。</div>
         </div>
 
         <div class="quick-replies">
@@ -599,119 +628,41 @@
       { name: "福井銀行", industry: "金融", address: "福井県福井市", info: "銀行・金融サービス" },
       { name: "ゲンキー", industry: "小売", address: "福井県を含む複数地域", info: "ドラッグストア" },
       { name: "株式会社PLANT", industry: "その他", address: "〒919-0521 福井県坂井市坂井町下新庄15号8番地の1", info: "事業者情報" },
-      { name: "株式会社ジャクエツ", industry: "その他", address: "東京本社／東京都港区高輪4-24-50 福井本社／福井県敦賀市若葉町2-1770", info: "保育教材、遊具、介護関連" },
+      { name: "株式会社ジャクエツ", industry: "その他", address: "東京本社／東京都港区高輪4-24-50 福井本社／福井県敦賀市若葉町2-1770", info: "保育教材、遊具、園児服などの企画・製造・販売" },
       { name: "清川メッキ工業株式会社", industry: "その他", address: "福井県福井市和田中1-414", info: "その他メーカー" },
       { name: "勝山ファーマ株式会社", industry: "その他", address: "福井県勝山市猪野口37字2番1号", info: "化粧品・医薬品" },
       { name: "株式会社永和システムマネジメント", industry: "IT", address: "福井県福井市問屋町3-111", info: "ソフトウェア・情報処理" },
-      { name: "有限会社増米商店", industry: "小売", address: "福井県敦賀市松島町18-10", info: "専門店（食品関連）" },
-      { name: "エルシーコープ株式会社", industry: "その他", address: "福井県坂井市丸岡町小黒74字2番地1", info: "生活協同組合" },
-      { name: "株式会社SHINDO", industry: "その他", address: "福井県あわら市伊井11-1-1", info: "繊維" },
-      { name: "株式会社ミルコン", industry: "その他", address: "福井県福井市長本町202", info: "設計" },
-      { name: "株式会社伝食", industry: "その他", address: "福井県敦賀市田結27-1-2", info: "通信販売・ネット販売" },
-      { name: "興和江守株式会社", industry: "その他", address: "福井県福井市毛矢一丁目6番23号", info: "専門商社" },
-      { name: "ネッツトヨタ福井株式会社", industry: "その他", address: "福井県福井市今市町58-12", info: "自動車関連" },
-      { name: "株式会社サンワコン", industry: "その他", address: "福井県福井市花堂北1-7-25", info: "建設コンサルタント" },
-      { name: "松文産業株式会社", industry: "その他", address: "福井県勝山市旭町1丁目1番56号", info: "繊維" },
-      { name: "株式会社ミタス", industry: "その他", address: "福井県福井市問屋町4丁目901", info: "医療用機器・医療関連" },
-      { name: "アイテック株式会社", industry: "その他", address: "福井県鯖江市神中町2-6-8", info: "鉱業・金属製品・鉄鋼" },
-      { name: "株式会社TOKO", industry: "その他", address: "福井県鯖江市熊田町1-100", info: "住宅・建材・エクステリア" },
-      { name: "井上商事株式会社", industry: "その他", address: "福井県福井市日之出2-1-6", info: "住宅・建材・エクステリア" },
-      { name: "カラヤ株式会社", industry: "その他", address: "福井県越前市中央2丁目6-5", info: "鉱業・金属製品・鉄鋼" },
-      { name: "カラヤエンジニアリング株式会社", industry: "その他", address: "福井県坂井市坂井町下関13-9-1", info: "非鉄金属" },
-      { name: "倉茂電工株式会社", industry: "その他", address: "福井県越前市下平吹町10-9", info: "鉱業・金属製品・鉄鋼" },
-      { name: "大信トラスト株式会社", industry: "その他", address: "福井県越前市小野谷町14-1-1", info: "半導体・電子・電気機器" },
-      { name: "株式会社福岡", industry: "その他", address: "福井県鯖江市定次町27-1-2", info: "建設・土木" },
-      { name: "広撚株式会社", industry: "その他", address: "福井県福井市毛矢1-2-7", info: "専門商社" },
-      { name: "福井都市ガス株式会社", industry: "その他", address: "福井県福井市飯塚町20-1-5", info: "電力・ガス・エネルギー" },
-      { name: "手賀精工株式会社", industry: "その他", address: "福井県鯖江市有定町1-6-14", info: "鉱業・金属製品・鉄鋼" },
-      { name: "冨田工業株式会社", industry: "その他", address: "福井県坂井市丸岡町北横地46号4番地1", info: "建設・土木" },
-      { name: "株式会社平和ITC", industry: "その他", address: "福井県福井市渕1丁目1704番地", info: "建設コンサルタント" },
-      { name: "株式会社山田組", industry: "その他", address: "福井県越前市松森町7番地", info: "建設・土木" },
-      { name: "株式会社ダイナテック", industry: "その他", address: "福井県福井市問屋町1丁目20番地", info: "設備工事" },
-      { name: "株式会社文珠四郎管工商会", industry: "その他", address: "福井県福井市松本1-56-10", info: "建設・土木" },
-      { name: "株式会社進士鐵工", industry: "その他", address: "福井県坂井市春江町正蓮花18-41", info: "鉱業・金属製品・鉄鋼" },
-      { name: "前田電気株式会社", industry: "その他", address: "福井県大野市中保第21号12番地", info: "設備工事" },
-      { name: "河上電機株式会社", industry: "その他", address: "福井県越前市芝原4丁目5-10", info: "設備工事" },
-      { name: "株式会社三和テクノ", industry: "その他", address: "福井県あわら市古屋石塚22-111-1", info: "精密機器" },
-      { name: "ノーク・ホームズ株式会社", industry: "その他", address: "福井県福井市御幸2丁目18番18号", info: "建設・土木" },
-      { name: "株式会社三工光学", industry: "その他", address: "福井県鯖江市北野町2丁目13番12号", info: "日用品・雑貨" },
-      { name: "福井日野自動車株式会社", industry: "その他", address: "福井県福井市大和田1-501", info: "自動車関連" },
-      { name: "株式会社コバード", industry: "その他", address: "福井県坂井市春江町藤鷲塚36", info: "重電・産業用電気機器" },
-      { name: "株式会社ウノコーポレーション", industry: "その他", address: "福井県越前市家久町105-27", info: "鉱業・金属製品・鉄鋼" },
-      { name: "クリーンガス福井株式会社", industry: "その他", address: "福井県福井市花堂東1丁目17番25号", info: "電力・ガス・エネルギー" },
-      { name: "武生特殊鋼材株式会社", industry: "その他", address: "福井県越前市四郎丸町21-2-1", info: "鉱業・金属製品・鉄鋼" },
-      { name: "みのる産業株式会社", industry: "その他", address: "福井県福井市三尾町第29号2番地8", info: "専門商社" },
-      { name: "浜本テクニカル株式会社", industry: "その他", address: "福井県鯖江市神中町2丁目501-30", info: "日用品・雑貨" },
-      { name: "株式会社パワープラス", industry: "その他", address: "福井県敦賀市津内町2-11-9", info: "建設・土木" },
-      { name: "クラシス株式会社", industry: "その他", address: "福井県鯖江市下河端町1701番地", info: "住宅・建材・エクステリア" },
-      { name: "株式会社北陸環境サービス", industry: "その他", address: "福井県福井市白滝町67-2", info: "環境・リサイクル" },
-      { name: "株式会社武生製麺", industry: "その他", address: "福井県越前市真柄町7-37", info: "食品" },
-      { name: "株式会社白崎コーポレーション", industry: "その他", address: "福井県鯖江市石生谷町11-23", info: "住宅・建材・エクステリア" },
-      { name: "丸市食品株式会社", industry: "その他", address: "福井県福井市高木中央3-2014", info: "食品" },
-      { name: "村中建設株式会社", industry: "その他", address: "福井県福井市日之出3丁目2番1号", info: "建設・土木" },
-      { name: "共同コンピュータ株式会社", industry: "IT", address: "福井県福井市月見5丁目4番4号", info: "ソフトウェア・情報処理" },
-      { name: "株式会社キミコン", industry: "その他", address: "福井県鯖江市小泉町26-6-4", info: "建設コンサルタント" },
-      { name: "株式会社サンリーブ", industry: "その他", address: "福井県鯖江市杉本町15-22", info: "日用品・雑貨" },
-      { name: "福井システムズ株式会社", industry: "IT", address: "福井県坂井市丸岡町熊堂第3号2-22-5", info: "ソフトウェア・情報処理" },
-      { name: "石黒建設株式会社", industry: "その他", address: "福井県福井市西開発3-301-1", info: "建設・土木" },
-      { name: "えちぜん鉄道株式会社", industry: "その他", address: "福井県福井市松本上町15-3-1", info: "鉄道・交通" },
-      { name: "大日メタックス株式会社", industry: "その他", address: "福井県福井市森行町2号5番地", info: "金属製品" },
-      { name: "株式会社ジャストコーポレーション", industry: "その他", address: "福井県福井市殿下町46-3", info: "文具・事務機器" },
-      { name: "株式会社マルツ電波", industry: "その他", address: "福井県福井市豊島2-6-7", info: "電子・電気機器" },
-      { name: "株式会社グリーンシェルター", industry: "その他", address: "福井県坂井市丸岡町小黒70-6-1", info: "建設・土木" },
-      { name: "福井日産自動車株式会社", industry: "その他", address: "福井県福井市下荒井町21-3", info: "自動車販売" },
-      { name: "AGC若狭化学株式会社", industry: "その他", address: "福井県小浜市飯盛24-26-1", info: "化学・医療関連" },
-      { name: "山金工業株式会社", industry: "その他", address: "福井県福井市左内町4-15", info: "住宅・建材・エクステリア" },
-      { name: "福井信用金庫", industry: "金融", address: "福井県福井市田原2丁目3-1", info: "信用金庫・金融サービス" },
-      { name: "株式会社北川", industry: "その他", address: "福井県福井市問屋町2-65", info: "建築資材" },
-      { name: "ミツカワ株式会社", industry: "その他", address: "福井県越前市五分市町18-8", info: "繊維・ニット生地" },
-      { name: "株式会社ウエマツ", industry: "その他", address: "福井県福井市下河北町7号5番地4", info: "繊維・染色" },
-      { name: "タケウチ住建株式会社", industry: "その他", address: "福井県丹生郡越前町江波第89号1番地3", info: "住宅建設" },
-      { name: "福井商工会議所", industry: "その他", address: "福井県福井市西木田2-8-1", info: "地域経済・企業支援" },
-      { name: "株式会社エクネス", industry: "IT", address: "福井県鯖江市上河端町36-4-3", info: "IT・ロボット代筆サービス・通販" },
-      { name: "西田建設株式会社", industry: "その他", address: "福井県福井市", info: "建設・土木" },
-      { name: "三谷設備株式会社", industry: "その他", address: "福井県福井市豊島1-3-1", info: "空調・給排水設備" },
-      { name: "クリタ西日本株式会社", industry: "その他", address: "福井県福井市高木中央1-2913", info: "水処理・環境関連サービス" },
-      { name: "株式会社アイケープラスト", industry: "その他", address: "福井県敦賀市", info: "製造業・プラスチック容器" },
-      { name: "株式会社アイル", industry: "その他", address: "福井県福井市", info: "人材派遣・職業紹介" },
-      { name: "社会福祉法人足羽福祉会", industry: "その他", address: "福井県福井市", info: "福祉・介護" },
-      { name: "株式会社アタゴ", industry: "その他", address: "福井県福井市", info: "繊維製品の製造" },
-      { name: "株式会社日本エー・エム・シー", industry: "その他", address: "福井県福井市", info: "高圧用配管継手の製造・販売" },
-      { name: "エネックス株式会社", industry: "その他", address: "福井県福井市", info: "リサイクル関連" },
-      { name: "株式会社江守情報", industry: "IT", address: "福井県坂井市", info: "システム開発・情報サービス" },
-      { name: "株式会社エル・ローズ", industry: "その他", address: "福井県福井市", info: "衣料品・ヘルスケア" },
-      { name: "株式会社イワシタ", industry: "その他", address: "福井県福井市", info: "機械・製造業" },
-      { name: "J.P.C株式会社", industry: "その他", address: "福井県福井市", info: "製造業" },
-      { name: "株式会社田中化学研究所", industry: "その他", address: "福井県福井市", info: "化学・電池材料" },
-      { name: "田中建設株式会社", industry: "その他", address: "福井県越前市", info: "建設・土木" },
-      { name: "株式会社田中地質コンサルタント", industry: "その他", address: "福井県越前市", info: "地質調査・建設コンサルタント" },
-      { name: "株式会社TOP", industry: "その他", address: "福井県越前市", info: "製造業" },
-      { name: "日信化学工業株式会社", industry: "その他", address: "福井県坂井市", info: "化学製品の製造" },
-      { name: "福井県民生活協同組合", industry: "その他", address: "福井県福井市", info: "生活協同組合・福祉・小売" },
-      { name: "株式会社フィッシュパス", industry: "IT", address: "福井県坂井市", info: "情報通信・地域サービス" },
-      { name: "株式会社金津技研", industry: "その他", address: "福井県あわら市", info: "電気機械器具製造" },
-      { name: "株式会社ワカヤマ", industry: "その他", address: "福井県鯖���市", info: "表面処理加工" },
-      { name: "株式会社オーディオテクニカフクイ", industry: "その他", address: "福井県越前市", info: "電気音響機器の製造" },
-      { name: "株式会社オーカワパン", industry: "その他", address: "福井県坂井市", info: "パンの製造・販売" },
-      { name: "株式会社タマヤ", industry: "IT", address: "福井県越前市", info: "ICT機器のレンタル・販売" },
-      { name: "株式会社ササマタ", industry: "その他", address: "福井県鯖江市", info: "製造業" },
-      { name: "株式会社カワグチ", industry: "その他", address: "福井県福井市", info: "食肉販売" },
-      { name: "テラオライテック株式会社", industry: "その他", address: "福井県越前市", info: "総合設備工事" },
-      { name: "株式会社長田工業所", industry: "その他", address: "福井県坂井市", info: "設備工事" },
-      { name: "株式会社ササキ工業", industry: "その他", address: "福井県越前市", info: "総合建設業" },
-      { name: "株式会社フィッシュパス", industry: "IT", address: "福井県坂井市", info: "情報通信サービス" },
-      { name: "株式会社アサヒレース", industry: "その他", address: "福井県丹生郡越前町", info: "レース生地の製造" },
-      { name: "株式会社リプレッド", industry: "その他", address: "福井県鯖江市", info: "専門サービス" }
+      { name: "有限会社増米商店", industry: "小売", address: "福井県敦賀市松島町18-10", info: "専門店（食品関連）" }
     ];
 
     const search = document.getElementById("search");
-    const industry = document.getElementById("industry");
+    const industrySelect = document.getElementById("industry");
     const list = document.getElementById("list");
     const count = document.getElementById("count");
 
+    function createBurst(event) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const burst = document.createElement("span");
+      burst.className = "bubble-burst";
+      burst.style.setProperty("--x", x + "px");
+      burst.style.setProperty("--y", y + "px");
+      const angle = (Math.random() * 360) * Math.PI / 180;
+      const distance = 18 + Math.random() * 30;
+      burst.style.setProperty("--tx", (Math.cos(angle) * distance).toFixed(2) + "px");
+      burst.style.setProperty("--ty", (Math.sin(angle) * distance).toFixed(2) + "px");
+      event.currentTarget.appendChild(burst);
+      setTimeout(() => burst.remove(), 650);
+    }
+
+    function bindBurst(target) {
+      target.addEventListener("pointerdown", createBurst);
+    }
+
     function showCompanies() {
       const keyword = search.value.trim().toLowerCase();
-      const selected = industry.value;
+      const selected = industrySelect.value;
       const filtered = companies.filter(company => {
         const text = (company.name + company.address + company.info).toLowerCase();
         return text.includes(keyword) && (!selected || company.industry === selected);
@@ -728,6 +679,7 @@
         button.type = "button";
         button.innerHTML = `<span>＋ ${company.name}</span><span>${company.industry}</span>`;
         button.setAttribute("aria-expanded", "false");
+        bindBurst(button);
 
         const detail = document.createElement("div");
         detail.className = "detail";
@@ -754,7 +706,7 @@
     }
 
     search.addEventListener("input", showCompanies);
-    industry.addEventListener("change", showCompanies);
+    industrySelect.addEventListener("change", showCompanies);
     showCompanies();
 
     const messages = document.getElementById("messages");
@@ -762,6 +714,16 @@
     const sendBtn = document.getElementById("sendBtn");
     const startChat = document.getElementById("startChat");
     const jumpToJobs = document.getElementById("jumpToJobs");
+
+    [
+      document.querySelector(".btn.primary"),
+      document.getElementById("sendBtn"),
+      document.getElementById("jumpToJobs"),
+      ...document.querySelectorAll(".chip"),
+      ...document.querySelectorAll(".job-card")
+    ].forEach(el => {
+      if (el) bindBurst(el);
+    });
 
     function addMessage(text, role = "bot") {
       const div = document.createElement("div");
@@ -775,26 +737,26 @@
       const text = input.toLowerCase();
 
       if (text.includes("人と") || text.includes("話す") || text.includes("接客") || text.includes("営業")) {
-        return "人と話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業が候補になりやすいです。";
+        return "人��話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業が候補として多くあります。";
       }
 
       if (text.includes("pc") || text.includes("it") || text.includes("技術") || text.includes("コンピューター") || text.includes("パソコン")) {
-        return "PCや技術に関心があるなら、ITサポート、Webデザイン、システム運用、データ管理などが向いています。まずは簡単なIT基礎の勉強から始めるのがおすすめです。";
+        return "PCや技術に関心があるなら、ITサポート、Webデザイン、システム運用、データ管理などが向いています。まずは簡単なIT基礎の勉強から始めると選びやすくなります。";
       }
 
       if (text.includes("デザイン") || text.includes("作る") || text.includes("創作") || text.includes("美術") || text.includes("イラスト")) {
-        return "創作やデザインが好きなら、Webデザイナー、グラフィック制作、写真・動画編集、イベント企画などが合いそうです。自分の作品を見せる場所を増やすのもよいです。";
+        return "創作やデザインが好きなら、Webデザイナー、グラフィック制作、写真・動画編集、イベント企画などが合いそうです。自分の作品を見せることが仕事につながりやすいです。";
       }
 
       if (text.includes("福井") || text.includes("地域") || text.includes("地元") || text.includes("地方")) {
-        return "地方や福井の暮らしに合った仕事としては、地域密着の営業、接客、受付、ITサポート、自治体・商店街関連の仕事が候補になります。地元の企業や働き方を知ることが大事です。";
+        return "地方や福井の暮らしに合った仕事としては、地域密着の営業、接客、受付、ITサポート、自治体・商店街関連の仕事が候補になります。自分の得意を活かすと働きやすいです。";
       }
 
       if (text.includes("不安") || text.includes("迷") || text.includes("わから") || text.includes("どう")) {
-        return "最初は『人と話すのが好きか』『PCが得意か』『創作が好きか』の3つで考えると整理しやすいです。今のあなたの返信をもとに、次は趣味や得意なことに合う職種を絞っていきましょう。";
+        return "最初は『人と話すのが好きか』『PCが得意か』『創作が好きか』の3つで考えると整理しやすいです。今のあなたの返信をもとに、次はおすすめ候補を絞って提案します。";
       }
 
-      return "あなたの話をもとに、まずは営業・接客、Webデザイナー、ITサポートの3つが候補としておすすめです。さらに詳しく知りたいときは、どのタイプに近いか教えてください。";
+      return "あなたの話をもとに、まずは営業・接客、Webデザイナー、ITサポートの3つが候補としておすすめです。さらに詳しく知りたいときは、あなたの性格や得意なことをもう少し教えてください。";
     }
 
     function sendMessage() {
@@ -820,7 +782,7 @@
 
     startChat.addEventListener("click", () => {
       userInput.focus();
-      addMessage("まずは、どんな仕事に少しだけ興味があるか教えてください。人と接するタイプなのか、創作が好きなのか、技術に惹かれるのかで選びやすくなります。", "bot");
+      addMessage("まずは、どんな仕事に少しだけ興味があるか教えてください。人と接するタイプなのか、創作が好きなのか、技術に惹かれるのかで選び方が変わります。", "bot");
     });
 
     jumpToJobs.addEventListener("click", () => {
