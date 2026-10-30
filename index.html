@@ -6,86 +6,175 @@
 <title>福井県 企業情報一覧</title>
 <style>
 :root {
-  --bg-1: #eef6ff;
-  --bg-2: #f9f4ee;
-  --primary: #1f5d8c;
-  --primary-dark: #123f62;
+  --bg-1: #edf6ff;
+  --bg-2: #f8f2eb;
+  --bg-3: #fffdf9;
+  --primary: #1e5d8d;
+  --primary-dark: #163f60;
+  --primary-soft: #eaf3ff;
   --accent: #f0a35d;
-  --accent-soft: #fff1e1;
-  --card: #ffffff;
-  --text: #233447;
-  --muted: #58718a;
-  --line: #dfeaf5;
-  --shadow: rgba(23, 58, 94, 0.12);
+  --accent-soft: #fff1df;
+  --card: rgba(255, 255, 255, 0.9);
+  --card-strong: #ffffff;
+  --text: #243548;
+  --muted: #5d7186;
+  --line: #deebf5;
+  --shadow: rgba(20, 46, 68, 0.12);
+  --success: #3f8a7a;
 }
 
 * { box-sizing: border-box; }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
-  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
   margin: 0;
-  padding: 32px 18px;
+  font-family: "Yu Gothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
   color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(30, 93, 141, 0.12), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(240, 163, 93, 0.15), transparent 28%),
+    linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  min-height: 100vh;
+  padding: 32px 18px 48px;
 }
 
 main {
-  max-width: 900px;
+  max-width: 980px;
   margin: 0 auto;
 }
 
-h1 {
-  color: var(--primary-dark);
-  margin: 0 0 10px;
-  font-size: clamp(2rem, 3vw, 2.6rem);
+.hero {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(222, 235, 245, 0.9);
+  border-radius: 28px;
+  box-shadow: 0 18px 42px rgba(29, 59, 82, 0.08);
+  padding: 26px 24px 18px;
+  margin-bottom: 22px;
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.76rem;
+  font-weight: 700;
   letter-spacing: 0.04em;
 }
 
-p {
-  margin: 0 0 12px;
+.kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px rgba(240, 163, 93, 0.12);
+}
+
+h1 {
+  margin: 14px 0 10px;
+  color: var(--primary-dark);
+  font-size: clamp(2rem, 3.2vw, 2.9rem);
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+}
+
+.hero p {
+  margin: 0;
   color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.toolbar {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(200px, 1.2fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.field {
+  position: relative;
 }
 
 input, select {
   width: 100%;
-  padding: 14px 16px;
+  padding: 15px 16px;
   font-size: 16px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 16px;
   background: rgba(255,255,255,0.9);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);
   color: var(--text);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: inset 0 1px 2px rgba(15, 35, 51, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 22px) calc(50% - 2px),
+    calc(100% - 16px) calc(50% - 2px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 42px;
 }
 
 input:focus, select:focus {
   outline: none;
-  border-color: rgba(31, 93, 140, 0.5);
-  box-shadow: 0 0 0 4px rgba(31, 93, 140, 0.12);
+  border-color: rgba(30, 93, 141, 0.6);
+  box-shadow: 0 0 0 4px rgba(30, 93, 141, 0.12);
 }
 
-input { margin-bottom: 14px; }
-select { margin-bottom: 18px; }
-
 #count {
+  margin: 20px 4px 14px;
+  color: var(--primary-dark);
+  font-size: 0.98rem;
   font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+#count strong {
   color: var(--primary);
-  margin-bottom: 18px;
+  font-size: 1.15em;
+}
+
+#list {
+  display: grid;
+  gap: 16px;
 }
 
 .company {
-  background: var(--card);
-  padding: 18px 18px 10px;
-  margin-bottom: 14px;
-  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,251,255,0.9));
   border: 1px solid var(--line);
-  box-shadow: 0 8px 20px var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 20px;
+  box-shadow: 0 14px 28px rgba(22, 55, 77, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .company:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(23, 58, 94, 0.14);
+  border-color: rgba(30, 93, 141, 0.2);
+  box-shadow: 0 18px 32px rgba(22, 55, 77, 0.12);
 }
 
 .company button {
@@ -93,53 +182,151 @@ select { margin-bottom: 18px; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 0;
-  background: linear-gradient(180deg, #f8fbff 0%, #edf5ff 100%);
+  gap: 14px;
+  padding: 18px 18px 16px;
+  background: transparent;
+  border: none;
   color: var(--primary-dark);
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1.06rem;
+  font-weight: 800;
   text-align: left;
   cursor: pointer;
-  padding: 12px 14px;
-  border-radius: 12px;
+  letter-spacing: 0.01em;
 }
 
-.company button:hover {
-  background: linear-gradient(180deg, #edf5ff 0%, #e4f0ff 100%);
+.company button span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.company button .mark {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary-soft), rgba(31, 93, 140, 0.12));
+  color: var(--primary);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.company button .chevron {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(30, 93, 141, 0.06);
+  color: var(--primary);
+  font-size: 1.3rem;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.company button:hover .chevron {
+  background: rgba(30, 93, 141, 0.1);
 }
 
 .detail {
-  line-height: 1.8;
-  margin-top: 12px;
-  padding: 14px 12px 6px;
-  border-top: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(240,163,93,0.05), rgba(255,255,255,0));
-  border-radius: 10px;
+  margin: 0;
+  padding: 0 18px 18px;
+  border-top: 1px solid rgba(222, 235, 245, 0.9);
+  background: linear-gradient(180deg, rgba(240,163,93,0.05), rgba(255,255,255,0.12));
+}
+
+.detail-inner {
+  padding-top: 16px;
+  display: grid;
+  gap: 10px;
 }
 
 .detail p {
-  margin: 0 0 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
   color: var(--text);
-  font-size: 0.98rem;
+  line-height: 1.7;
+  font-size: 0.97rem;
 }
 
-[hidden] { display: none; }
+.detail .label {
+  flex-shrink: 0;
+  min-width: 72px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--primary-dark);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+[hidden] { display: none !important; }
+
+@media (max-width: 640px) {
+  body {
+    padding: 18px 12px 36px;
+  }
+
+  .hero {
+    padding: 22px 16px 14px;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .company button {
+    padding: 16px 14px 14px;
+    font-size: 1rem;
+  }
+
+  .detail {
+    padding: 0 14px 14px;
+  }
+
+  .detail p {
+    display: block;
+  }
+
+  .detail .label {
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+}
 </style>
 </head>
 <body>
 <main>
-  <h1>福井県 企業情報一覧</h1>
-  <p>福井県に関係する企業を検索できます。</p>
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="kicker">福井県企業マップ</div>
+        <h1>福井県 企業情報一覧</h1>
+      </div>
+    </div>
+    <p>福井県に関係する企業を検索し、業種や所在地から絞り込みできます。</p>
 
-  <input id="search" type="text" placeholder="企業名・住所・キーワードで検索">
+    <div class="toolbar">
+      <div class="field">
+        <input id="search" type="text" placeholder="企業名・住所・キーワードで検索" aria-label="企業を検索">
+      </div>
 
-  <select id="industry">
-    <option value="">すべての業種</option>
-    <option value="IT">IT・情報通信</option>
-    <option value="金融">金融</option>
-    <option value="小売">小売・流通</option>
-    <option value="その他">その他</option>
-  </select>
+      <div class="field">
+        <select id="industry" aria-label="業種で絞り込み">
+          <option value="">すべての業種</option>
+          <option value="IT">IT・情報通信</option>
+          <option value="金融">金融</option>
+          <option value="小売">小売・流通</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+    </div>
+  </section>
 
   <p id="count"></p>
   <div id="list"></div>
@@ -440,35 +627,41 @@ function showCompanies() {
   });
 
   list.replaceChildren();
-  count.textContent = filtered.length + "社の企業が見つかりました";
+  count.innerHTML = '<strong>' + filtered.length + '</strong> 社の企業が見つかりました';
 
-  filtered.forEach(company => {
+  filtered.forEach((company, index) => {
     const card = document.createElement("div");
     card.className = "company";
 
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = "＋ " + company.name;
+    button.setAttribute("aria-expanded", "false");
+    button.innerHTML = '<span><span class="mark">' + (index + 1) + '</span>' + company.name + '</span><span class="chevron">＋</span>';
 
     const detail = document.createElement("div");
     detail.className = "detail";
     detail.hidden = true;
 
+    const inner = document.createElement("div");
+    inner.className = "detail-inner";
+
     const address = document.createElement("p");
-    address.textContent = "所在地：" + company.address;
+    address.innerHTML = '<span class="label">所在地</span><span>' + company.address + '</span>';
 
     const type = document.createElement("p");
-    type.textContent = "業種：" + company.industry;
+    type.innerHTML = '<span class="label">業種</span><span>' + company.industry + '</span>';
 
     const info = document.createElement("p");
-    info.textContent = "企業情報：" + company.info;
+    info.innerHTML = '<span class="label">情報</span><span>' + company.info + '</span>';
 
-    detail.append(address, type, info);
+    inner.append(address, type, info);
+    detail.append(inner);
 
     button.addEventListener("click", () => {
-      detail.hidden = !detail.hidden;
-      button.textContent = (detail.hidden ? "＋ " : "－ ") + company.name;
-      button.setAttribute("aria-expanded", String(!detail.hidden));
+      const open = !detail.hidden;
+      detail.hidden = open;
+      button.setAttribute("aria-expanded", String(!open));
+      button.querySelector(".chevron").textContent = open ? "＋" : "－";
     });
 
     card.append(button, detail);
