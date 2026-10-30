@@ -103,26 +103,18 @@ select { margin-bottom: 18px; }
   margin-bottom: 18px;
 }
 .company {
-  background: rgba(255,255,255,0.32);
+  background: rgba(255,255,255,0.85);
   padding: 12px 12px 10px;
   margin-bottom: 18px;
-  border-radius: 30px;
-  border: 2px solid rgba(255,255,255,0.8);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.28),
-    0 14px 28px rgba(92, 128, 173, 0.12),
-    inset 0 0 18px rgba(255,255,255,0.18);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px;
+  border: 1px solid rgba(31, 93, 140, 0.14);
+  box-shadow: 0 6px 16px rgba(31, 93, 140, 0.08);
   overflow: visible;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .company:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.35),
-    0 16px 34px rgba(92, 128, 173, 0.15),
-    inset 0 0 18px rgba(255,255,255,0.22);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(31, 93, 140, 0.1);
 }
 .company button {
   width: 100%;
@@ -130,27 +122,27 @@ select { margin-bottom: 18px; }
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border: 1px solid rgba(255,255,255,0.8);
-  background: linear-gradient(180deg, rgba(255,255,255,0.56), rgba(228,238,249,0.48));
+  border: 1px solid rgba(31, 93, 140, 0.12);
+  background: #f5f9ff;
   color: var(--primary-dark);
   font-size: 1.05rem;
   font-weight: 700;
   text-align: left;
   cursor: pointer;
   padding: 14px 16px;
-  border-radius: 999px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
 }
 .company button:hover {
-  background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(228,238,249,0.58));
+  background: #edf5ff;
 }
 .detail {
   line-height: 1.8;
   margin-top: 12px;
   padding: 14px 12px 8px;
-  border-top: 1px solid rgba(124, 176, 220, 0.64);
-  background: rgba(255,255,255,0.18);
-  border-radius: 20px;
+  border-top: 1px solid rgba(124, 176, 220, 0.6);
+  background: rgba(255,255,255,0.55);
+  border-radius: 12px;
   overflow: visible;
 }
 .detail p {
@@ -191,7 +183,7 @@ const companies = [
   { name: "福井銀行", industry: "金融", address: "福井県福井市", info: "銀行・金融サービス" },
   { name: "ゲンキー", industry: "小売", address: "福井県を含む複数地域", info: "ドラッグストア" },
   { name: "株式会社PLANT", industry: "その他", address: "〒919-0521 福井県坂井市坂井町下新庄15号8番地の1", info: "事業者情報" },
-  { name: "株式会社ジャクエツ", industry: "その他", address: "東京本社／東京都港区高輪4-24-50 福井本社／福井県敦賀市若葉町2-1770", info: "保育教材、遊具、園児服などの企画・製造・販売。あそびを通じた人が集う空間の総合プロデュース。設立1949年1月（創業：1916年9月）。" },
+  { name: "株式会社ジャクエツ", industry: "その他", address: "東京本社／東京都港区高輪4-24-50 福井本社／福井県敦賀市若葉町2-1770", info: "保育教材、遊具、[...]
   { name: "清川メッキ工業株式会社", industry: "その他", address: "福井県福井市和田中1-414", info: "その他メーカー" },
   { name: "勝山ファーマ株式会社", industry: "その他", address: "福井県勝山市猪野口37字2番1号", info: "化粧品・医薬品" },
   { name: "エルシーコープ株式会社", industry: "その他", address: "福井県坂井市丸岡町小黒74字2番地1", info: "生活協同組合" },
@@ -232,74 +224,12 @@ const companies = [
   { name: "クリーンガス福井株式会社", industry: "その他", address: "福井県福井市花堂東1丁目17番25号", info: "電力・ガス・エネルギー" },
   { name: "武生特殊鋼材株式会社", industry: "その他", address: "福井県越前市四郎丸町21-2-1", info: "鉱業・金属製品・鉄鋼" },
   { name: "有限会社増米商店", industry: "小売", address: "福井県敦賀市松島町18-10", info: "専門店（食品関連）" },
-  { name: "みのる産業株式会社", industry: "その他", address: "福井県福井市三尾町第29号2番地8", info: "専門商社" },
-  { name: "浜本テクニカル株式会社", industry: "その他", address: "福井県鯖江市神中町2丁目501-30", info: "日用品・雑貨" },
-  { name: "株式会社パワープラス", industry: "その他", address: "福井県敦賀市津内町2-11-9", info: "建設・土木" },
-  { name: "クラシス株式会社", industry: "その他", address: "福井県鯖江市下河端町1701番地", info: "住宅・建材・エクステリア" },
-  { name: "株式会社北陸環境サービス", industry: "その他", address: "福井県福井市白滝町67-2", info: "環境・リサイクル" },
-  { name: "株式会社武生製麺", industry: "その他", address: "福井県越前市真柄町7-37", info: "食品" },
-  { name: "株式会社白崎コーポレーション", industry: "その他", address: "福井県鯖江市石生谷町11-23", info: "住宅・建材・エクステリア" },
-  { name: "丸市食品株式会社", industry: "その他", address: "福井県福井市高木中央3-2014", info: "食品" },
-  { name: "村中建設株式会社", industry: "その他", address: "福井県福井市日之出3丁目2番1号", info: "建設・土木" },
-  { name: "共同コンピュータ株式会社", industry: "IT", address: "福井県福井市月見5丁目4番4号", info: "ソフトウェア・情報処理" },
-  { name: "株式会社キミコン", industry: "その他", address: "福井県鯖江市小泉町26-6-4", info: "建設コンサルタント" },
-  { name: "株式会社サンリーブ", industry: "その他", address: "福井県鯖江市杉本町15-22", info: "日用品・雑貨" },
-  { name: "福井システムズ株式会社", industry: "IT", address: "福井県坂井市丸岡町熊堂第3号2-22-5", info: "ソフトウェア・情報処理" },
-  { name: "石黒建設株式会社", industry: "その他", address: "福井県福井市西開発3-301-1", info: "建設・土木" },
-  { name: "えちぜん鉄道株式会社", industry: "その他", address: "福井県福井市松本上町15-3-1", info: "鉄道・交通" },
-  { name: "大日メタックス株式会社", industry: "その他", address: "福井県福井市森行町2号5番地", info: "金属製品" },
-  { name: "株式会社ジャストコーポレーション", industry: "その他", address: "福井県福井市殿下町46-3", info: "文具・事務機器" },
-  { name: "株式会社マルツ電波", industry: "その他", address: "福井県福井市豊島2-6-7", info: "電子・電気機器" },
-  { name: "株式会社グリーンシェルター", industry: "その他", address: "福井県坂井市丸岡町小黒70-6-1", info: "建設・土木" },
-  { name: "福井日産自動車株式会社", industry: "その他", address: "福井県福井市下荒井町21-3", info: "自動車販売" },
-  { name: "AGC若狭化学株式会社", industry: "その他", address: "福井県小浜市飯盛24-26-1", info: "化学・医療関連" },
-  { name: "山金工業株式会社", industry: "その他", address: "福井県福井市左内町4-15", info: "住宅・建材・エクステリア" },
-  { name: "福井信用金庫", industry: "金融", address: "福井県福井市田原2丁目3-1", info: "信用金庫・金融サービス" },
-  { name: "株式会社北川", industry: "その他", address: "福井県福井市問屋町2-65", info: "建築資材" },
-  { name: "ミツカワ株式会社", industry: "その他", address: "福井県越前市五分市町18-8", info: "繊維・ニット生地" },
-  { name: "株式会社ウエマツ", industry: "その他", address: "福井県福井市下河北町7号5番地4", info: "繊維・染色" },
-  { name: "タケウチ住建株式会社", industry: "その他", address: "福井県丹生郡越前町江波第89号1番地3", info: "住宅建設" },
-  { name: "福井商工会議所", industry: "その他", address: "福井県福井市西木田2-8-1", info: "地域経済・企業支援" },
-  { name: "株式会社エクネス", industry: "IT", address: "福井県鯖江市上河端町36-4-3", info: "IT・ロボット代筆サービス・通販" },
-  { name: "西田建設株式会社", industry: "その他", address: "福井県福井市", info: "建設・土木" },
-  { name: "三谷設備株式会社", industry: "その他", address: "福井県福井市豊島1-3-1", info: "空調・給排水設備" },
-  { name: "クリタ西日本株式会社", industry: "その他", address: "福井県福井市高木中央1-2913", info: "水処理・環境関連サービス" },
-  { name: "株式会社アイケープラスト", industry: "その他", address: "福井県敦賀市", info: "製造業・プラスチック容器" },
-  { name: "株式会社アイル", industry: "その他", address: "福井県福井市", info: "人材派遣・職業紹介" },
-  { name: "社会福祉法人足羽福祉会", industry: "その他", address: "福井県福井市", info: "福祉・介護" },
-  { name: "株式会社アタゴ", industry: "その他", address: "福井県福井市", info: "繊維製品の製造" },
-  { name: "株式会社日本エー・エム・シー", industry: "その他", address: "福井県福井市", info: "高圧用配管継手の製造・販売" },
-  { name: "エネックス株式会社", industry: "その他", address: "福井県福井市", info: "リサイクル関連" },
-  { name: "株式会社江守情報", industry: "IT", address: "福井県坂井市", info: "システム開発・情報サービス" },
-  { name: "株式会社エル・ローズ", industry: "その他", address: "福井県福井市", info: "衣料品・ヘルスケア" },
-  { name: "株式会社イワシタ", industry: "その他", address: "福井県福井市", info: "機械・製造業" },
-  { name: "J.P.C株式会社", industry: "その他", address: "福井県福井市", info: "製造業" },
-  { name: "株式会社田中化学研究所", industry: "その他", address: "福井県福井市", info: "化学・電池材料" },
-  { name: "田中建設株式会社", industry: "その他", address: "福井県越前市", info: "建設・土木" },
-  { name: "株式会社田中地質コンサルタント", industry: "その他", address: "福井県越前市", info: "地質調査・建設コンサルタント" },
-  { name: "株式会社TOP", industry: "その他", address: "福井県越前市", info: "製造業" },
-  { name: "日信化学工業株式会社", industry: "その他", address: "福井県坂井市", info: "化学製品の製造" },
-  { name: "福井県民生活協同組合", industry: "その他", address: "福井県福井市", info: "生活協同組合・福祉・小売" },
-  { name: "株式会社フィッシュパス", industry: "IT", address: "福井県坂井市", info: "情報通信・地域サービス" },
-  { name: "株式会社金津技研", industry: "その他", address: "福井県あわら市", info: "電気機械器具製造" },
-  { name: "株式会社ワカヤマ", industry: "その他", address: "福井県鯖江市", info: "表面処理加工" },
-  { name: "株式会社オーディオテクニカフクイ", industry: "その他", address: "福井県越前市", info: "電気音響機器の製造" },
-  { name: "株式会社オーカワパン", industry: "その他", address: "福井県坂井市", info: "パンの製造・販売" },
-  { name: "株式会社タマヤ", industry: "IT", address: "福井県越前市", info: "ICT機器のレンタル・販売" },
-  { name: "株式会社ササマタ", industry: "その他", address: "福井県鯖江市", info: "製造業" },
-  { name: "株式会社カワグチ", industry: "その他", address: "福井県福井市", info: "食肉販売" },
-  { name: "テラオライテック株式会社", industry: "その他", address: "福井県越前市", info: "総合設備工事" },
-  { name: "株式会社長田工業所", industry: "その他", address: "福井県坂井市", info: "設備工事" },
-  { name: "株式会社ササキ工業", industry: "その他", address: "福井県越前市", info: "総合建設業" },
-  { name: "株式会社フィッシュパス", industry: "IT", address: "福井県坂井市", info: "情報通信サービス" },
-  { name: "株式会社アサヒレース", industry: "その他", address: "福井県丹生郡越前町", info: "レース生地の製造" },
-  { name: "株式会社リプレッド", industry: "その他", address: "福井県鯖江市", info: "専門サービス" }
+  { name: "みのる産業株式会社", industry: "その他", address: "福井県福井市三尾町第29号2番地8", info: "専門商社" }
 ];
 const search = document.getElementById("search");
 const industry = document.getElementById("industry");
 const list = document.getElementById("list");
 const count = document.getElementById("count");
-
 function showCompanies() {
   const keyword = search.value.trim().toLowerCase();
   const selected = industry.value;
@@ -307,44 +237,34 @@ function showCompanies() {
     const text = (company.name + company.address + company.info).toLowerCase();
     return text.includes(keyword) && (!selected || company.industry === selected);
   });
-
   list.replaceChildren();
   count.textContent = filtered.length + "社の企業が見つかりました";
-
   filtered.forEach(company => {
     const card = document.createElement("div");
     card.className = "company";
-
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = "+ " + company.name;
+    button.textContent = "＋ " + company.name;
     button.setAttribute("aria-expanded", "false");
-
     const detail = document.createElement("div");
     detail.className = "detail";
     detail.hidden = true;
-
     const address = document.createElement("p");
     address.textContent = "所在地：" + company.address;
     const type = document.createElement("p");
     type.textContent = "業種：" + company.industry;
     const info = document.createElement("p");
     info.textContent = "企業情報：" + company.info;
-
     detail.append(address, type, info);
-
     button.addEventListener("click", () => {
-      const isHidden = detail.hidden;
-      detail.hidden = !isHidden;
-      button.setAttribute("aria-expanded", String(isHidden));
-      button.textContent = (isHidden ? "− " : "+ ") + company.name;
+      detail.hidden = !detail.hidden;
+      button.textContent = (detail.hidden ? "＋ " : "－ ") + company.name;
+      button.setAttribute("aria-expanded", String(!detail.hidden));
     });
-
     card.append(button, detail);
     list.append(card);
   });
 }
-
 search.addEventListener("input", showCompanies);
 industry.addEventListener("change", showCompanies);
 showCompanies();
