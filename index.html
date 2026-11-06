@@ -1,304 +1,923 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>仕事相談・おすすめ提案</title>
-  <style>
-    :root {
-      --bg-1: #eefcf9; --bg-2: #e9f9fb; --bg-3: #dff8f1;
-      --primary: #61c6c0; --primary-deep: #2a8a8a; --primary-dark: #1a4d5a;
-      --text: #234c54; --muted: #5d7b7d; --success: #69c7ad;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      position: relative; overflow-x: hidden; margin: 0; padding: 32px 18px 52px;
-      color: var(--text); font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
-      background: radial-gradient(circle at 15% 12%, rgba(255,255,255,.8), transparent 20%),
-        radial-gradient(circle at 82% 18%, rgba(176,245,236,.28), transparent 18%),
-        linear-gradient(180deg,var(--bg-1),var(--bg-2) 40%,var(--bg-3));
-    }
-    body::before, body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-    body::before {
-      background: radial-gradient(circle at 10% 18%,rgba(255,255,255,.9) 0 5%,transparent 5.5%),
-        radial-gradient(circle at 24% 44%,rgba(255,255,255,.82) 0 6%,transparent 6.7%),
-        radial-gradient(circle at 62% 25%,rgba(255,255,255,.78) 0 4.8%,transparent 5.5%),
-        radial-gradient(circle at 58% 72%,rgba(255,255,255,.86) 0 4.5%,transparent 5.2%),
-        radial-gradient(circle at 86% 38%,rgba(255,255,255,.8) 0 5.2%,transparent 6.1%);
-      filter: blur(3px);
-    }
-    body::after {
-      background: radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%),
-        radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%);
-      filter: blur(6px);
-    }
-    main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; }
-    .hero { display: grid; grid-template-columns: .9fr 1.1fr; gap: 24px; align-items: stretch; }
-    .hero-card, .chat-card, .panel {
-      background: rgba(255,255,255,.48); border: 2px solid rgba(255,255,255,.85);
-      border-radius: 30px; box-shadow: 0 18px 30px rgba(55,128,133,.1), inset 0 0 20px rgba(255,255,255,.2);
-      backdrop-filter: blur(10px);
-    }
-    .hero-card { padding: 28px 26px 22px; }
-    h1 { margin: 16px 0 12px; color: var(--primary-dark); font-size: clamp(2.1rem,4vw,3.6rem); letter-spacing: .04em; line-height: 1.1; }
-    .lead { margin: 0; color: var(--muted); line-height: 1.8; font-size: 1.05rem; }
-    .stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
-    .stat { padding: 14px 10px; background: rgba(255,255,255,.45); border: 1px solid rgba(111,191,195,.65); border-radius: 18px; text-align: center; }
-    .stat strong { display: block; color: var(--primary-dark); font-size: 1.2rem; margin-bottom: 4px; }
-    .stat span { color: var(--muted); font-size: .82rem; }
-    .chat-card { padding: 18px; display: flex; flex-direction: column; min-height: 520px; }
-    .chat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 4px 4px 10px; }
-    .chat-title { color: var(--primary-dark); font-weight: 700; font-size: 1.08rem; }
-    .online { display: inline-flex; align-items: center; gap: 8px; color: #1e8f7a; font-size: .8rem; font-weight: 700; }
-    .online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 6px rgba(105,199,173,.18); }
-    .messages { flex: 1; min-height: 220px; max-height: 560px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px 14px; background: rgba(255,255,255,.3); border: 1px solid rgba(111,191,195,.38); border-radius: 22px; }
-    .message { max-width: 94%; padding: 12px 14px; border-radius: 18px; line-height: 1.6; font-size: .94rem; box-shadow: 0 8px 18px rgba(41,116,124,.06); white-space: pre-line; }
-    .message.bot { align-self: flex-start; background: rgba(255,255,255,.9); color: var(--text); border-top-left-radius: 8px; }
-    .message.user { align-self: flex-end; background: rgba(122,219,215,.3); color: var(--primary-dark); border-top-right-radius: 8px; }
-    .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
-    .chip, .search-button { padding: 9px 13px; border-radius: 999px; border: 1px solid rgba(111,191,195,.72); background: rgba(255,255,255,.78); color: var(--primary-dark); cursor: pointer; font-size: .88rem; }
-    .chip:hover, .search-button:hover { filter: brightness(.97); }
-    .composer { display: flex; gap: 10px; margin-top: 10px; }
-    .composer input, .search-box input, .search-box select { width: 100%; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font: inherit; }
-    .composer input { flex: 1; min-width: 0; }
-    .composer button { min-width: 100px; border: 0; border-radius: 999px; background: linear-gradient(135deg,var(--primary),#9ae3d8); color: white; font-weight: 700; cursor: pointer; }
-    .panel { padding: 22px 20px 18px; margin-top: 24px; }
-    .panel h2 { margin: 0 0 8px; color: var(--primary-dark); font-size: 1.3rem; letter-spacing: .04em; }
-    .panel-intro { margin: 0 0 16px; color: var(--muted); line-height: 1.7; }
-    .search-box { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
-    .search-button { min-height: 48px; background: linear-gradient(135deg,var(--primary),#9ae3d8); color: #fff; border: 0; }
-    .filter-status { margin: 12px 0 0; color: var(--primary-deep); font-weight: 700; }
-    .recommendations { display: grid; gap: 8px; width: min(100%, 460px); }
-    .recommendation { padding: 12px; border: 1px solid rgba(111,191,195,.65); border-radius: 16px; background: linear-gradient(135deg,rgba(255,255,255,.94),rgba(224,250,248,.9)); }
-    .recommendation strong { display: block; margin-bottom: 4px; color: var(--primary-dark); }
-    .recommendation p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.6; }
-    .recommendation-note { margin: 0; color: var(--muted); font-size: .8rem; }
-    @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } .chat-card { min-height: 480px; } .search-box { grid-template-columns: repeat(2,minmax(0,1fr)); } }
-    @media (max-width: 600px) { body { padding: 18px 12px 36px; } .hero-card,.chat-card,.panel { padding: 16px; } .stats,.search-box { grid-template-columns: 1fr; } .composer { flex-direction: column; } .composer button { min-height: 46px; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>福井で見つける仕事・企業探し</title>
+
+<style>
+:root {
+  --bg1:#eefcf9;
+  --bg2:#e9f9fb;
+  --bg3:#dff8f1;
+  --primary:#61c6c0;
+  --deep:#2a8a8a;
+  --dark:#1a4d5a;
+  --text:#234c54;
+  --muted:#5d7b7d;
+}
+
+* {box-sizing:border-box;}
+
+html {scroll-behavior:smooth;}
+
+body {
+  margin:0;
+  padding:28px 16px 50px;
+  color:var(--text);
+  font-family:"Yu Gothic","Hiragino Sans",sans-serif;
+  background:
+    radial-gradient(circle at 15% 12%,white,transparent 22%),
+    linear-gradient(180deg,var(--bg1),var(--bg2),var(--bg3));
+}
+
+main {
+  max-width:1050px;
+  margin:auto;
+}
+
+.hero,.panel,.chat {
+  background:rgba(255,255,255,.65);
+  border:2px solid white;
+  border-radius:26px;
+  padding:24px;
+  margin-bottom:22px;
+  box-shadow:0 12px 28px rgba(55,128,133,.1);
+}
+
+h1 {
+  color:var(--dark);
+  font-size:clamp(28px,5vw,44px);
+  line-height:1.3;
+}
+
+h2 {
+  color:var(--dark);
+  font-size:22px;
+}
+
+p {line-height:1.8;}
+
+.lead,.panel-intro {
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:20px;
+}
+
+.stat {
+  background:white;
+  border:1px solid #b8e6df;
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+}
+
+.stat strong {
+  display:block;
+  color:var(--dark);
+}
+
+.stat span {
+  font-size:12px;
+  color:var(--muted);
+}
+
+.chat-title {
+  font-weight:bold;
+  color:var(--dark);
+  font-size:18px;
+}
+
+.messages {
+  height:300px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:14px;
+  margin-top:12px;
+  background:#f5fffc;
+  border:1px solid #d0eee7;
+  border-radius:18px;
+}
+
+.message {
+  max-width:90%;
+  padding:12px 15px;
+  border-radius:16px;
+  line-height:1.7;
+  white-space:pre-line;
+}
+
+.bot {
+  background:white;
+  align-self:flex-start;
+}
+
+.user {
+  background:#c9f1e9;
+  align-self:flex-end;
+}
+
+.quick {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:12px 0;
+}
+
+button {
+  border:0;
+  border-radius:30px;
+  padding:11px 16px;
+  cursor:pointer;
+  font:inherit;
+}
+
+button:hover {
+  filter:brightness(.97);
+}
+
+.chip {
+  background:white;
+  color:var(--dark);
+  border:1px solid #9bd8d2;
+}
+
+.send,.search-button {
+  background:linear-gradient(135deg,var(--primary),#9ae3d8);
+  color:white;
+  font-weight:bold;
+}
+
+.composer {
+  display:flex;
+  gap:10px;
+}
+
+input,select {
+  min-width:0;
+  width:100%;
+  padding:13px;
+  border:1px solid #a8dcd5;
+  border-radius:14px;
+  background:white;
+  color:var(--text);
+  font:inherit;
+}
+
+.composer input {flex:1;}
+
+.filters {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+
+.status {
+  color:var(--deep);
+  font-weight:bold;
+}
+
+.result-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:13px;
+  margin-top:15px;
+}
+
+.job-card,.company-card {
+  padding:17px;
+  background:linear-gradient(135deg,#fff,#e9faf6);
+  border:1px solid #b6e2dc;
+  border-radius:18px;
+}
+
+.job-card h3,.company-card h3 {
+  margin:0 0 8px;
+  color:var(--dark);
+}
+
+.company-card p,.job-card p {
+  font-size:14px;
+  color:var(--muted);
+  overflow-wrap:anywhere;
+}
+
+.company-area {
+  font-size:13px;
+  color:var(--deep);
+  font-weight:bold;
+}
+
+.company-link {
+  display:inline-block;
+  margin-top:8px;
+  color:#238b89;
+  font-weight:bold;
+}
+
+.notice {
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.8;
+}
+
+.hidden {display:none;}
+
+@media(max-width:650px) {
+  body {padding:14px 10px;}
+  .hero,.panel,.chat {padding:17px;}
+  .stats {grid-template-columns:1fr;}
+  .filters {grid-template-columns:1fr;}
+  .composer {flex-direction:column;}
+  .send {min-height:45px;}
+}
+</style>
 </head>
+
 <body>
-  <main>
-    <section class="hero">
-      <div class="hero-card">
-        <h1>自分に合う仕事を見つけよう</h1>
-        <p class="lead">仕事探しは不安で、何から始めればいいかわからないことがあります。<br>好きなことや得意なことをチャットで教えてください。自分に合う仕事を一緒に探します。</p>
-        <div class="stats">
-          <div class="stat"><strong>チャット</strong><span>気軽に相談</span></div>
-          <div class="stat"><strong>条件検索</strong><span>希望に合わせて探す</span></div>
-        </div>
-      </div>
-      <div class="chat-card">
-        <div class="chat-header"><div class="chat-title">仕事相談チャット</div><div class="online">オンライン</div></div>
-        <div class="messages" id="messages" aria-live="polite">
-          <div class="message bot">こんにちは！どんなことが好きですか？人と話すこと、PC、ものづくりなど、興味や得意なことを教えてください。何回か会話を重ねると、あなたに合う仕事候補が見えてきます。</div>
-        </div>
-        <div class="quick-replies">
-          <button class="chip" type="button">人と話すのが好き</button>
-          <button class="chip" type="button">PCやITに興味がある</button>
-          <button class="chip" type="button">建物やまちづくりに興味がある</button>
-          <button class="chip" type="button">福井で働きたい</button>
-        </div>
-        <div class="composer">
-          <input id="userInput" type="text" placeholder="例：人と話すのが好きです" aria-label="相談内容を入力">
-          <button type="button" id="sendBtn">送信</button>
-        </div>
-      </div>
-    </section>
+<main>
 
-    <section class="panel" aria-labelledby="conditions-title">
-      <h2 id="conditions-title">希望条件で仕事を探す</h2>
-      <p class="panel-intro">企業一覧は表示せず、職種・勤務地・雇用形態・規模の条件を使って、チャットのおすすめを絞り込めます。</p>
-      <div class="search-box">
-        <select id="job-category" aria-label="希望する職種">
-          <option value="">職種を指定しない</option>
-          <option value="営業・接客">営業・接客</option>
-          <option value="IT">IT・技術</option>
-          <option value="デザイン">デザイン・創作</option>
-          <option value="事務">事務・総務</option>
-          <option value="製造">ものづくり・製造</option>
-          <option value="福祉">福祉・教育</option>
-          <option value="企画">企画・広報</option>
-          <option value="建築・土木">建築・土木</option>
-          <option value="医療">医療・看護</option>
-          <option value="物流">物流・運輸</option>
-          <option value="飲食">飲食・調理</option>
-          <option value="販売">販売・小売</option>
-          <option value="農林水産">農林水産</option>
-          <option value="美容">美容・生活サービス</option>
-        </select>
-        <select id="work-area" aria-label="希望する勤務地">
-          <option value="">勤務地を指定しない</option>
-          <option value="福井県">福井県</option>
-          <option value="福井市">福井市</option>
-          <option value="敦賀市">敦賀市</option>
-          <option value="小浜市">小浜市</option>
-          <option value="大野市">大野市</option>
-          <option value="勝山市">勝山市</option>
-          <option value="鯖江市">鯖江市</option>
-          <option value="あわら市">あわら市</option>
-          <option value="越前市">越前市</option>
-          <option value="坂井市">坂井市</option>
-          <option value="永平寺町">永平寺町</option>
-          <option value="池田町">池田町</option>
-          <option value="南越前町">南越前町</option>
-          <option value="越前町">越前町</option>
-          <option value="美浜町">美浜町</option>
-          <option value="高浜町">高浜町</option>
-          <option value="おおい町">おおい町</option>
-          <option value="若狭町">若狭町</option>
-          <option value="県外">県外・勤務地不問</option>
-        </select>
-        <select id="employment-type" aria-label="希望する雇用形態">
-          <option value="">雇用形態を指定しない</option>
-          <option value="正社員">正社員</option>
-          <option value="契約社員">契約社員</option>
-          <option value="パート・アルバイト">パート・アルバイト</option>
-          <option value="柔軟な働き方">柔軟な働き方</option>
-        </select>
-        <select id="company-size" aria-label="希望する企業規模">
-          <option value="">企業規模を指定しない</option>
-          <option value="大企業">大企業</option>
-          <option value="中小企業">中小企業</option>
-          <option value="小規模企業">小規模企業</option>
-        </select>
-        <input id="condition-keyword" type="search" placeholder="条件・キーワード（例：未経験）" aria-label="条件やキーワード">
-        <button class="search-button" type="button" id="apply-filters">条件を適用</button>
-      </div>
-      <p class="filter-status" id="filter-status" role="status" aria-live="polite">希望条件を選んで「条件を適用」を押してください。</p>
-    </section>
-  </main>
+<!-- トップページ -->
+<section class="hero">
 
-  <script>
-    const messages = document.getElementById("messages");
-    const userInput = document.getElementById("userInput");
-    const userMessages = [];
-    let recommendationsShown = false;
+<h1>自分に合う仕事を見つけよう 🌷</h1>
 
-    const jobOptions = [
-      { title: "営業・接客", about: "人と話し、相手の希望に合わせて商品やサービスを提案する仕事です。", category: "営業・接客", words: ["人と", "話", "接客", "会話", "相談"], keywords: ["営業", "接客", "お客様", "販売", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "ITサポート・システム運用", about: "PCやシステムの困りごとを解決し、利用する人を支える仕事です。", category: "IT", words: ["pc", "it", "パソコン", "システム", "ネットワーク", "サポート"], keywords: ["IT", "PC", "パソコン", "システム", "運用", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "Web・グラフィックデザイン", about: "アイデアや色・形の工夫を使い、Webサイトや制作物を形にする仕事です。", category: "デザイン", words: ["デザイン", "デザイナー", "グラフィック", "色", "イラスト", "web"], keywords: ["デザイン", "web", "グラフィック", "イラスト", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "事務・総務", about: "書類やデータを整理し、チームの仕事が進むように支える仕事です。", category: "事務", words: ["事務", "整理", "正確", "コミュニケーション", "資料"], keywords: ["事務", "総務", "資料", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "ものづくり・製造", about: "製品を作ったり品質を確かめたりして、形に残る成果を生み出す仕事です。", category: "製造", words: ["ものづくり", "製造", "手作業", "品質", "加工"], keywords: ["製造", "ものづくり", "工場", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "福祉・教育サポート", about: "相手の成長や日々の暮らしに寄り添い、必要な支援を行う仕事です。", category: "福祉", words: ["子ども", "教育", "支援", "看護", "安心"], keywords: ["福祉", "教育", "子ども", "支援", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "企画・広報", about: "情報を集めてアイデアを考え、イベントやサービスの魅力を伝える仕事です。", category: "企画", words: ["企画", "広報", "イベント", "発信", "アイデア"], keywords: ["企画", "広報", "イベント", "発信", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "建築設計・CADオペレーター", about: "建物の図面を作成・修正し、設計者や施工チームを支える仕事です。", category: "建築・土木", words: ["建築", "図面", "CAD", "設計", "施工"], keywords: ["建築", "CAD", "設計", "図面", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "施工管理・現場監督", about: "建築や土木の工事現場で、安全・品質・スケジュールを管理する仕事です。", category: "建築・土木", words: ["施工", "現場", "安全", "管理", "工事"], keywords: ["施工", "現場", "管理", "工事", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "土木技術者・測量", about: "道路や橋などのインフラ整備に関わり、測量や工事計画を行う仕事です。", category: "建築・土木", words: ["土木", "測量", "道路", "橋", "工事"], keywords: ["土木", "測量", "道路", "橋", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "看護師・医療事務", about: "医療機関で患者さんのケアや受付、診療を支える仕事です。", category: "医療", words: ["医療", "看護", "病院", "患者", "受付"], keywords: ["医療", "看護", "病院", "患者", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "物流・倉庫スタッフ", about: "商品の入出荷や在庫管理を行い、必要なものを届ける仕事です。", category: "物流", words: ["物流", "倉庫", "運ぶ", "配送", "在庫"], keywords: ["物流", "倉庫", "配送", "在庫", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "調理スタッフ・飲食店スタッフ", about: "料理を作ったり、お客様を迎えたりして食事の時間を支える仕事です。", category: "飲食", words: ["料理", "飲食", "調理", "接客", "厨房"], keywords: ["飲食", "調理", "料理", "厨房", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "販売スタッフ", about: "商品選びをお手伝いし、お店づくりや売り場の管理にも関わる仕事です。", category: "販売", words: ["販売", "小売", "ショップ", "接客", "商品"], keywords: ["販売", "小売", "ショップ", "商品", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "農業・林業スタッフ", about: "農作物の栽培や森林の手入れなど、自然や地域の資源に関わる仕事です。", category: "農林水産", words: ["農業", "林業", "自然", "栽培", "地域"], keywords: ["農業", "林業", "自然", "栽培", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] },
-      { title: "美容師・美容スタッフ", about: "ヘアや身だしなみのサービスを通じて、お客様の希望をかなえる仕事です。", category: "美容", words: ["美容", "ヘア", "接客", "サービス", "スタイル"], keywords: ["美容", "ヘア", "サービス", "スタイル", "福井県", "福井市", "敦賀市", "小浜市", "大野市", "勝山市", "鯖江市", "あわら市", "越前市", "坂井市", "永平寺町", "池田町", "南越前町", "越前町", "美浜町", "高浜町", "おおい町", "若狭町"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["大企業", "中小企業", "小規模企業"] }
-    ];
+<p class="lead">
+好きなことや得意なことから、自分に合う仕事を探してみませんか？
+福井県内の企業情報とつなげて、将来の選択肢を広げます。
+</p>
 
-    function addMessage(text, role = "bot") {
-      const div = document.createElement("div");
-      div.className = `message ${role}`;
-      div.textContent = text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-      return div;
-    }
+<div class="stats">
 
-    function activeFilters() {
-      return {
-        category: document.getElementById("job-category").value,
-        area: document.getElementById("work-area").value,
-        employment: document.getElementById("employment-type").value,
-        size: document.getElementById("company-size").value,
-        keyword: document.getElementById("condition-keyword").value.trim().toLowerCase()
-      };
-    }
+<div class="stat">
+<strong>仕事探し</strong>
+<span>興味から職種を提案</span>
+</div>
 
-    function matchingJobs() {
-      const profile = userMessages.join(" ").toLowerCase();
-      const filters = activeFilters();
-      return jobOptions.map((job, index) => ({
-        ...job,
-        score: job.words.reduce((score, word) => score + (profile.includes(word) ? 1 : 0), 0),
-        index
-      })).filter(job => {
-        const text = `${job.title} ${job.about} ${job.keywords.join(" ")}`.toLowerCase();
-        return (!filters.category || job.category === filters.category)
-          && (!filters.employment || job.employment.includes(filters.employment))
-          && (!filters.size || job.size.includes(filters.size))
-          && (!filters.keyword || text.includes(filters.keyword))
-          && (!filters.area || filters.area === "県外" || filters.area === "福井県" || job.keywords.includes(filters.area));
-      }).sort((a, b) => b.score - a.score || a.index - b.index);
-    }
+<div class="stat">
+<strong>企業検索</strong>
+<span>福井県内の企業を紹介</span>
+</div>
 
-    function showRecommendations() {
-      document.querySelectorAll(".recommendations").forEach(element => element.remove());
-      const recommendations = document.createElement("div");
-      recommendations.className = "recommendations";
-      const note = document.createElement("p");
-      note.className = "recommendation-note";
-      note.textContent = "会話と選択した希望条件をもとにした提案です。職種の例として参考にしてください。";
-      recommendations.appendChild(note);
-      const jobs = matchingJobs().slice(0, 3);
-      if (jobs.length === 0) {
-        const empty = document.createElement("article");
-        empty.className = "recommendation";
-        empty.textContent = "選択した条件に合う提案が見つかりませんでした。条件を少し広げて、もう一度お試しください。";
-        recommendations.appendChild(empty);
-      } else {
-        jobs.forEach(job => {
-          const card = document.createElement("article");
-          card.className = "recommendation";
-          const title = document.createElement("strong");
-          title.textContent = job.title;
-          const description = document.createElement("p");
-          description.textContent = job.about;
-          card.append(title, description);
-          recommendations.appendChild(card);
-        });
+<div class="stat">
+<strong>条件検索</strong>
+<span>勤務地・職種で絞り込み</span>
+</div>
+
+</div>
+</section>
+
+<!-- チャット -->
+<section class="chat">
+
+<div class="chat-title">🌷 仕事相談チャット</div>
+
+<div class="messages" id="messages" aria-live="polite">
+
+<div class="message bot">
+こんにちは！
+
+あなたの好きなことや得意なことを教えてください。
+
+例えば、
+
+・人と話すことが好き
+・パソコンに興味がある
+・地域やまちづくりに興味がある
+・ものづくりが好き
+・アイデアを考えるのが好き
+
+どんなことでも大丈夫です！
+</div>
+
+</div>
+
+<div class="quick">
+
+<button class="chip">人と話すのが好き</button>
+<button class="chip">パソコンやITに興味がある</button>
+<button class="chip">ものづくりが好き</button>
+<button class="chip">地域やまちづくりに興味がある</button>
+<button class="chip">アイデアを考えるのが好き</button>
+
+</div>
+
+<div class="composer">
+
+<input
+id="userInput"
+placeholder="自分の好きなことを入力してください"
+aria-label="相談内容"
+>
+
+<button class="send" id="sendBtn">送信</button>
+
+</div>
+</section>
+
+<!-- おすすめの仕事 -->
+<section class="panel" id="job-section">
+
+<h2>✨ あなたにおすすめの仕事</h2>
+
+<p class="panel-intro">
+チャットの回答をもとに、相性のよい仕事を提案します。
+</p>
+
+<div id="job-results" class="result-grid">
+
+<p class="notice">
+まずはチャットで好きなことを教えてください。
+</p>
+
+</div>
+</section>
+
+<!-- 企業検索 -->
+<section class="panel" id="company-section">
+
+<h2>🏢 福井県の企業を探す</h2>
+
+<p class="panel-intro">
+福井県内の実在企業を、事業内容や勤務地から探せます。
+</p>
+
+<div class="filters">
+
+<select id="job-filter">
+<option value="">すべての職種</option>
+<option value="営業・販売">営業・販売</option>
+<option value="IT・情報">IT・情報</option>
+<option value="製造・品質管理">製造・品質管理</option>
+<option value="建築・土木">建築・土木</option>
+<option value="企画・広報">企画・広報</option>
+<option value="事務・総務">事務・総務</option>
+<option value="研究・技術">研究・技術</option>
+</select>
+
+<select id="area-filter">
+<option value="">すべての勤務地</option>
+<option value="福井市">福井市</option>
+<option value="敦賀市">敦賀市</option>
+<option value="越前市">越前市</option>
+<option value="坂井市">坂井市</option>
+<option value="大野市">大野市</option>
+<option value="鯖江市">鯖江市</option>
+<option value="あわら市">あわら市</option>
+</select>
+
+<input
+id="keyword-filter"
+type="search"
+placeholder="企業名・事業内容で検索"
+>
+
+</div>
+
+<button class="search-button" id="searchBtn" style="margin-top:12px">
+企業を検索する
+</button>
+
+<p class="status" id="searchStatus" role="status" aria-live="polite"></p>
+
+<div class="result-grid" id="company-results"></div>
+
+<p class="notice">
+※掲載企業は福井県内に本社または事業所を持つ企業の一例です。
+※関連職種は事業内容から考えられる仕事の例です。現在の求人募集を示すものではありません。
+※住所・事業内容は登録情報をもとにしています。公開前に各社の公式情報をご確認ください。
+</p>
+
+</section>
+
+</main>
+
+<script>
+
+/* =========================
+   おすすめする仕事
+========================= */
+
+const jobs = [
+
+{
+title:"営業・販売",
+description:"お客様の希望を聞き、商品やサービスを提案する仕事。",
+words:["人と話す","会話","相談","接客","営業","販売","人と関わる","コミュニケーション"],
+tags:["営業・販売"]
+},
+
+{
+title:"IT・情報",
+description:"システムやパソコン、情報技術を使って課題を解決する仕事。",
+words:["パソコン","pc","it","プログラミング","システム","ネットワーク","情報"],
+tags:["IT・情報"]
+},
+
+{
+title:"製造・品質管理",
+description:"製品を作り、品質や安全性を確認する仕事。",
+words:["ものづくり","製造","工場","機械","作る","品質","加工"],
+tags:["製造・品質管理"]
+},
+
+{
+title:"建築・土木",
+description:"道路や建物など、地域の暮らしを支える仕事。",
+words:["建築","土木","道路","まちづくり","地域","設計","建物","橋"],
+tags:["建築・土木"]
+},
+
+{
+title:"企画・広報",
+description:"アイデアを考え、商品や会社、地域の魅力を発信する仕事。",
+words:["企画","アイデア","発信","イベント","広報","考える","sns","デザイン"],
+tags:["企画・広報"]
+},
+
+{
+title:"事務・総務",
+description:"書類や情報を整理し、会社の活動を支える仕事。",
+words:["事務","整理","資料","正確","サポート","銀行","書類"],
+tags:["事務・総務"]
+},
+
+{
+title:"研究・技術",
+description:"専門知識や技術を生かし、新しい製品や技術を開発する仕事。",
+words:["研究","開発","実験","化学","科学","技術","精密"],
+tags:["研究・技術"]
+}
+
+];
+
+
+/* =========================
+   福井県の企業データ
+   全21社
+========================= */
+
+const companies = [
+
+{
+name:"株式会社PLANT",
+area:"坂井市",
+address:"〒919-0521 福井県坂井市坂井町下新庄15号8番地の1",
+business:"流通・チェーンストア",
+jobs:["営業・販売","事務・総務"],
+keywords:"流通 小売 スーパー 販売 接客 商品"
+},
+
+{
+name:"株式会社アイシン福井",
+area:"越前市",
+address:"〒915-8520 福井県越前市池ノ上町38",
+business:"輸送用機器（自動車含む）",
+jobs:["製造・品質管理","研究・技術"],
+keywords:"自動車 部品 機械 開発 製造 技術"
+},
+
+{
+name:"日華化学株式会社",
+area:"福井市",
+address:"〒910-0017 福井県福井市文京4丁目23番1号",
+business:"ガラス・化学・石油",
+jobs:["研究・技術","製造・品質管理","営業・販売"],
+keywords:"化学 研究 開発 製造 技術"
+},
+
+{
+name:"株式会社松屋アールアンドディ",
+area:"大野市",
+address:"〒912-0071 福井県大野市鍬掛20番地1番地2",
+business:"精密機器",
+jobs:["製造・品質管理","研究・技術"],
+keywords:"精密機器 機械 製造 技術 開発"
+},
+
+{
+name:"株式会社福井銀行",
+area:"福井市",
+address:"〒910-8660 福井県福井市順化1丁目1番1号",
+business:"銀行",
+jobs:["営業・販売","事務・総務"],
+keywords:"銀行 金融 営業 事務 経済"
+},
+
+{
+name:"前田工繊株式会社",
+area:"坂井市",
+address:"〒919-0422 福井県坂井市春江町沖布目38番地3",
+business:"建設・土木",
+jobs:["建築・土木","製造・品質管理","営業・販売"],
+keywords:"土木 建築 インフラ 資材 製造 営業"
+},
+
+{
+name:"三谷商事株式会社",
+area:"福井市",
+address:"〒910-8510 福井県福井市豊島1丁目3番1号（三谷ビル）",
+business:"総合商社",
+jobs:["営業・販売","IT・情報","事務・総務"],
+keywords:"商社 情報システム エネルギー 建設 営業"
+},
+
+{
+name:"株式会社ジャクエツ",
+area:"敦賀市",
+address:"〒914-0125 福井県敦賀市若葉町2丁目1770番地",
+business:"インテリア・住宅関連",
+jobs:["営業・販売","企画・広報","製造・品質管理"],
+keywords:"教育用品 保育 園 企画 デザイン 販売"
+},
+
+{
+name:"株式会社シャルマン",
+area:"鯖江市",
+address:"〒916-8555 福井県鯖江市川去町6番地1",
+business:"精密機器",
+jobs:["製造・品質管理","研究・技術","営業・販売"],
+keywords:"眼鏡 メガネ 精密機器 製造 技術"
+},
+
+{
+name:"トラストファーマテック株式会社",
+area:"あわら市",
+address:"〒919-0603 福井県あわら市矢地5番地15",
+business:"化粧品・医薬品",
+jobs:["製造・品質管理","研究・技術"],
+keywords:"医薬品 薬 化学 製造 品質"
+},
+
+{
+name:"日東シンコー株式会社",
+area:"坂井市",
+address:"〒910-0381 福井県坂井市丸岡町舟寄110号1番地1",
+business:"ガラス・化学・石油",
+jobs:["製造・品質管理","研究・技術"],
+keywords:"化学 電気絶縁材料 製造 開発 技術"
+},
+
+{
+name:"福井トヨタ株式会社",
+area:"福井市",
+address:"〒918-8017 福井県福井市下荒井町第19号50番地",
+business:"自動車関連",
+jobs:["営業・販売","事務・総務"],
+keywords:"自動車 車 販売 営業 接客 整備"
+},
+
+{
+name:"株式会社アートテクノロジー",
+area:"鯖江市",
+address:"〒916-0037 福井県鯖江市上河端町第6号1番地33",
+business:"ソフトウェア・情報処理",
+jobs:["IT・情報","研究・技術"],
+keywords:"IT ソフトウェア プログラミング システム 開発"
+},
+
+{
+name:"株式会社日本ピーエス",
+area:"敦賀市",
+address:"〒914-0027 福井県敦賀市若泉町3番地",
+business:"建設・土木",
+jobs:["建築・土木","研究・技術"],
+keywords:"建設 土木 橋梁 インフラ 設計 技術"
+},
+
+{
+name:"株式会社ニホンパッケージ",
+area:"福井市",
+address:"〒918-8188 福井県福井市三尾野町第29号2番地29",
+business:"物流・倉庫",
+jobs:["営業・販売","事務・総務"],
+keywords:"物流 倉庫 包装 梱包 輸送"
+},
+
+{
+name:"三谷セキサン株式会社",
+area:"福井市",
+address:"〒910-8571 福井県福井市豊島1丁目3番1号（三谷ビル）",
+business:"プラント・エンジニアリング",
+jobs:["建築・土木","研究・技術","営業・販売"],
+keywords:"コンクリート 建設 土木 エンジニアリング 技術"
+},
+
+{
+name:"株式会社ヒューマン・デザイン",
+area:"福井市",
+address:"〒918-8114 福井県福井市羽水2丁目701番地",
+business:"人材派遣・人材紹介",
+jobs:["営業・販売","事務・総務"],
+keywords:"人材 派遣 紹介 採用 仕事 人事"
+},
+
+{
+name:"福井県医療生活協同組合",
+area:"福井市",
+address:"〒910-0026 福井県福井市光陽2丁目18番15号",
+business:"生活協同組合",
+jobs:["事務・総務"],
+keywords:"医療 福祉 地域 生活協同組合"
+},
+
+{
+name:"株式会社ながすぎ",
+area:"鯖江市",
+address:"〒916-0028 福井県鯖江市小黒町1丁目15番23号",
+business:"食品関連の専門店",
+jobs:["営業・販売","事務・総務"],
+keywords:"食品 販売 小売 接客 店舗"
+},
+
+{
+name:"フクビ化学工業株式会社",
+area:"福井市",
+address:"福井県福井市三十八社町33-66",
+business:"建築資材・樹脂製品・精密化学製品",
+jobs:["製造・品質管理","研究・技術","建築・土木"],
+keywords:"化学 建築 住宅 樹脂 製造 開発"
+},
+
+{
+name:"株式会社MAEDA",
+area:"大野市",
+address:"福井県大野市中野39-25-1",
+business:"撚糸・整経業",
+jobs:["製造・品質管理"],
+keywords:"繊維 糸 製造 ものづくり 加工"
+}
+
+];
+
+
+/* =========================
+   チャット機能
+========================= */
+
+const messages = document.getElementById("messages");
+const input = document.getElementById("userInput");
+
+let conversation = "";
+
+function addMessage(text,type) {
+
+  const div = document.createElement("div");
+
+  div.className = "message " + type;
+  div.textContent = text;
+
+  messages.appendChild(div);
+
+  messages.scrollTop = messages.scrollHeight;
+}
+
+
+function recommendJobs() {
+
+  const results = document.getElementById("job-results");
+
+  const scored = jobs.map(job => {
+
+    let score = 0;
+
+    job.words.forEach(word => {
+
+      if(conversation.includes(word.toLowerCase())) {
+        score++;
       }
-      messages.appendChild(recommendations);
-      messages.scrollTop = messages.scrollHeight;
-      recommendationsShown = true;
-    }
 
-    function replyToConversation() {
-      if (userMessages.length === 1) {
-        return "教えてくれてありがとうございます。ほかに好きなことや、仕事で大切にしたいこと（人と関わる・落ち着いて作業する・勤務地など）を教えてください。";
-      }
-      if (userMessages.length === 2) {
-        addMessage("ありがとうございます。お話に出た興味や希望をもとに、おすすめの仕事を考えました。");
-        showRecommendations();
-        return "希望条件を下の検索欄で指定すると、おすすめを絞り込めます。気になる仕事はありますか？";
-      }
-      if (recommendationsShown) showRecommendations();
-      return "なるほど、その希望も大切ですね。会話と希望条件をもとに提案を更新しました。気になる仕事や、追加したい条件を教えてください。";
-    }
-
-    function sendMessage() {
-      const value = userInput.value.trim();
-      if (!value) return;
-      addMessage(value, "user");
-      userMessages.push(value);
-      userInput.value = "";
-      window.setTimeout(() => addMessage(replyToConversation()), 250);
-    }
-
-    document.getElementById("sendBtn").addEventListener("click", sendMessage);
-    userInput.addEventListener("keydown", event => { if (event.key === "Enter") sendMessage(); });
-    document.querySelectorAll(".chip").forEach(button => button.addEventListener("click", () => {
-      userInput.value = button.textContent;
-      sendMessage();
-    }));
-    document.getElementById("apply-filters").addEventListener("click", () => {
-      const status = document.getElementById("filter-status");
-      if (userMessages.length === 0) {
-        status.textContent = "まずチャットで興味や得意なことを教えてください。会話後に希望条件を反映できます。";
-        return;
-      }
-      showRecommendations();
-      status.textContent = "希望条件をおすすめに反映しました。チャット内の提案をご確認ください。";
     });
-  </script>
+
+    return {...job,score};
+
+  }).sort((a,b) => b.score-a.score);
+
+
+  const selected = scored
+    .filter(job => job.score > 0)
+    .slice(0,3);
+
+
+  const finalJobs = selected.length
+    ? selected
+    : [jobs[0],jobs[4],jobs[2]];
+
+
+  results.replaceChildren();
+
+
+  finalJobs.forEach(job => {
+
+    const card = document.createElement("article");
+    card.className = "job-card";
+
+    const title = document.createElement("h3");
+    title.textContent = job.title;
+
+    const desc = document.createElement("p");
+    desc.textContent = job.description;
+
+    const button = document.createElement("button");
+    button.className = "chip";
+    button.textContent = "関連企業を見る";
+
+    button.addEventListener("click",() => {
+
+      document.getElementById("job-filter").value = job.title;
+
+      searchCompanies();
+
+      document.getElementById("company-section")
+        .scrollIntoView({behavior:"smooth"});
+
+    });
+
+    card.append(title,desc,button);
+
+    results.appendChild(card);
+
+  });
+
+}
+
+
+function sendMessage() {
+
+  const value = input.value.trim();
+
+  if(!value) return;
+
+  conversation += " " + value.toLowerCase();
+
+  addMessage(value,"user");
+
+  input.value = "";
+
+  recommendJobs();
+
+  addMessage(
+    "ありがとうございます！入力内容から仕事の候補を更新しました。\n下のおすすめを見て、気になる仕事の「関連企業を見る」を押してみてください。",
+    "bot"
+  );
+
+}
+
+
+document.getElementById("sendBtn")
+  .addEventListener("click",sendMessage);
+
+
+input.addEventListener("keydown",event => {
+
+  if(event.key === "Enter") {
+    sendMessage();
+  }
+
+});
+
+
+document.querySelectorAll(".quick .chip").forEach(button => {
+
+  button.addEventListener("click",() => {
+
+    input.value = button.textContent;
+
+    sendMessage();
+
+  });
+
+});
+
+
+/* =========================
+   企業検索機能
+========================= */
+
+function searchCompanies() {
+
+  const job = document.getElementById("job-filter").value;
+
+  const area = document.getElementById("area-filter").value;
+
+  const keyword = document.getElementById("keyword-filter")
+    .value.trim().toLowerCase();
+
+
+  const results = document.getElementById("company-results");
+
+  const status = document.getElementById("searchStatus");
+
+
+  const matched = companies.filter(company => {
+
+    const text = (
+      company.name + " " +
+      company.business + " " +
+      company.keywords + " " +
+      company.area + " " +
+      company.address
+    ).toLowerCase();
+
+
+    return (!job || company.jobs.includes(job))
+      && (!area || company.area === area)
+      && (!keyword || text.includes(keyword));
+
+  });
+
+
+  results.replaceChildren();
+
+  status.textContent = matched.length + "社が見つかりました。";
+
+
+  if(matched.length === 0) {
+
+    const empty = document.createElement("p");
+
+    empty.textContent =
+      "条件に合う企業が見つかりませんでした。検索条件を変更してください。";
+
+    results.appendChild(empty);
+
+    return;
+
+  }
+
+
+  matched.forEach(company => {
+
+    const card = document.createElement("article");
+
+    card.className = "company-card";
+
+
+    const title = document.createElement("h3");
+
+    title.textContent = company.name;
+
+
+    const area = document.createElement("div");
+
+    area.className = "company-area";
+
+    area.textContent = "📍 " + company.area;
+
+
+    const address = document.createElement("p");
+
+    address.textContent = company.address;
+
+
+    const business = document.createElement("p");
+
+    business.textContent = company.business;
+
+
+    const jobsText = document.createElement("p");
+
+    jobsText.textContent =
+      "関連する仕事の例：" + company.jobs.join("・");
+
+
+    card.append(
+      title,
+      area,
+      address,
+      business,
+      jobsText
+    );
+
+
+    results.appendChild(card);
+
+  });
+
+}
+
+
+/* =========================
+   検索ボタン
+========================= */
+
+document.getElementById("searchBtn")
+  .addEventListener("click",searchCompanies);
+
+
+/* 最初から全企業を表示 */
+
+searchCompanies();
+
+</script>
+
 </body>
 </html>
