@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>企業・学校の所在地マップ | ガクマチ</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root { color-scheme: light; font-family: "Yu Gothic", "Hiragino Sans", sans-serif; color: #234c54; }
+    * { box-sizing: border-box; }
+    body { max-width: 900px; margin: 0 auto; padding: 28px 16px; line-height: 1.6; background: #eefcf9; }
+    main { padding: 24px; border: 1px solid #d5efeb; border-radius: 20px; background: #fff; box-shadow: 0 12px 30px rgba(55,128,133,.1); }
+    h1 { margin-top: 0; color: #1a4d5a; }
+    label { display: block; margin: 20px 0 6px; font-weight: 700; }
+    select { width: 100%; padding: 12px; border: 1px solid #6fbfc3; border-radius: 10px; background: #fff; color: inherit; font: inherit; }
+    #address, #message { color: #5d7b7d; }
+    #map { width: 100%; height: 420px; margin-top: 16px; border-radius: 14px; background: #e8f3f2; }
+    .back { display: inline-block; margin-top: 16px; color: #1a777c; }
+    @media (max-width: 600px) { body { padding: 14px 10px; } main { padding: 18px 14px; } #map { height: 340px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>企業・学校の所在地マップ</h1>
+    <p>表示したい企業・学校を選ぶと、住所を地図上に表示します。</p>
+    <label for="location-select">場所を選択</label>
+    <select id="location-select" aria-label="地図に表示する企業・学校"></select>
+    <p id="address"></p>
+    <p id="message" role="status" aria-live="polite">場所を選択してください。</p>
+    <div id="map" aria-label="所在地の地図"></div>
+    <a class="back" href="./">ガクマチのトップページへ戻る</a>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./companies.js"></script>
+  <script>
+    const locations = [
+      { name: "福井県立敦賀高等学校", address: "福井県敦賀市松葉町2-1" },
+      ...(Array.isArray(companies) ? companies : [])
+    ];
+    const select = document.getElementById("location-select");
+    const addressElement = document.getElementById("address");
+    const messageElement = document.getElementById("message");
+    const map = L.map("map");
+    const markerLayer = L.layerGroup().addTo(map);
+
+    L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
+    }).addTo(map);
+    map.setView([35.645, 136.055], 9);
+
+    locations.forEach((location, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = location.name;
+      select.appendChild(option);
+    });
+
+    async function showLocation(location) {
+      markerLayer.clearLayers();
+      addressElement.textContent = `住所：${location.address}`;
+      messageElement.textContent = "住所を調べています…";
+
+      if (!location.address || !location.address.trim()) {
+        messageElement.textContent = "住所が登録されていません。";
+        return;
+      }
+
+      try {
+        const { normalize } = await import("https://esm.sh/@geolonia/normalize-japanese-addresses@3.1.3");
+        const result = await normalize(location.address, { level: 8 });
+        const point = result.point;
+
+        if (!point || point.level < 3) {
+          messageElement.textContent = "この住所の位置を調べられませんでした。住所をご確認ください。";
+          return;
+        }
+
+        const position = [point.lat, point.lng];
+        map.setView(position, 16);
+        L.marker(position).addTo(markerLayer).bindPopup(location.name).openPopup();
+        map.invalidateSize();
+        messageElement.textContent = point.level === 8
+          ? "住所から調べた位置です。正確な場所は確認してください。"
+          : "町・丁目の代表地点です。正確な場所とは異なる場合があります。";
+      } catch (error) {
+        messageElement.textContent = "地図を表示できませんでした。通信環境を確認してください。";
+        console.error(error);
+      }
+    }
+
+    select.addEventListener("change", () => {
+      const location = locations[Number(select.value)];
+      if (location) showLocation(location);
+    });
+    if (locations.length) {
+      select.value = "0";
+      showLocation(locations[0]);
+    }
+  </script>
+</body>
+</html>
