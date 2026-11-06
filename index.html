@@ -6,74 +6,38 @@
   <title>仕事相談・おすすめ提案</title>
   <style>
     :root {
-      --bg-1: #eefcf9;
-      --bg-2: #e9f9fb;
-      --bg-3: #dff8f1;
-      --primary: #61c6c0;
-      --primary-deep: #2a8a8a;
-      --primary-dark: #1a4d5a;
-      --text: #234c54;
-      --muted: #5d7b7d;
-      --success: #69c7ad;
+      --bg-1: #eefcf9; --bg-2: #e9f9fb; --bg-3: #dff8f1;
+      --primary: #61c6c0; --primary-deep: #2a8a8a; --primary-dark: #1a4d5a;
+      --text: #234c54; --muted: #5d7b7d; --success: #69c7ad;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      position: relative;
-      overflow-x: hidden;
-      margin: 0;
-      padding: 32px 18px 52px;
-      color: var(--text);
-      font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
-      background:
-        radial-gradient(circle at 15% 12%, rgba(255,255,255,.8), transparent 20%),
+      position: relative; overflow-x: hidden; margin: 0; padding: 32px 18px 52px;
+      color: var(--text); font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
+      background: radial-gradient(circle at 15% 12%, rgba(255,255,255,.8), transparent 20%),
         radial-gradient(circle at 82% 18%, rgba(176,245,236,.28), transparent 18%),
         linear-gradient(180deg,var(--bg-1),var(--bg-2) 40%,var(--bg-3));
     }
-    body::before, body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
+    body::before, body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; }
     body::before {
-      background:
-        radial-gradient(circle at 10% 18%,rgba(255,255,255,.9) 0 5%,transparent 5.5%),
+      background: radial-gradient(circle at 10% 18%,rgba(255,255,255,.9) 0 5%,transparent 5.5%),
         radial-gradient(circle at 24% 44%,rgba(255,255,255,.82) 0 6%,transparent 6.7%),
         radial-gradient(circle at 62% 25%,rgba(255,255,255,.78) 0 4.8%,transparent 5.5%),
         radial-gradient(circle at 58% 72%,rgba(255,255,255,.86) 0 4.5%,transparent 5.2%),
         radial-gradient(circle at 86% 38%,rgba(255,255,255,.8) 0 5.2%,transparent 6.1%);
       filter: blur(3px);
     }
-    body::after {
-      background:
-        radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%),
-        radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%);
-      filter: blur(6px);
-    }
+    body::after { background: radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%), radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%); filter: blur(6px); }
     main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; }
-    .hero {
-      display: grid;
-      grid-template-columns: .9fr 1.1fr;
-      gap: 24px;
-      align-items: stretch;
-    }
-    .hero-card, .chat-card {
-      background: rgba(255,255,255,.48);
-      border: 2px solid rgba(255,255,255,.85);
-      border-radius: 30px;
-      box-shadow: 0 18px 30px rgba(55,128,133,.1), inset 0 0 20px rgba(255,255,255,.2);
+    .hero { display: grid; grid-template-columns: .9fr 1.1fr; gap: 24px; align-items: stretch; }
+    .hero-card, .chat-card, .panel {
+      background: rgba(255,255,255,.48); border: 2px solid rgba(255,255,255,.85);
+      border-radius: 30px; box-shadow: 0 18px 30px rgba(55,128,133,.1), inset 0 0 20px rgba(255,255,255,.2);
       backdrop-filter: blur(10px);
     }
     .hero-card { padding: 28px 26px 22px; }
-    h1 {
-      margin: 16px 0 12px;
-      color: var(--primary-dark);
-      font-size: clamp(2.1rem,4vw,3.6rem);
-      letter-spacing: .04em;
-      line-height: 1.1;
-    }
+    h1 { margin: 16px 0 12px; color: var(--primary-dark); font-size: clamp(2.1rem,4vw,3.6rem); letter-spacing: .04em; line-height: 1.1; }
     .lead { margin: 0; color: var(--muted); line-height: 1.8; font-size: 1.05rem; }
     .stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
     .stat { padding: 14px 10px; background: rgba(255,255,255,.45); border: 1px solid rgba(111,191,195,.65); border-radius: 18px; text-align: center; }
@@ -89,17 +53,24 @@
     .message.bot { align-self: flex-start; background: rgba(255,255,255,.9); color: var(--text); border-top-left-radius: 8px; }
     .message.user { align-self: flex-end; background: rgba(122,219,215,.3); color: var(--primary-dark); border-top-right-radius: 8px; }
     .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
-    .chip { padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(111,191,195,.72); background: rgba(255,255,255,.75); color: var(--primary-dark); cursor: pointer; font-size: .8rem; font-weight: 700; }
+    .chip, .search-button { padding: 9px 13px; border-radius: 999px; border: 1px solid rgba(111,191,195,.72); background: rgba(255,255,255,.78); color: var(--primary-dark); cursor: pointer; font-size: .85rem; font-weight: 700; }
     .composer { display: flex; gap: 10px; margin-top: 10px; }
-    .composer input { flex: 1; min-width: 0; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font-size: 16px; }
+    .composer input, .search-box input, .search-box select { width: 100%; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font-size: 16px; }
+    .composer input { flex: 1; min-width: 0; }
     .composer button { min-width: 100px; border: 0; border-radius: 999px; background: linear-gradient(135deg,var(--primary),#9ae3d8); color: white; font-weight: 700; cursor: pointer; }
+    .panel { padding: 22px 20px 18px; margin-top: 24px; }
+    .panel h2 { margin: 0 0 8px; color: var(--primary-dark); font-size: 1.3rem; letter-spacing: .04em; }
+    .panel-intro { margin: 0 0 16px; color: var(--muted); line-height: 1.7; }
+    .search-box { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+    .search-button { min-height: 48px; background: linear-gradient(135deg,var(--primary),#9ae3d8); color: #fff; border: 0; }
+    .filter-status { margin: 12px 0 0; color: var(--primary-deep); font-weight: 700; }
     .recommendations { display: grid; gap: 8px; width: min(100%, 460px); }
     .recommendation { padding: 12px; border: 1px solid rgba(111,191,195,.65); border-radius: 16px; background: linear-gradient(135deg,rgba(255,255,255,.94),rgba(224,250,248,.9)); }
     .recommendation strong { display: block; margin-bottom: 4px; color: var(--primary-dark); }
     .recommendation p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.6; }
     .recommendation-note { margin: 0; color: var(--muted); font-size: .8rem; }
-    @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } .chat-card { min-height: 480px; } }
-    @media (max-width: 600px) { body { padding: 18px 12px 36px; } .hero-card,.chat-card { padding: 16px; } .stats { grid-template-columns: 1fr; } .composer { flex-direction: column; } .composer button { min-height: 46px; } }
+    @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } .chat-card { min-height: 480px; } .search-box { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+    @media (max-width: 600px) { body { padding: 18px 12px 36px; } .hero-card,.chat-card,.panel { padding: 16px; } .stats,.search-box { grid-template-columns: 1fr; } .composer { flex-direction: column; } .composer button { min-height: 46px; } }
   </style>
 </head>
 <body>
@@ -107,10 +78,10 @@
     <section class="hero">
       <div class="hero-card">
         <h1>自分に合う仕事を見つけよう</h1>
-        <p class="lead">仕事探しは不安で、何から始めればいいかわからないことがあります。<br>好きなことや得意なことをチャットで教えてください。会話をもとに、おすすめの仕事を提案します。</p>
+        <p class="lead">仕事探しは不安で、何から始めればいいかわからないことがあります。<br>好きなことや得意なことをチャットで教えてください。会話と希望条件をもとに、おすすめの仕事を提案します。</p>
         <div class="stats">
           <div class="stat"><strong>チャット</strong><span>気軽に相談</span></div>
-          <div class="stat"><strong>おすすめ</strong><span>興味に合わせて提案</span></div>
+          <div class="stat"><strong>条件検索</strong><span>希望に合わせて探す</span></div>
         </div>
       </div>
       <div class="chat-card">
@@ -130,21 +101,65 @@
         </div>
       </div>
     </section>
+
+    <section class="panel" aria-labelledby="conditions-title">
+      <h2 id="conditions-title">希望条件で仕事を探す</h2>
+      <p class="panel-intro">企業一覧は表示せず、職種・勤務地・雇用形態・規模の条件を使って、チャットのおすすめを絞り込めます。</p>
+      <div class="search-box">
+        <select id="job-category" aria-label="希望する職種">
+          <option value="">職種を指定しない</option>
+          <option value="営業・接客">営業・接客</option>
+          <option value="IT">IT・技術</option>
+          <option value="デザイン">デザイン・創作</option>
+          <option value="事務">事務・総務</option>
+          <option value="製造">ものづくり・製造</option>
+          <option value="福祉">福祉・教育</option>
+          <option value="企画">企画・広報</option>
+        </select>
+        <select id="work-area" aria-label="希望する勤務地">
+          <option value="">勤務地を指定しない</option>
+          <option value="福井県">福井県</option>
+          <option value="福井市">福井市</option>
+          <option value="鯖江市">鯖江市</option>
+          <option value="敦賀市">敦賀市</option>
+          <option value="坂井市">坂井市</option>
+          <option value="勝山市">勝山市</option>
+          <option value="県外">県外・勤務地不問</option>
+        </select>
+        <select id="employment-type" aria-label="希望する雇用形態">
+          <option value="">雇用形態を指定しない</option>
+          <option value="正社員">正社員</option>
+          <option value="契約社員">契約社員</option>
+          <option value="パート・アルバイト">パート・アルバイト</option>
+          <option value="柔軟な働き方">柔軟な働き方</option>
+        </select>
+        <select id="company-size" aria-label="希望する企業規模">
+          <option value="">企業規模を指定しない</option>
+          <option value="大企業">大企業</option>
+          <option value="中小企業">中小企業</option>
+          <option value="小規模企業">小規模企業</option>
+        </select>
+        <input id="condition-keyword" type="search" placeholder="条件・キーワード（例：未経験）" aria-label="条件やキーワード">
+        <button class="search-button" type="button" id="apply-filters">条件を適用</button>
+      </div>
+      <p class="filter-status" id="filter-status" role="status" aria-live="polite">希望条件を選んで「条件を適用」を押してください。</p>
+    </section>
   </main>
 
   <script>
     const messages = document.getElementById("messages");
     const userInput = document.getElementById("userInput");
     const userMessages = [];
+    let recommendationsShown = false;
 
     const jobOptions = [
-      { title: "営業・接客", about: "人と話し、相手の希望に合わせて商品やサービスを提案する仕事です。", words: ["人と", "話", "接客", "営業", "相談", "コミュニケーション", "販売", "人が好き"] },
-      { title: "ITサポート・システム運用", about: "PCやシステムの困りごとを解決し、利用する人を支える仕事です。", words: ["pc", "it", "パソコン", "技術", "コンピューター", "プログラミング", "データ", "機械"] },
-      { title: "Web・グラフィックデザイン", about: "アイデアや色・形の工夫を使い、Webサイトや制作物を形にする仕事です。", words: ["デザイン", "創作", "作る", "美術", "イラスト", "絵", "動画", "写真"] },
-      { title: "事務・総務", about: "書類やデータを整理し、チームの仕事が進むように支える仕事です。", words: ["事務", "整理", "正確", "コツコツ", "書類", "計画", "落ち着"] },
-      { title: "ものづくり・製造", about: "製品を作ったり品質を確かめたりして、形に残る成果を生み出す仕事です。", words: ["ものづくり", "製造", "工場", "手を動か", "作業", "細かい", "品質"] },
-      { title: "福祉・教育サポート", about: "相手の成長や日々の暮らしに寄り添い、必要な支援を行う仕事です。", words: ["子ども", "教育", "福祉", "助け", "支援", "人の役に", "教える", "保育"] },
-      { title: "企画・広報", about: "情報を集めてアイデアを考え、イベントやサービスの魅力を伝える仕事です。", words: ["企画", "広報", "発信", "イベント", "アイデア", "考える", "文章"] }
+      { title: "営業・接客", about: "人と話し、相手の希望に合わせて商品やサービスを提案する仕事です。", category: "営業・接客", words: ["人と", "話", "接客", "営業", "相談", "コミュニケーション", "販売", "人が好き"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業", "小規模企業"], keywords: ["未経験", "人と関わる", "福井県"] },
+      { title: "ITサポート・システム運用", about: "PCやシステムの困りごとを解決し、利用する人を支える仕事です。", category: "IT", words: ["pc", "it", "パソコン", "技術", "コンピューター", "プログラミング", "データ", "機械"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"], keywords: ["未経験", "PC", "福井県"] },
+      { title: "Web・グラフィックデザイン", about: "アイデアや色・形の工夫を使い、Webサイトや制作物を形にする仕事です。", category: "デザイン", words: ["デザイン", "創作", "作る", "美術", "イラスト", "絵", "動画", "写真"], employment: ["正社員", "契約社員", "柔軟な働き方"], size: ["中小企業", "小規模企業"], keywords: ["未経験", "創作", "福井県"] },
+      { title: "事務・総務", about: "書類やデータを整理し、チームの仕事が進むように支える仕事です。", category: "事務", words: ["事務", "整理", "正確", "コツコツ", "書類", "計画", "落ち着"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業", "小規模企業"], keywords: ["未経験", "落ち着いて働く", "福井県"] },
+      { title: "ものづくり・製造", about: "製品を作ったり品質を確かめたりして、形に残る成果を生み出す仕事です。", category: "製造", words: ["ものづくり", "製造", "工場", "手を動か", "作業", "細かい", "品質"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"], keywords: ["未経験", "手を動かす", "福井県"] },
+      { title: "福祉・教育サポート", about: "相手の成長や日々の暮らしに寄り添い、必要な支援を行う仕事です。", category: "福祉", words: ["子ども", "教育", "福祉", "助け", "支援", "人の役に", "教える", "保育"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"], keywords: ["未経験", "人の役に立つ", "福井県"] },
+      { title: "企画・広報", about: "情報を集めてアイデアを考え、イベントやサービスの魅力を伝える仕事です。", category: "企画", words: ["企画", "広報", "発信", "イベント", "アイデア", "考える", "文章"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"], keywords: ["未経験", "アイデア", "福井県"] }
     ];
 
     function addMessage(text, role = "bot") {
@@ -153,45 +168,78 @@
       div.textContent = text;
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
+      return div;
     }
 
-    function recommendJobs() {
+    function activeFilters() {
+      return {
+        category: document.getElementById("job-category").value,
+        area: document.getElementById("work-area").value,
+        employment: document.getElementById("employment-type").value,
+        size: document.getElementById("company-size").value,
+        keyword: document.getElementById("condition-keyword").value.trim().toLowerCase()
+      };
+    }
+
+    function matchingJobs() {
       const profile = userMessages.join(" ").toLowerCase();
-      const ranked = jobOptions.map((job, index) => ({
+      const filters = activeFilters();
+      return jobOptions.map((job, index) => ({
         ...job,
         score: job.words.reduce((score, word) => score + (profile.includes(word) ? 1 : 0), 0),
         index
-      })).sort((a, b) => b.score - a.score || a.index - b.index).slice(0, 3);
+      })).filter(job => {
+        const text = `${job.title} ${job.about} ${job.keywords.join(" ")}`.toLowerCase();
+        return (!filters.category || job.category === filters.category)
+          && (!filters.employment || job.employment.includes(filters.employment))
+          && (!filters.size || job.size.includes(filters.size))
+          && (!filters.keyword || text.includes(filters.keyword))
+          && (!filters.area || filters.area === "県外" || filters.area === "福井県" || job.keywords.includes(filters.area));
+      }).sort((a, b) => b.score - a.score || a.index - b.index);
+    }
+
+    function showRecommendations() {
+      document.querySelectorAll(".recommendations").forEach(element => element.remove());
       const recommendations = document.createElement("div");
       recommendations.className = "recommendations";
       const note = document.createElement("p");
       note.className = "recommendation-note";
-      note.textContent = "お話の内容から考えたおすすめです。気になる仕事があれば、理由や仕事内容をさらに聞いてください。";
+      note.textContent = "会話と選択した希望条件をもとにした提案です。職種の例として参考にしてください。";
       recommendations.appendChild(note);
-      ranked.forEach(job => {
-        const card = document.createElement("article");
-        card.className = "recommendation";
-        const title = document.createElement("strong");
-        title.textContent = job.title;
-        const description = document.createElement("p");
-        description.textContent = job.about;
-        card.append(title, description);
-        recommendations.appendChild(card);
-      });
+      const jobs = matchingJobs().slice(0, 3);
+      if (jobs.length === 0) {
+        const empty = document.createElement("article");
+        empty.className = "recommendation";
+        empty.textContent = "選択した条件に合う提案が見つかりませんでした。条件を少し広げて、もう一度お試しください。";
+        recommendations.appendChild(empty);
+      } else {
+        jobs.forEach(job => {
+          const card = document.createElement("article");
+          card.className = "recommendation";
+          const title = document.createElement("strong");
+          title.textContent = job.title;
+          const description = document.createElement("p");
+          description.textContent = job.about;
+          card.append(title, description);
+          recommendations.appendChild(card);
+        });
+      }
       messages.appendChild(recommendations);
       messages.scrollTop = messages.scrollHeight;
+      recommendationsShown = true;
     }
 
     function replyToConversation() {
       if (userMessages.length === 1) {
-        return "教えてくれてありがとうございます。ほかに好きなことや、仕事で大切にしたいこと（人と関わる・落ち着いて作業する・福井で働くなど）はありますか？もう少し聞いてからおすすめを考えます。";
+        return "教えてくれてありがとうございます。ほかに好きなことや、仕事で大切にしたいこと（人と関わる・落ち着いて作業する・勤務地など）はありますか？もう少し聞いてからおすすめを考えます。";
       }
       if (userMessages.length === 2) {
         addMessage("ありがとうございます。お話に出た興味や希望をもとに、おすすめの仕事を考えました。");
-        recommendJobs();
-        return "この中で気になる仕事はありますか？選んだ理由や仕事内容についても一緒に考えられます。";
+        showRecommendations();
+        return "希望条件を下の検索欄で指定すると、おすすめを絞り込めます。気になる仕事はありますか？";
       }
-      return "なるほど、その希望も大切ですね。先ほどのおすすめの中から、気になるものを教えてください。希望に合わせて候補を絞り込めます。";
+      if (recommendationsShown) showRecommendations();
+      return "なるほど、その希望も大切ですね。会話と希望条件をもとに提案を更新しました。気になる仕事や、追加したい条件を教えてください。";
     }
 
     function sendMessage() {
@@ -204,13 +252,20 @@
     }
 
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
-    userInput.addEventListener("keydown", event => {
-      if (event.key === "Enter") sendMessage();
-    });
+    userInput.addEventListener("keydown", event => { if (event.key === "Enter") sendMessage(); });
     document.querySelectorAll(".chip").forEach(button => button.addEventListener("click", () => {
       userInput.value = button.textContent;
       sendMessage();
     }));
+    document.getElementById("apply-filters").addEventListener("click", () => {
+      const status = document.getElementById("filter-status");
+      if (userMessages.length === 0) {
+        status.textContent = "まずチャットで興味や得意なことを教えてください。会話後に希望条件を反映できます。";
+        return;
+      }
+      showRecommendations();
+      status.textContent = "希望条件をおすすめに反映しました。チャット内の提案をご確認ください。";
+    });
   </script>
 </body>
 </html>
