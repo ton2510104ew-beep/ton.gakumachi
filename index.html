@@ -387,6 +387,7 @@
 
     .search-box {
       display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
     }
 
@@ -552,6 +553,7 @@
 
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; }
+      .search-box { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 600px) {
@@ -560,6 +562,7 @@
       .stats { grid-template-columns: 1fr; }
       .composer { flex-direction: column; }
       .btn { width: 100%; }
+      .search-box { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -590,7 +593,7 @@
         </div>
 
         <div class="messages" id="messages" aria-live="polite">
-          <div class="message bot">こんにちは！あなたの性格や好きなことを教えてくれると、ぴったりの仕事を一緒に探せます。たとえば「人と話すのが好き」で、福井で働きたいといった相談にも対応できます。</div>
+          <div class="message bot">こんにちは！あなたの性格や好きなことを教えてくれると、ぴったりの仕事を一緒に探せます。たとえば「人と話すのが好き」「PCが得意」「創作が好き」など、どんなことでも大丈夫です。</div>
         </div>
 
         <div class="quick-replies">
@@ -646,12 +649,33 @@
       <h2>福井県の企業を探す</h2>
       <div class="search-box">
         <input id="search" type="text" placeholder="企業名・住所・キーワードで検索">
+        <select id="city">
+          <option value="">市町村を選択</option>
+          <option value="福井市">福井市</option>
+          <option value="鯖江市">鯖江市</option>
+          <option value="敦賀市">敦賀市</option>
+          <option value="坂井市">坂井市</option>
+          <option value="勝山市">勝山市</option>
+          <option value="複数地域">複数地域</option>
+        </select>
         <select id="industry">
           <option value="">すべての業種</option>
           <option value="IT">IT・情報通信</option>
           <option value="金融">金融</option>
           <option value="小売">小売・流通</option>
           <option value="その他">その他</option>
+        </select>
+        <select id="scale">
+          <option value="">企業規模を選択</option>
+          <option value="大企業">大企業</option>
+          <option value="中小企業">中小企業</option>
+          <option value="小規模企業">小規模企業</option>
+        </select>
+        <select id="employment">
+          <option value="">雇用形態を選択</option>
+          <option value="正社員">正社員</option>
+          <option value="契約・派遣">契約・派遣</option>
+          <option value="パート・アルバイト">パート・アルバイト</option>
         </select>
       </div>
       <p id="count"></p>
@@ -662,19 +686,22 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const companies = [
-      { name: "jig.jp", industry: "IT", address: "福井県鯖江市", info: "ソフトウェア・情報通信" },
-      { name: "福井銀行", industry: "金融", address: "福井県福井市", info: "銀行・金融サービス" },
-      { name: "ゲンキー", industry: "小売", address: "福井県を含む複数地域", info: "ドラッグストア" },
-      { name: "株式会社PLANT", industry: "その他", address: "〒919-0521 福井県坂井市坂井町下新庄15号8番地の1", info: "事業者情報" },
-      { name: "株式会社ジャクエツ", industry: "その他", address: "福井県敦賀市若葉町2-1770", info: "保育教材、遊び道具" },
-      { name: "清川メッキ工業株式会社", industry: "その他", address: "福井県福井市和田中1-414", info: "その他メーカー" },
-      { name: "勝山ファーマ株式会社", industry: "その他", address: "福井県勝山市猪野口37字2番1号", info: "化粧品・医薬品" },
-      { name: "株式会社永和システムマネジメント", industry: "IT", address: "福井県福井市問屋町3-111", info: "ソフトウェア・情報処理" },
-      { name: "有限会社増米商店", industry: "小売", address: "福井県敦賀市松島町18-10", info: "専門店（食品関連）" }
+      { name: "jig.jp", industry: "IT", city: "鯖江市", scale: "中小企業", employment: "正社員", address: "福井県鯖江市", info: "ソフトウェア・情報通信" },
+      { name: "福井銀行", industry: "金融", city: "福井市", scale: "大企業", employment: "正社員", address: "福井県福井市", info: "銀行・金融サービス" },
+      { name: "ゲンキー", industry: "小売", city: "複数地域", scale: "大企業", employment: "正社員", address: "福井県を含む複数地域", info: "ドラッグストア" },
+      { name: "株式会社PLANT", industry: "その他", city: "坂井市", scale: "中小企業", employment: "契約・派遣", address: "〒919-0521 福井県坂井市坂井町下新庄15号8番地の1", info: "事業者情報" },
+      { name: "株式会社ジャクエツ", industry: "その他", city: "敦賀市", scale: "中小企業", employment: "正社員", address: "福井県敦賀市若葉町2-1770", info: "保育教材、遊び道具" },
+      { name: "清川メッキ工業株式会社", industry: "その他", city: "福井市", scale: "中小企業", employment: "正社員", address: "福井県福井市和田中1-414", info: "その他メーカー" },
+      { name: "勝山ファーマ株式会社", industry: "その他", city: "勝山市", scale: "小規模企業", employment: "正社員", address: "福井県勝山市猪野口37字2番1号", info: "化粧品・医薬品" },
+      { name: "株式会社永和システムマネジメント", industry: "IT", city: "福井市", scale: "中小企業", employment: "正社員", address: "福井県福井市問屋町3-111", info: "ソフトウェア・情報処理" },
+      { name: "有限会社増米商店", industry: "小売", city: "敦賀市", scale: "小規模企業", employment: "パート・アルバイト", address: "福井県敦賀市松島町18-10", info: "専門店（食品関連）" }
     ];
 
     const search = document.getElementById("search");
+    const citySelect = document.getElementById("city");
     const industrySelect = document.getElementById("industry");
+    const scaleSelect = document.getElementById("scale");
+    const employmentSelect = document.getElementById("employment");
     const list = document.getElementById("list");
     const count = document.getElementById("count");
 
@@ -739,10 +766,17 @@
 
     function showCompanies() {
       const keyword = search.value.trim().toLowerCase();
+      const selectedCity = citySelect.value;
       const selected = industrySelect.value;
+      const selectedScale = scaleSelect.value;
+      const selectedEmployment = employmentSelect.value;
       const filtered = companies.filter(company => {
-        const text = (company.name + company.address + company.info).toLowerCase();
-        return text.includes(keyword) && (!selected || company.industry === selected);
+        const text = (company.name + company.address + company.city + company.info + company.scale + company.employment).toLowerCase();
+        return text.includes(keyword)
+          && (!selectedCity || company.city === selectedCity)
+          && (!selected || company.industry === selected)
+          && (!selectedScale || company.scale === selectedScale)
+          && (!selectedEmployment || company.employment === selectedEmployment);
       });
 
       list.replaceChildren();
@@ -764,8 +798,14 @@
 
         const address = document.createElement("p");
         address.textContent = "所在地：" + company.address;
+        const city = document.createElement("p");
+        city.textContent = "市町村：" + company.city;
         const type = document.createElement("p");
         type.textContent = "業種：" + company.industry;
+        const scale = document.createElement("p");
+        scale.textContent = "企業規模：" + company.scale;
+        const employment = document.createElement("p");
+        employment.textContent = "雇用形態：" + company.employment;
         const info = document.createElement("p");
         info.textContent = "企業情報：" + company.info;
 
@@ -789,14 +829,17 @@
           }
         });
 
-        detail.append(address, type, info, mapWrap, mapStatus);
+        detail.append(address, city, type, scale, employment, info, mapWrap, mapStatus);
         card.append(button, detail);
         list.append(card);
       });
     }
 
     search.addEventListener("input", showCompanies);
+    citySelect.addEventListener("change", showCompanies);
     industrySelect.addEventListener("change", showCompanies);
+    scaleSelect.addEventListener("change", showCompanies);
+    employmentSelect.addEventListener("change", showCompanies);
     showCompanies();
 
     const messages = document.getElementById("messages");
@@ -827,26 +870,26 @@
       const text = input.toLowerCase();
 
       if (text.includes("人と") || text.includes("話す") || text.includes("接客") || text.includes("営業")) {
-        return "人と話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業が候補として適しています。";
+        return "人と話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業務が候補になりやすいです。";
       }
 
       if (text.includes("pc") || text.includes("it") || text.includes("技術") || text.includes("コンピューター") || text.includes("パソコン")) {
-        return "PCや技術に関心があるなら、ITサポート、Webデザイン、システム運用、データ管理などが向いています。まずは簡単なIT基礎の勉強から始めると安心です。";
+        return "PCや技術に関心があるなら、ITサポート、Webデザイン、システム運用、データ管理などが向いています。まずは簡単なIT基礎の勉強から始めると良いです。";
       }
 
       if (text.includes("デザイン") || text.includes("作る") || text.includes("創作") || text.includes("美術") || text.includes("イラスト")) {
-        return "創作やデザインが好きなら、Webデザイナー、グラフィック制作、写真・動画編集、イベント企画などが合いそうです。自分の作品を見せることから始められます。";
+        return "創作やデザインが好きなら、Webデザイナー、グラフィック制作、写真・動画編集、イベント企画などが合いそうです。自分の作品を見せることから始めてみましょう。";
       }
 
       if (text.includes("福井") || text.includes("地域") || text.includes("地元") || text.includes("地方")) {
-        return "地方や福井の暮らしに合った仕事としては、地域密着の営業、接客、受付、ITサポート、自治体・商店街関連の仕事が候補になります。";
+        return "地方や福井の暮らしに合った仕事としては、地域密着の営業、接客、受付、ITサポート、自治体・商店街関連の仕事が候補になります。地元の雰囲気に合う仕事を選ぶと長く続けやすいです。";
       }
 
       if (text.includes("不安") || text.includes("迷") || text.includes("わから") || text.includes("どう")) {
-        return "最初は『人と話すのが好きか』『PCが得意か』『創作が好きか』の3つで考えると整理しやすいです。今のあなたの返信をもとに、次はさらに具体的な候補を絞れます。";
+        return "最初は『人と話すのが好きか』『PCが得意か』『創作が好きか』の3つで考えると整理しやすいです。今のあなたの返信をもとに、次はおすすめの仕事を絞って提案します。";
       }
 
-      return "あなたの話をもとに、まずは営業・接客、Webデザイナー、ITサポートの3つが候補としておすすめです。さらに詳しく知りたいときは、あなたの好みをもう少し教えてください。";
+      return "あなたの話をもとに、まずは営業・接客、Webデザイナー、ITサポートの3つが候補としておすすめです。さらに詳しく知りたいときは、あなたの性格や働き方の希望も教えてください。";
     }
 
     function sendMessage() {
@@ -872,7 +915,7 @@
 
     startChat.addEventListener("click", () => {
       userInput.focus();
-      addMessage("まずは、どんな仕事に少しだけ興味があるか教えてください。人と接するタイプなのか、創作が好きなのか、技術に惹かれるのかで選びやすくなります。");
+      addMessage("まずは、どんな仕事に少しだけ興味があるか教えてください。人と接するタイプなのか、創作が好きなのか、技術に惹かれるのかで選びやすくなります。")
     });
 
     jumpToJobs.addEventListener("click", () => {
