@@ -7,474 +7,65 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     :root {
-      --bg-1: #eefcf9;
-      --bg-2: #e9f9fb;
-      --bg-3: #dff8f1;
-      --primary: #61c6c0;
-      --primary-deep: #2a8a8a;
-      --primary-dark: #1a4d5a;
-      --accent: #bfeae2;
-      --accent-2: #dff7fb;
-      --card: rgba(255, 255, 255, 0.56);
-      --card-strong: rgba(255, 255, 255, 0.78);
-      --text: #234c54;
-      --muted: #5d7b7d;
-      --line: rgba(111, 191, 195, 0.7);
-      --shadow: rgba(42, 117, 124, 0.12);
-      --bubble: rgba(255,255,255,0.5);
-      --bubble-strong: rgba(255,255,255,0.78);
-      --success: #69c7ad;
+      --bg-1: #eefcf9; --bg-2: #e9f9fb; --bg-3: #dff8f1;
+      --primary: #61c6c0; --primary-deep: #2a8a8a; --primary-dark: #1a4d5a;
+      --text: #234c54; --muted: #5d7b7d; --success: #69c7ad;
     }
-
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-
     body {
-      position: relative;
-      overflow-x: hidden;
-      font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
-      background:
-        radial-gradient(circle at 15% 12%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 20%),
-        radial-gradient(circle at 82% 18%, rgba(176, 245, 236, 0.28) 0%, rgba(176, 245, 236, 0) 18%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 40%, var(--bg-3) 100%);
-      margin: 0;
-      padding: 32px 18px 52px;
-      color: var(--text);
+      position: relative; overflow-x: hidden; margin: 0; padding: 32px 18px 52px;
+      color: var(--text); font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
+      background: radial-gradient(circle at 15% 12%, rgba(255,255,255,.8), transparent 20%),
+        radial-gradient(circle at 82% 18%, rgba(176,245,236,.28), transparent 18%),
+        linear-gradient(180deg,var(--bg-1),var(--bg-2) 40%,var(--bg-3));
     }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::before {
-      background:
-        radial-gradient(circle at 10% 18%, rgba(255,255,255,0.9) 0 5%, transparent 5.5%),
-        radial-gradient(circle at 24% 44%, rgba(255,255,255,0.82) 0 6%, transparent 6.7%),
-        radial-gradient(circle at 62% 25%, rgba(255,255,255,0.78) 0 4.8%, transparent 5.5%),
-        radial-gradient(circle at 58% 72%, rgba(255,255,255,0.86) 0 4.5%, transparent 5.2%),
-        radial-gradient(circle at 86% 38%, rgba(255,255,255,0.8) 0 5.2%, transparent 6.1%),
-        radial-gradient(circle at 36% 82%, rgba(255,255,255,0.85) 0 4.8%, transparent 5.5%);
-      filter: blur(3px);
-      opacity: 1;
-    }
-
-    body::after {
-      background:
-        radial-gradient(circle at 18% 10%, rgba(163, 233, 238, 0.22) 0 9%, transparent 9.6%),
-        radial-gradient(circle at 72% 12%, rgba(163, 233, 238, 0.18) 0 8%, transparent 8.8%),
-        radial-gradient(circle at 82% 70%, rgba(201, 248, 232, 0.2) 0 10%, transparent 10.8%);
-      filter: blur(6px);
-    }
-
-    main {
-      position: relative;
-      z-index: 1;
-      max-width: 1120px;
-      margin: 0 auto;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: 24px;
-      align-items: stretch;
-      margin-bottom: 28px;
-    }
-
-    .hero-card,
-    .chat-card,
-    .panel {
-      background: rgba(255,255,255,0.34);
-      border: 2px solid rgba(255,255,255,0.85);
-      border-radius: 34px;
-      box-shadow: 0 18px 30px rgba(55, 128, 133, 0.1), inset 0 0 20px rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .hero-card {
-      padding: 28px 26px 22px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      right: -54px;
-      top: -48px;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(171, 240, 233, 0.78), rgba(171, 240, 233, 0));
-    }
-
-    h1 {
-      color: var(--primary-dark);
-      margin: 16px 0 12px;
-      font-size: clamp(2.1rem, 4vw, 3.6rem);
-      letter-spacing: 0.04em;
-      text-shadow: 0 4px 12px rgba(255,255,255,0.75);
-      line-height: 1.1;
-    }
-
-    .lead {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 1.05rem;
-      max-width: 620px;
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .btn {
-      position: relative;
-      border: 0;
-      border-radius: 999px;
-      padding: 14px 20px;
-      font-size: 0.98rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      overflow: visible;
-      isolation: isolate;
-    }
-
-    .btn:hover { transform: translateY(-2px); }
-
-    .btn.primary {
-      background: linear-gradient(135deg, var(--primary), #8ee2d7);
-      color: white;
-      box-shadow: 0 12px 22px rgba(62, 141, 145, 0.24);
-    }
-
-    .btn.secondary {
-      background: rgba(255,255,255,0.66);
-      color: var(--primary-dark);
-      border: 1px solid rgba(111, 191, 195, 0.8);
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .stat {
-      padding: 14px 10px;
-      background: rgba(255,255,255,0.32);
-      border: 1px solid rgba(111, 191, 195, 0.65);
-      border-radius: 18px;
-      text-align: center;
-    }
-
-    .stat strong {
-      display: block;
-      color: var(--primary-dark);
-      font-size: 1.4rem;
-      margin-bottom: 4px;
-    }
-
-    .stat span { color: var(--muted); font-size: 0.82rem; }
-
-    .chat-card {
-      padding: 18px 18px 16px;
-      display: flex;
-      flex-direction: column;
-      min-height: 420px;
-    }
-
-    .chat-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding: 4px 4px 10px;
-    }
-
-    .chat-title { font-weight: 700; color: var(--primary-dark); font-size: 1.08rem; }
-
-    .online {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      color: #1e8f7a;
-      font-weight: 700;
-    }
-
-    .online::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 0 6px rgba(105, 199, 173, 0.18);
-    }
-
-    .messages {
-      flex: 1;
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(111, 191, 195, 0.6);
-      border-radius: 24px;
-      padding: 16px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 180px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .message {
-      max-width: 88%;
-      padding: 12px 14px;
-      border-radius: 18px;
-      line-height: 1.6;
-      font-size: 0.94rem;
-      box-shadow: 0 8px 18px rgba(41,116,124,0.06);
-    }
-
-    .message.bot {
-      align-self: flex-start;
-      background: rgba(255,255,255,0.8);
-      color: var(--text);
-      border-top-left-radius: 8px;
-    }
-
-    .message.user {
-      align-self: flex-end;
-      background: linear-gradient(135deg, rgba(122, 219, 215, 0.28), rgba(185, 234, 233, 0.26));
-      color: var(--primary-dark);
-      border-top-right-radius: 8px;
-    }
-
+    body::before, body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    body::before { background: radial-gradient(circle at 10% 18%,rgba(255,255,255,.9) 0 5%,transparent 5.5%), radial-gradient(circle at 24% 44%,rgba(255,255,255,.82) 0 6%,transparent 6.7%), radial-gradient(circle at 62% 25%,rgba(255,255,255,.78) 0 4.8%,transparent 5.5%), radial-gradient(circle at 58% 72%,rgba(255,255,255,.86) 0 4.5%,transparent 5.2%), radial-gradient(circle at 86% 38%,rgba(255,255,255,.8) 0 5.2%,transparent 6.1%); filter: blur(3px); }
+    body::after { background: radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%), radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%); filter: blur(6px); }
+    main { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; }
+    .hero { display: grid; grid-template-columns: 1.08fr .92fr; gap: 24px; align-items: stretch; margin-bottom: 28px; }
+    .hero-card,.chat-card,.panel { background: rgba(255,255,255,.48); border: 2px solid rgba(255,255,255,.85); border-radius: 30px; box-shadow: 0 18px 30px rgba(55,128,133,.1),inset 0 0 20px rgba(255,255,255,.2); backdrop-filter: blur(10px); }
+    .hero-card { padding: 28px 26px 22px; }
+    h1 { margin: 16px 0 12px; color: var(--primary-dark); font-size: clamp(2.1rem,4vw,3.6rem); letter-spacing: .04em; line-height: 1.1; }
+    .lead { max-width: 620px; margin: 0; color: var(--muted); line-height: 1.8; font-size: 1.05rem; }
+    .stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
+    .stat { padding: 14px 10px; background: rgba(255,255,255,.45); border: 1px solid rgba(111,191,195,.65); border-radius: 18px; text-align: center; }
+    .stat strong { display: block; color: var(--primary-dark); font-size: 1.4rem; margin-bottom: 4px; }
+    .stat span { color: var(--muted); font-size: .82rem; }
+    .chat-card { padding: 18px; display: flex; flex-direction: column; min-height: 420px; }
+    .chat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 4px 4px 10px; }
+    .chat-title { color: var(--primary-dark); font-weight: 700; font-size: 1.08rem; }
+    .online { display: inline-flex; align-items: center; gap: 8px; color: #1e8f7a; font-size: .8rem; font-weight: 700; }
+    .online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 6px rgba(105,199,173,.18); }
+    .messages { flex: 1; min-height: 180px; max-height: 440px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px 14px; background: rgba(255,255,255,.3); border: 1px solid rgba(111,191,195,.6); border-radius: 24px; }
+    .message { max-width: 92%; padding: 12px 14px; border-radius: 18px; line-height: 1.6; font-size: .94rem; box-shadow: 0 8px 18px rgba(41,116,124,.06); white-space: pre-line; }
+    .message.bot { align-self: flex-start; background: rgba(255,255,255,.9); color: var(--text); border-top-left-radius: 8px; }
+    .message.user { align-self: flex-end; background: rgba(122,219,215,.3); color: var(--primary-dark); border-top-right-radius: 8px; }
     .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
-
-    .chip {
-      position: relative;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(111, 191, 195, 0.72);
-      background: rgba(255,255,255,0.62);
-      color: var(--primary-dark);
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 700;
-      overflow: visible;
-      isolation: isolate;
-    }
-
+    .chip { padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(111,191,195,.72); background: rgba(255,255,255,.75); color: var(--primary-dark); cursor: pointer; font-size: .8rem; font-weight: 700; }
     .composer { display: flex; gap: 10px; margin-top: 10px; }
-
-    .composer input {
-      flex: 1;
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid rgba(111, 191, 195, 0.7);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.7);
-      font-size: 0.96rem;
-      color: var(--text);
-      outline: none;
-    }
-
-    .composer input:focus { box-shadow: 0 0 0 4px rgba(97, 198, 192, 0.12); }
-
-    .composer button {
-      min-width: 100px;
-      border: none;
-      border-radius: 999px;
-      background: linear-gradient(135deg, var(--primary), #9ae3d8);
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      position: relative;
-      overflow: visible;
-      isolation: isolate;
-    }
-
-    .panel { padding: 22px 20px 18px; margin-top: 8px; }
-    .panel h2 { margin: 0 0 16px; color: var(--primary-dark); font-size: 1.3rem; letter-spacing: 0.04em; }
-    .job-list { display: grid; gap: 12px; }
-
-    .job-card {
-      background: linear-gradient(135deg, rgba(255,255,255,0.76), rgba(224,250,248,0.78));
-      border: 1px solid rgba(111, 191, 195, 0.7);
-      border-radius: 22px;
-      padding: 16px;
-      box-shadow: inset 0 0 18px rgba(255,255,255,0.26);
-      position: relative;
-      overflow: visible;
-      isolation: isolate;
-    }
-
-    .job-card h3 { margin: 0 0 8px; color: var(--primary-dark); font-size: 1.08rem; }
-    .job-card p { margin: 0; color: var(--muted); line-height: 1.7; font-size: 0.92rem; }
-    .tag-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-
-    .mini-tag {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.7);
-      border: 1px solid rgba(111, 191, 195, 0.56);
-      color: var(--primary-dark);
-      font-size: 0.72rem;
-      font-weight: 700;
-    }
-
-    .search-box { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
-
-    .search-box input,
-    .search-box select {
-      width: 100%;
-      padding: 16px 18px;
-      font-size: 16px;
-      border: 1px solid rgba(255,255,255,0.9);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.46);
-      box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 8px 18px rgba(51, 123, 130, 0.08), 0 0 0 1px rgba(48, 121, 127, 0.04);
-      color: var(--text);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-    }
-
-    .search-box input:focus,
-    .search-box select:focus {
-      outline: none;
-      border-color: rgba(52, 126, 128, 0.5);
-      box-shadow: 0 0 0 4px rgba(97, 198, 192, 0.12), 0 8px 18px rgba(51, 123, 130, 0.1), inset 0 1px 2px rgba(255,255,255,0.8);
-      transform: translateY(-1px);
-    }
-
-    #count { margin: 10px 0 0; font-weight: 700; color: var(--primary-deep); }
+    .composer input,.search-box input,.search-box select { width: 100%; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font-size: 16px; }
+    .composer button { min-width: 100px; border: 0; border-radius: 999px; background: linear-gradient(135deg,var(--primary),#9ae3d8); color: white; font-weight: 700; cursor: pointer; }
+    .panel { padding: 22px 20px 18px; margin-top: 24px; }
+    .panel h2 { margin: 0 0 16px; color: var(--primary-dark); font-size: 1.3rem; letter-spacing: .04em; }
+    .search-box { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; }
+    #count { margin: 10px 0 0; color: var(--primary-deep); font-weight: 700; }
     .company-list { display: grid; gap: 14px; margin-top: 18px; }
-
-    .company {
-      background: linear-gradient(180deg, rgba(255,255,255,0.52), rgba(228,247,248,0.68));
-      border-radius: 30px;
-      border: 2px solid rgba(255,255,255,0.88);
-      box-shadow: 0 14px 20px rgba(80, 158, 160, 0.08), inset 0 0 18px rgba(255,255,255,0.30);
-      overflow: hidden;
-      position: relative;
-      isolation: isolate;
-    }
-
-    .company::before {
-      content: "";
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      right: -18px;
-      top: -18px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.25);
-      border: 1px solid rgba(255,255,255,0.55);
-    }
-
-    .company button {
-      width: 100%;
-      border: 0;
-      background: transparent;
-      color: var(--primary-dark);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      font-size: 1rem;
-      font-weight: 700;
-      text-align: left;
-      cursor: pointer;
-      padding: 16px 18px;
-      border-radius: 0;
-      position: relative;
-      z-index: 1;
-      transition: transform 0.18s ease;
-    }
-
-    .company button:hover { transform: scale(1.01); }
-
-    .company .detail {
-      padding: 0 18px 16px;
-      border-top: 1px solid rgba(111, 191, 195, 0.62);
-      background: rgba(255,255,255,0.14);
-      line-height: 1.8;
-      position: relative;
-      z-index: 1;
-      overflow: hidden;
-      animation: detailOpen 0.28s ease;
-    }
-
-    .company .detail p { margin: 10px 0 0; color: var(--text); font-size: 0.95rem; }
-
-    .company-map {
-      width: 100%;
-      height: 260px;
-      margin-top: 12px;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(111, 191, 195, 0.7);
-      background: rgba(255,255,255,0.42);
-    }
-
-    .map-status { margin: 8px 0 0; font-size: 0.82rem; color: var(--muted); }
-
-    @keyframes detailOpen {
-      from { opacity: 0; transform: translateY(-8px); max-height: 0; }
-      to { opacity: 1; transform: translateY(0); max-height: 600px; }
-    }
-
-    .bubble-burst {
-      position: absolute;
-      left: var(--x, 50%);
-      top: var(--y, 50%);
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 18px rgba(255,255,255,0.4);
-      pointer-events: none;
-      transform: translate(-50%, -50%) scale(1);
-      animation: bubbleBurst 540ms ease-out forwards;
-      z-index: 10;
-    }
-
-    @keyframes bubbleBurst {
-      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      35% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.9); }
-      100% { opacity: 0; transform: translate(calc(-50% + var(--tx, 0px)), calc(-50% + var(--ty, 0px))) scale(0.18); }
-    }
-
-    [hidden] { display: none; }
-
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; }
-      .search-box { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 600px) {
-      body { padding-left: 12px; padding-right: 12px; }
-      .chat-card, .hero-card, .panel { padding-left: 16px; padding-right: 16px; }
-      .stats { grid-template-columns: 1fr; }
-      .composer { flex-direction: column; }
-      .btn { width: 100%; }
-      .search-box { grid-template-columns: 1fr; }
-    }
+    .company { position: relative; overflow: hidden; isolation: isolate; border: 2px solid rgba(255,255,255,.88); border-radius: 24px; background: linear-gradient(180deg,rgba(255,255,255,.72),rgba(228,247,248,.78)); box-shadow: 0 14px 20px rgba(80,158,160,.08); }
+    .company button { width: 100%; display: flex; justify-content: space-between; gap: 12px; padding: 16px 18px; border: 0; background: transparent; color: var(--primary-dark); text-align: left; font-size: 1rem; font-weight: 700; cursor: pointer; }
+    .company .detail { padding: 0 18px 16px; border-top: 1px solid rgba(111,191,195,.62); line-height: 1.8; }
+    .company .detail p { margin: 10px 0 0; font-size: .95rem; }
+    .company-map { width: 100%; height: 260px; margin-top: 12px; border-radius: 18px; overflow: hidden; border: 1px solid rgba(111,191,195,.7); background: rgba(255,255,255,.6); }
+    .map-status { margin: 8px 0 0; color: var(--muted); font-size: .82rem; }
+    [hidden] { display: none !important; }
+    .recommendations { display: grid; gap: 8px; width: min(100%, 420px); }
+    .recommendation { padding: 12px; border: 1px solid rgba(111,191,195,.65); border-radius: 16px; background: linear-gradient(135deg,rgba(255,255,255,.94),rgba(224,250,248,.9)); }
+    .recommendation strong { display: block; margin-bottom: 4px; color: var(--primary-dark); }
+    .recommendation p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+    .recommendation-note { margin: 0; color: var(--muted); font-size: .8rem; }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .search-box { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+    @media (max-width: 600px) { body { padding: 18px 12px 36px; } .hero-card,.chat-card,.panel { padding: 16px; } .stats,.search-box { grid-template-columns: 1fr; } .composer { flex-direction: column; } .composer button { min-height: 46px; } }
   </style>
 </head>
 <body>
@@ -482,100 +73,49 @@
     <section class="hero">
       <div class="hero-card">
         <h1>自分に合う仕事を見つけよう</h1>
-        <p class="lead">
-          仕事探しは不安で、何から始めればいいかわからないことがあります。<br>
-          まずは気持ちや興味を話してみてください。AIがあなたに合いそうな職種や福井県での候補を一緒に整理します。
-        </p>
-        <div class="cta-row">
-          <button class="btn primary" type="button" id="startChat">相談を始める</button>
-          <button class="btn secondary" type="button" id="jumpToJobs">仕事候補を見る</button>
-        </div>
+        <p class="lead">仕事探しは不安で、何から始めればいいかわからないことがあります。<br>好きなことや得意なことをチャットで教えてください。会話をもとに、おすすめの仕事を提案します。</p>
         <div class="stats">
-          <div class="stat"><strong>3分</strong><span>相談の目安</span></div>
-          <div class="stat"><strong>8件</strong><span>おすすめ候補</span></div>
-          <div class="stat"><strong>福井</strong><span>地域に合わせた提案</span></div>
+          <div class="stat"><strong>チャット</strong><span>気軽に相談</span></div>
+          <div class="stat"><strong>おすすめ</strong><span>興味に合わせて提案</span></div>
+          <div class="stat"><strong>福井</strong><span>地域の企業も検索</span></div>
         </div>
       </div>
-
       <div class="chat-card">
-        <div class="chat-header">
-          <div class="chat-title">仕事相談チャット</div>
-          <div class="online">オンライン</div>
-        </div>
-
+        <div class="chat-header"><div class="chat-title">仕事相談チャット</div><div class="online">オンライン</div></div>
         <div class="messages" id="messages" aria-live="polite">
-          <div class="message bot">こんにちは！あなたの性格や好きなことを教えてくれると、ぴったりの仕事を一緒に探せます。たとえば「人と話すのが好き」「PCを使うのが好き」など、気軽に教えてください。</div>
+          <div class="message bot">こんにちは！どんなことが好きですか？人と話すこと、PC、ものづくりなど、興味や得意なことを教えてください。何回かお話ししたあと、あなたに合いそうな仕事を提案します。</div>
         </div>
-
         <div class="quick-replies">
-          <button class="chip" type="button">人と話す仕事</button>
-          <button class="chip" type="button">PCを使う仕事</button>
-          <button class="chip" type="button">創作・デザイン</button>
-          <button class="chip" type="button">福井でできること</button>
+          <button class="chip" type="button">人と話すのが好き</button>
+          <button class="chip" type="button">PCやITに興味がある</button>
+          <button class="chip" type="button">創作・デザインが好き</button>
+          <button class="chip" type="button">福井で働きたい</button>
         </div>
-
         <div class="composer">
           <input id="userInput" type="text" placeholder="例：人と話すのが好きで、福井で働きたいです" aria-label="相談内容を入力">
-          <button class="btn primary" type="button" id="sendBtn">送信</button>
+          <button type="button" id="sendBtn">送信</button>
         </div>
       </div>
     </section>
 
-    <section class="panel">
-      <h2>おすすめの仕事候補</h2>
-      <div class="job-list" id="jobList">
-        <article class="job-card">
-          <h3>営業・接客</h3>
-          <p>人とコミュニケーションをとるのが得意な人に向いています。地域密着型の仕事や販売関連にも適しています。</p>
-          <div class="tag-list"><span class="mini-tag">対話</span><span class="mini-tag">人脈</span><span class="mini-tag">福井</span></div>
-        </article>
-        <article class="job-card">
-          <h3>Webデザイナー</h3>
-          <p>デザインや発想力を活かせる仕事です。クリエイティブ系の仕事として、オンライン上でも活躍しやすいです。</p>
-          <div class="tag-list"><span class="mini-tag">クリエイティブ</span><span class="mini-tag">PC</span><span class="mini-tag">発想</span></div>
-        </article>
-        <article class="job-card">
-          <h3>ITサポート</h3>
-          <p>技術に興味がある人や、相談に乗るのが好きな人に向いています。地域の企業や小規模事業者の支援にもつながります。</p>
-          <div class="tag-list"><span class="mini-tag">IT</span><span class="mini-tag">サポート</span><span class="mini-tag">技術</span></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" style="margin-top: 24px;">
+    <section class="panel" id="companies-panel">
       <h2>福井県の企業を探す</h2>
       <div class="search-box">
-        <input id="search" type="text" placeholder="企業名・住所・キーワードで検索">
-        <select id="city">
-          <option value="">市町村を選択</option>
-          <option value="福井市">福井市</option>
-          <option value="鯖江市">鯖江市</option>
-          <option value="敦賀市">敦賀市</option>
-          <option value="坂井市">坂井市</option>
-          <option value="勝山市">勝山市</option>
-          <option value="複数地域">複数地域</option>
+        <input id="search" type="text" placeholder="企業名・住所・キーワードで検索" aria-label="企業検索">
+        <select id="city" aria-label="市町村で絞り込み">
+          <option value="">市町村を選択</option><option value="福井市">福井市</option><option value="鯖江市">鯖江市</option><option value="敦賀市">敦賀市</option><option value="坂井市">坂井市</option><option value="勝山市">勝山市</option><option value="複数地域">複数地域</option>
         </select>
-        <select id="industry">
-          <option value="">すべての業種</option>
-          <option value="IT">IT・情報通信</option>
-          <option value="金融">金融</option>
-          <option value="小売">小売・流通</option>
-          <option value="その他">その他</option>
+        <select id="industry" aria-label="業種で絞り込み">
+          <option value="">すべての業種</option><option value="IT">IT・情報通信</option><option value="金融">金融</option><option value="小売">小売・流通</option><option value="その他">その他</option>
         </select>
-        <select id="scale">
-          <option value="">企業規模を選択</option>
-          <option value="大企業">大企業</option>
-          <option value="中小企業">中小企業</option>
-          <option value="小規模企業">小規模企業</option>
+        <select id="scale" aria-label="企業規模で絞り込み">
+          <option value="">企業規模を選択</option><option value="大企業">大企業</option><option value="中小企業">中小企業</option><option value="小規模企業">小規模企業</option>
         </select>
-        <select id="employment">
-          <option value="">雇用形態を選択</option>
-          <option value="正社員">正社員</option>
-          <option value="契約・派遣">契約・派遣</option>
-          <option value="パート・アルバイト">パート・アルバイト</option>
+        <select id="employment" aria-label="雇用形態で絞り込み">
+          <option value="">雇用形態を選択</option><option value="正社員">正社員</option><option value="契約・派遣">契約・派遣</option><option value="パート・アルバイト">パート・アルバイト</option>
         </select>
       </div>
-      <p id="count"></p>
+      <p id="count" aria-live="polite"></p>
       <div id="list" class="company-list"></div>
     </section>
   </main>
@@ -602,41 +142,16 @@
     const list = document.getElementById("list");
     const count = document.getElementById("count");
 
-    function createBurst(event) {
-      const rect = event.currentTarget.getBoundingClientRect();
-      const burst = document.createElement("span");
-      burst.className = "bubble-burst";
-      burst.style.setProperty("--x", (event.clientX - rect.left) + "px");
-      burst.style.setProperty("--y", (event.clientY - rect.top) + "px");
-      const angle = Math.random() * 2 * Math.PI;
-      const distance = 14 + Math.random() * 30;
-      burst.style.setProperty("--tx", (Math.cos(angle) * distance).toFixed(2) + "px");
-      burst.style.setProperty("--ty", (Math.sin(angle) * distance).toFixed(2) + "px");
-      event.currentTarget.appendChild(burst);
-      setTimeout(() => burst.remove(), 650);
-    }
-
-    function bindBurst(target) {
-      target.addEventListener("pointerdown", createBurst);
-    }
-
-    async function showCompanyMap(company, mapElement, messageElement) {
-      messageElement.textContent = "住所を調べています…";
-      if (!company.address || !company.address.trim()) {
-        messageElement.textContent = "住所が登録されていません。";
-        return;
-      }
-
+    async function showCompanyMap(company, mapElement, status) {
+      status.textContent = "住所を調べています…";
       try {
         const { normalize } = await import("https://esm.sh/@geolonia/normalize-japanese-addresses@3.1.3");
         const result = await normalize(company.address, { level: 8 });
         const point = result && result.point;
-
         if (!point || !Number.isFinite(point.lat) || !Number.isFinite(point.lng) || point.level < 3) {
-          messageElement.textContent = "この住所の位置を調べられませんでした。住所を確認してください。";
+          status.textContent = "この住所の位置を調べられませんでした。住所を確認してください。";
           return;
         }
-
         const position = [point.lat, point.lng];
         const map = L.map(mapElement).setView(position, point.level === 8 ? 16 : 13);
         L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
@@ -646,108 +161,83 @@
         const popup = document.createElement("span");
         popup.textContent = company.name;
         L.marker(position).addTo(map).bindPopup(popup).openPopup();
-
-        messageElement.textContent = point.level === 8
-          ? "住所から調べた位置です。正確な場所は企業にご確認ください。"
-          : "市町村などの代表地点です。正確な場所とは異なる場合があります。";
+        status.textContent = point.level === 8 ? "住所から調べた位置です。正確な場所は企業にご確認ください。" : "市町村などの代表地点です。正確な場所とは異なる場合があります。";
         requestAnimationFrame(() => map.invalidateSize());
       } catch (error) {
-        messageElement.textContent = "地図を表示できませんでした。通信環境を確認してください。";
+        status.textContent = "地図を表示できませんでした。通信環境を確認してください。";
         console.error(error);
       }
     }
 
     function showCompanies() {
       const keyword = search.value.trim().toLowerCase();
-      const selectedCity = citySelect.value;
-      const selectedIndustry = industrySelect.value;
-      const selectedScale = scaleSelect.value;
-      const selectedEmployment = employmentSelect.value;
       const filtered = companies.filter(company => {
-        const text = (company.name + company.address + company.city + company.info + company.scale + company.employment).toLowerCase();
-        return text.includes(keyword)
-          && (!selectedCity || company.city === selectedCity)
-          && (!selectedIndustry || company.industry === selectedIndustry)
-          && (!selectedScale || company.scale === selectedScale)
-          && (!selectedEmployment || company.employment === selectedEmployment);
+        const text = `${company.name}${company.address}${company.city}${company.info}${company.scale}${company.employment}`.toLowerCase();
+        return text.includes(keyword) && (!citySelect.value || company.city === citySelect.value)
+          && (!industrySelect.value || company.industry === industrySelect.value)
+          && (!scaleSelect.value || company.scale === scaleSelect.value)
+          && (!employmentSelect.value || company.employment === employmentSelect.value);
       });
-
       list.replaceChildren();
-      count.textContent = filtered.length + "社の企業が見つかりました";
-
+      count.textContent = `${filtered.length}社の企業が見つかりました`;
       filtered.forEach(company => {
-        const card = document.createElement("div");
+        const card = document.createElement("article");
         card.className = "company";
-
         const button = document.createElement("button");
         button.type = "button";
-        button.innerHTML = `<span>＋ ${company.name}</span><span>${company.industry}</span>`;
         button.setAttribute("aria-expanded", "false");
-        bindBurst(button);
-
+        const companyName = document.createElement("span");
+        companyName.textContent = `＋ ${company.name}`;
+        const industry = document.createElement("span");
+        industry.textContent = company.industry;
+        button.append(companyName, industry);
         const detail = document.createElement("div");
         detail.className = "detail";
         detail.hidden = true;
-
-        const address = document.createElement("p");
-        address.textContent = "所在地：" + company.address;
-        const city = document.createElement("p");
-        city.textContent = "市町村：" + company.city;
-        const type = document.createElement("p");
-        type.textContent = "業種：" + company.industry;
-        const scale = document.createElement("p");
-        scale.textContent = "企業規模：" + company.scale;
-        const employment = document.createElement("p");
-        employment.textContent = "雇用形態：" + company.employment;
-        const info = document.createElement("p");
-        info.textContent = "企業情報：" + company.info;
-        const mapWrap = document.createElement("div");
-        mapWrap.className = "company-map";
-        mapWrap.setAttribute("aria-label", company.name + "の所在地マップ");
-        const mapStatus = document.createElement("p");
-        mapStatus.className = "map-status";
-        mapStatus.setAttribute("role", "status");
-        mapStatus.setAttribute("aria-live", "polite");
+        for (const [label, value] of [["所在地", company.address], ["市町村", company.city], ["業種", company.industry], ["企業規模", company.scale], ["雇用形態", company.employment], ["企業情報", company.info]]) {
+          const p = document.createElement("p");
+          p.textContent = `${label}：${value}`;
+          detail.appendChild(p);
+        }
+        const mapElement = document.createElement("div");
+        mapElement.className = "company-map";
+        mapElement.setAttribute("aria-label", `${company.name}の所在地マップ`);
+        const status = document.createElement("p");
+        status.className = "map-status";
+        status.setAttribute("role", "status");
+        status.setAttribute("aria-live", "polite");
         let mapLoaded = false;
-
-        button.addEventListener("click", async event => {
-          createBurst(event);
+        detail.append(mapElement, status);
+        button.addEventListener("click", () => {
           detail.hidden = !detail.hidden;
-          button.innerHTML = `<span>${detail.hidden ? "＋" : "－"} ${company.name}</span><span>${company.industry}</span>`;
           button.setAttribute("aria-expanded", String(!detail.hidden));
-
+          companyName.textContent = `${detail.hidden ? "＋" : "－"} ${company.name}`;
           if (!detail.hidden && !mapLoaded) {
             mapLoaded = true;
-            await showCompanyMap(company, mapWrap, mapStatus);
+            showCompanyMap(company, mapElement, status);
           }
         });
-
-        detail.append(address, city, type, scale, employment, info, mapWrap, mapStatus);
         card.append(button, detail);
-        list.append(card);
+        list.appendChild(card);
       });
     }
-
-    search.addEventListener("input", showCompanies);
-    citySelect.addEventListener("change", showCompanies);
-    industrySelect.addEventListener("change", showCompanies);
-    scaleSelect.addEventListener("change", showCompanies);
-    employmentSelect.addEventListener("change", showCompanies);
+    [search, citySelect, industrySelect, scaleSelect, employmentSelect].forEach(element => element.addEventListener(element === search ? "input" : "change", showCompanies));
     showCompanies();
 
     const messages = document.getElementById("messages");
     const userInput = document.getElementById("userInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const startChat = document.getElementById("startChat");
-    const jumpToJobs = document.getElementById("jumpToJobs");
+    const userMessages = [];
+    let recommendationsShown = false;
 
-    [
-      document.querySelector(".btn.primary"),
-      document.getElementById("sendBtn"),
-      document.getElementById("jumpToJobs"),
-      ...document.querySelectorAll(".chip"),
-      ...document.querySelectorAll(".job-card")
-    ].forEach(el => { if (el) bindBurst(el); });
+    const jobOptions = [
+      { title: "営業・接客", about: "人と話し、相手の希望に合わせて商品やサービスを提案する仕事です。", words: ["人と", "話", "接客", "営業", "相談", "コミュニケーション", "販売", "人が好き"] },
+      { title: "ITサポート・システム運用", about: "PCやシステムの困りごとを解決し、利用する人を支える仕事です。", words: ["pc", "it", "パソコン", "技術", "コンピューター", "プログラミング", "データ", "機械"] },
+      { title: "Web・グラフィックデザイン", about: "アイデアや色・形の工夫を使い、Webサイトや制作物を形にする仕事です。", words: ["デザイン", "創作", "作る", "美術", "イラスト", "絵", "動画", "写真"] },
+      { title: "事務・総務", about: "書類やデータを整理し、チームの仕事が進むように支える仕事です。", words: ["事務", "整理", "正確", "コツコツ", "書類", "計画", "落ち着"] },
+      { title: "ものづくり・製造", about: "製品を作ったり品質を確かめたりして、形に残る成果を生み出す仕事です。", words: ["ものづくり", "製造", "工場", "手を動か", "作業", "細かい", "品質"] },
+      { title: "福祉・教育サポート", about: "相手の成長や日々の暮らしに寄り添い、必要な支援を行う仕事です。", words: ["子ども", "教育", "福祉", "助け", "支援", "人の役に", "教える", "保育"] },
+      { title: "企画・広報", about: "情報を集めてアイデアを考え、イベントやサービスの魅力を伝える仕事です。", words: ["企画", "広報", "発信", "イベント", "アイデア", "考える", "文章"] }
+    ];
 
     function addMessage(text, role = "bot") {
       const div = document.createElement("div");
@@ -755,53 +245,63 @@
       div.textContent = text;
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
+      return div;
     }
 
-    function buildReply(input) {
-      const text = input.toLowerCase();
-      if (text.includes("人と") || text.includes("話す") || text.includes("接客") || text.includes("営業")) {
-        return "人と話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業なども候補です。";
+    function recommendJobs() {
+      const profile = userMessages.join(" ").toLowerCase();
+      const ranked = jobOptions.map((job, index) => ({
+        ...job,
+        score: job.words.reduce((score, word) => score + (profile.includes(word) ? 1 : 0), 0),
+        index
+      })).sort((a, b) => b.score - a.score || a.index - b.index).slice(0, 3);
+      const recommendations = document.createElement("div");
+      recommendations.className = "recommendations";
+      const note = document.createElement("p");
+      note.className = "recommendation-note";
+      note.textContent = "お話の内容から考えたおすすめです。気になる仕事があれば、理由や仕事内容をさらに聞いてください。";
+      recommendations.appendChild(note);
+      ranked.forEach(job => {
+        const card = document.createElement("article");
+        card.className = "recommendation";
+        const title = document.createElement("strong");
+        title.textContent = job.title;
+        const description = document.createElement("p");
+        description.textContent = job.about;
+        card.append(title, description);
+        recommendations.appendChild(card);
+      });
+      messages.appendChild(recommendations);
+      messages.scrollTop = messages.scrollHeight;
+      recommendationsShown = true;
+    }
+
+    function replyToConversation() {
+      if (userMessages.length === 1) {
+        return "教えてくれてありがとうございます。ほかに好きなことや、仕事で大切にしたいこと（人と関わる・落ち着いて作業する・福井で働くなど）はありますか？もう少し聞いてからおすすめを考えます。";
       }
-      if (text.includes("pc") || text.includes("it") || text.includes("技術") || text.includes("コンピューター") || text.includes("パソコン")) {
-        return "PCや技術に関心があるなら、ITサポート、Webデザイン、システム運用、データ管理などが向いています。まずは簡単なIT基礎の勉強から始めるのもおすすめです。";
+      if (userMessages.length === 2) {
+        addMessage("ありがとうございます。お話に出た興味や希望をもとに、おすすめの仕事を考えました。");
+        recommendJobs();
+        return "この中で気になる仕事はありますか？選んだ理由や、福井県内の企業についても一緒に見ていけます。";
       }
-      if (text.includes("デザイン") || text.includes("作る") || text.includes("創作") || text.includes("美術") || text.includes("イラスト")) {
-        return "創作やデザインが好きなら、Webデザイナー、グラフィック制作、写真・動画編集、イベント企画などが合いそうです。自分の作品をまとめておくと強みになります。";
-      }
-      if (text.includes("福井") || text.includes("地域") || text.includes("地元") || text.includes("地方")) {
-        return "地方や福井の暮らしに合った仕事としては、地域密着の営業、接客、受付、ITサポート、自治体・商店街関連の仕事が候補になります。企業一覧も参考にしてください。";
-      }
-      if (text.includes("不安") || text.includes("迷") || text.includes("わから") || text.includes("どう")) {
-        return "最初は『人と話すのが好きか』『PCが得意か』『創作が好きか』の3つで考えると整理しやすいです。興味のあることをひとつ教えてください。";
-      }
-      return "あなたの話をもとに、まずは営業・接客、Webデザイナー、ITサポートの3つが候補としておすすめです。企業一覧から所在地や地図も確認できます。";
+      return "なるほど、その希望も大切ですね。先ほどのおすすめの中から、気になるものを教えてください。希望に合わせて候補を絞り込めます。";
     }
 
     function sendMessage() {
       const value = userInput.value.trim();
       if (!value) return;
       addMessage(value, "user");
-      setTimeout(() => addMessage(buildReply(value), "bot"), 250);
+      userMessages.push(value);
       userInput.value = "";
+      window.setTimeout(() => addMessage(replyToConversation()), 250);
     }
-
-    sendBtn.addEventListener("click", sendMessage);
+    document.getElementById("sendBtn").addEventListener("click", sendMessage);
     userInput.addEventListener("keydown", event => { if (event.key === "Enter") sendMessage(); });
-    document.querySelectorAll(".chip").forEach(button => {
-      button.addEventListener("click", () => {
-        userInput.value = button.textContent;
-        sendMessage();
-      });
-    });
-
-    startChat.addEventListener("click", () => {
-      userInput.focus();
-      addMessage("まずは、どんな仕事に少しだけ興味があるか教えてください。人と接するタイプなのか、創作が好きなのか、技術に惹かれるのかで一緒に考えましょう。");
-    });
-
-    jumpToJobs.addEventListener("click", () => {
-      document.getElementById("jobList").scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    document.querySelectorAll(".chip").forEach(button => button.addEventListener("click", () => {
+      userInput.value = button.textContent;
+      sendMessage();
+    }));
   </script>
 </body>
 </html>
