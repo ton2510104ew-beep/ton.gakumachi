@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>福井県 企業情報一覧</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     :root {
       --bg-1: #eefcf9;
@@ -487,6 +488,22 @@
       font-size: 0.95rem;
     }
 
+    .company-map {
+      width: 100%;
+      height: 220px;
+      margin-top: 12px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(111, 191, 195, 0.7);
+      background: rgba(255,255,255,0.42);
+    }
+
+    .map-status {
+      margin: 8px 0 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
     @keyframes detailOpen {
       from {
         opacity: 0;
@@ -573,7 +590,7 @@
         </div>
 
         <div class="messages" id="messages" aria-live="polite">
-          <div class="message bot">こんにちは！あなたの性格や好きなことを教えてくれると、ぴったりの仕事を一緒に探せます。たとえば「人と話すのが好き」「デザインに興味がある」など、気軽に教えてください。</div>
+          <div class="message bot">こんにちは！あなたの性格や好きなことを教えてくれると、ぴったりの仕事を一緒に探せます。たとえば「人と話すのが好き」で、福井で働きたいといった相談にも対応できます。</div>
         </div>
 
         <div class="quick-replies">
@@ -642,13 +659,14 @@
     </section>
   </main>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const companies = [
       { name: "jig.jp", industry: "IT", address: "福井県鯖江市", info: "ソフトウェア・情報通信" },
       { name: "福井銀行", industry: "金融", address: "福井県福井市", info: "銀行・金融サービス" },
       { name: "ゲンキー", industry: "小売", address: "福井県を含む複数地域", info: "ドラッグストア" },
       { name: "株式会社PLANT", industry: "その他", address: "〒919-0521 福井県坂井市坂井町下新庄15号8番地の1", info: "事業者情報" },
-      { name: "株式会社ジャクエツ", industry: "その他", address: "東京本社／東京都港区高輪4-24-50 福井本社／福井県敦賀市若葉町2-1770", info: "保育教材、遊具、園児服などの企画・製造・販売" },
+      { name: "株式会社ジャクエツ", industry: "その他", address: "福井県敦賀市若葉町2-1770", info: "保育教材、遊び道具" },
       { name: "清川メッキ工業株式会社", industry: "その他", address: "福井県福井市和田中1-414", info: "その他メーカー" },
       { name: "勝山ファーマ株式会社", industry: "その他", address: "福井県勝山市猪野口37字2番1号", info: "化粧品・医薬品" },
       { name: "株式会社永和システムマネジメント", industry: "IT", address: "福井県福井市問屋町3-111", info: "ソフトウェア・情報処理" },
@@ -678,6 +696,45 @@
 
     function bindBurst(target) {
       target.addEventListener("pointerdown", createBurst);
+    }
+
+    async function showCompanyMap(address, mapElement, messageElement) {
+      messageElement.textContent = "住所を調べています…";
+
+      if (!address || !address.trim()) {
+        messageElement.textContent = "住所が登録されていません。";
+        return;
+      }
+
+      try {
+        const { normalize } = await import("https://esm.sh/@geolonia/normalize-japanese-addresses@3.1.3");
+        const result = await normalize(address, { level: 8 });
+        const point = result.point;
+
+        if (!point || point.level < 3) {
+          messageElement.textContent = "この住所の位置を調べられませんでした。";
+          return;
+        }
+
+        const position = [point.lat, point.lng];
+        const map = L.map(mapElement).setView(position, 16);
+
+        L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
+          maxZoom: 18,
+          attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
+        }).addTo(map);
+
+        L.marker(position).addTo(map);
+
+        messageElement.textContent = point.level === 8
+          ? "住所から調べた位置です。正確な場所は確認してください。"
+          : "町・丁目の代表地点です。正確な場所とは異なります。";
+
+        setTimeout(() => map.invalidateSize(), 200);
+      } catch (error) {
+        messageElement.textContent = "地図を表示できませんでした。";
+        console.error(error);
+      }
     }
 
     function showCompanies() {
@@ -712,15 +769,27 @@
         const info = document.createElement("p");
         info.textContent = "企業情報：" + company.info;
 
-        detail.append(address, type, info);
+        const mapWrap = document.createElement("div");
+        mapWrap.className = "company-map";
+        const mapStatus = document.createElement("p");
+        mapStatus.className = "map-status";
+        mapStatus.textContent = "地図を読み込み中…";
 
-        button.addEventListener("click", (event) => {
+        let mapLoaded = false;
+
+        button.addEventListener("click", async (event) => {
           createBurst(event);
           detail.hidden = !detail.hidden;
           button.innerHTML = `<span>${detail.hidden ? "＋" : "－"} ${company.name}</span><span>${company.industry}</span>`;
           button.setAttribute("aria-expanded", String(!detail.hidden));
+
+          if (!detail.hidden && !mapLoaded) {
+            mapLoaded = true;
+            await showCompanyMap(company.address, mapWrap, mapStatus);
+          }
         });
 
+        detail.append(address, type, info, mapWrap, mapStatus);
         card.append(button, detail);
         list.append(card);
       });
@@ -758,26 +827,26 @@
       const text = input.toLowerCase();
 
       if (text.includes("人と") || text.includes("話す") || text.includes("接客") || text.includes("営業")) {
-        return "人と話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業が候補として多くあります。";
+        return "人と話すことが好きなら、営業や接客、案内業、地域密着の事務系の仕事が向いています。福井県では販売や店舗対応、サポート業が候補として適しています。";
       }
 
       if (text.includes("pc") || text.includes("it") || text.includes("技術") || text.includes("コンピューター") || text.includes("パソコン")) {
-        return "PCや技術に関心があるなら、ITサポート、Webデザイン、システム運用、データ管理などが向いています。まずは簡単なIT基礎の勉強から始めると選びやすくなります。";
+        return "PCや技術に関心があるなら、ITサポート、Webデザイン、システム運用、データ管理などが向いています。まずは簡単なIT基礎の勉強から始めると安心です。";
       }
 
       if (text.includes("デザイン") || text.includes("作る") || text.includes("創作") || text.includes("美術") || text.includes("イラスト")) {
-        return "創作やデザインが好きなら、Webデザイナー、グラフィック制作、写真・動画編集、イベント企画などが合いそうです。自分の作品を見せることが仕事につながりやすいです。";
+        return "創作やデザインが好きなら、Webデザイナー、グラフィック制作、写真・動画編集、イベント企画などが合いそうです。自分の作品を見せることから始められます。";
       }
 
       if (text.includes("福井") || text.includes("地域") || text.includes("地元") || text.includes("地方")) {
-        return "地方や福井の暮らしに合った仕事としては、地域密着の営業、接客、受付、ITサポート、自治体・商店街関連の仕事が候補になります。自分の得意を活かすと働きやすいです。";
+        return "地方や福井の暮らしに合った仕事としては、地域密着の営業、接客、受付、ITサポート、自治体・商店街関連の仕事が候補になります。";
       }
 
       if (text.includes("不安") || text.includes("迷") || text.includes("わから") || text.includes("どう")) {
-        return "最初は『人と話すのが好きか』『PCが得意か』『創作が好きか』の3つで考えると整理しやすいです。今のあなたの返信をもとに、次はおすすめ候補を絞って提案します。";
+        return "最初は『人と話すのが好きか』『PCが得意か』『創作が好きか』の3つで考えると整理しやすいです。今のあなたの返信をもとに、次はさらに具体的な候補を絞れます。";
       }
 
-      return "あなたの話をもとに、まずは営業・接客、Webデザイナー、ITサポートの3つが候補としておすすめです。さらに詳しく知りたいときは、あなたの性格や得意なことをもう少し教えてください。";
+      return "あなたの話をもとに、まずは営業・接客、Webデザイナー、ITサポートの3つが候補としておすすめです。さらに詳しく知りたいときは、あなたの好みをもう少し教えてください。";
     }
 
     function sendMessage() {
@@ -803,7 +872,7 @@
 
     startChat.addEventListener("click", () => {
       userInput.focus();
-      addMessage("まずは、どんな仕事に少しだけ興味があるか教えてください。人と接するタイプなのか、創作が好きなのか、技術に惹かれるのかで選び方が変わります。", "bot");
+      addMessage("まずは、どんな仕事に少しだけ興味があるか教えてください。人と接するタイプなのか、創作が好きなのか、技術に惹かれるのかで選びやすくなります。");
     });
 
     jumpToJobs.addEventListener("click", () => {
