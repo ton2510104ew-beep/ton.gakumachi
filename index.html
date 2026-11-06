@@ -5,17 +5,63 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>福井で見つける仕事・企業探し</title>
 <style>
-:root{--bg1:#eefcf9;--bg2:#e9f9fb;--bg3:#dff8f1;--primary:#61c6c0;--deep:#2a8a8a;--dark:#1a4d5a;--text:#234c54;--muted:#5d7b7d}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;padding:28px 16px 50px;color:var(--text);font-family:"Yu Gothic","Hiragino Sans",sans-serif;background:radial-gradient(circle at 15% 12%,white,transparent 22%),linear-gradient(180deg,var(--bg1),var(--bg2),var(--bg3))}main{max-width:1050px;margin:auto}.hero,.panel,.chat{background:rgba(255,255,255,.65);border:2px solid white;border-radius:26px;padding:24px;margin-bottom:22px;box-shadow:0 12px 28px rgba(55,128,133,.1)}h1{color:var(--dark);font-size:clamp(28px,5vw,44px);line-height:1.3}h2{color:var(--dark);font-size:22px}p{line-height:1.8}.lead,.panel-intro{color:var(--muted);line-height:1.8}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.stat{background:white;border:1px solid #b8e6df;border-radius:16px;padding:14px;text-align:center}.stat strong{display:block;color:var(--dark)}.stat span{font-size:12px;color:var(--muted)}.chat-title{font-weight:bold;color:var(--dark);font-size:18px}.messages{height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:14px;margin-top:12px;background:#f5fffc;border:1px solid #d0eee7;border-radius:18px}.message{max-width:90%;padding:12px 15px;border-radius:16px;line-height:1.7;white-space:pre-line}.bot{background:white;align-self:flex-start}.user{background:#c9f1e9;align-self:flex-end}.quick{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}button{border:0;border-radius:30px;padding:11px 16px;cursor:pointer;font:inherit}button:hover,.map-link:hover{filter:brightness(.96)}.chip{background:white;color:var(--dark);border:1px solid #9bd8d2}.send,.search-button{background:linear-gradient(135deg,var(--primary),#9ae3d8);color:white;font-weight:bold}.composer{display:flex;gap:10px}input,select{min-width:0;width:100%;padding:13px;border:1px solid #a8dcd5;border-radius:14px;background:white;color:var(--text);font:inherit}.composer input{flex:1}.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.status{color:var(--deep);font-weight:bold}.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-top:15px}.job-card,.company-card{padding:17px;background:linear-gradient(135deg,#fff,#e9faf6);border:1px solid #b6e2dc;border-radius:18px}.job-card h3,.company-card h3{margin:0 0 8px;color:var(--dark)}.company-card p,.job-card p{font-size:14px;color:var(--muted);overflow-wrap:anywhere}.company-area{font-size:13px;color:var(--deep);font-weight:bold}.map-link{display:inline-block;margin-top:8px;padding:9px 14px;border-radius:24px;background:#e5f7f3;border:1px solid #9bd8d2;color:#176e72;font-weight:bold;text-decoration:none}.notice{font-size:12px;color:var(--muted);line-height:1.8}@media(max-width:650px){body{padding:14px 10px}.hero,.panel,.chat{padding:17px}.stats,.filters{grid-template-columns:1fr}.composer{flex-direction:column}.send{min-height:45px}}
+:root{--bg1:#eefcf9;--bg2:#e9f9fb;--bg3:#dff8f1;--primary:#61c6c0;--deep:#2a8a8a;--dark:#1a4d5a;--text:#234c54;--muted:#5d7b7d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;padding:28px 16px 50px;color:var(--text);font-family:"Yu Gothic","Hiragino Sans",sans-serif;background:radial-gradient(circle at 15% 12%,white,transparent 22%),linear-gradient(180deg,var(--bg1),var(--bg2),var(--bg3))}main{max-width:1050px;margin:auto}
+.hero,.panel,.chat{background:rgba(255,255,255,.65);border:2px solid white;border-radius:26px;padding:24px;margin-bottom:22px;box-shadow:0 12px 28px rgba(55,128,133,.1)}h1{color:var(--dark);font-size:clamp(28px,5vw,44px);line-height:1.3}h2{color:var(--dark);font-size:22px}p{line-height:1.8}.lead,.panel-intro{color:var(--muted);line-height:1.8}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}.stat{background:white;border:1px solid #b8e6df;border-radius:16px;padding:14px;text-align:center}.stat strong{display:block;color:var(--dark)}.stat span{font-size:12px;color:var(--muted)}.chat-title{font-weight:bold;color:var(--dark);font-size:18px}.messages{height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:14px;margin-top:12px;background:#f5fffc;border:1px solid #d0eee7;border-radius:18px}.message{max-width:90%;padding:12px 15px;border-radius:16px;line-height:1.7;white-space:pre-line}.bot{background:white;align-self:flex-start}.user{background:#c9f1e9;align-self:flex-end}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}button{border:0;border-radius:30px;padding:11px 16px;cursor:pointer;font:inherit}button:hover{filter:brightness(.97)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #2a8a8a;outline-offset:2px}.chip{background:white;color:var(--dark);border:1px solid #9bd8d2}.send,.search-button{background:linear-gradient(135deg,var(--primary),#9ae3d8);color:white;font-weight:bold}.composer{display:flex;gap:10px}input,select{min-width:0;width:100%;padding:13px;border:1px solid #a8dcd5;border-radius:14px;background:white;color:var(--text);font:inherit}.composer input{flex:1}.filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.status{color:var(--deep);font-weight:bold}.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-top:15px}.job-card,.company-card{padding:17px;background:linear-gradient(135deg,#fff,#e9faf6);border:1px solid #b6e2dc;border-radius:18px}.job-card h3,.company-card h3{margin:0 0 8px;color:var(--dark)}.company-card p,.job-card p{font-size:14px;color:var(--muted);overflow-wrap:anywhere}.company-area{font-size:13px;color:var(--deep);font-weight:bold}.notice{font-size:12px;color:var(--muted);line-height:1.8}.hidden{display:none}
+@media(max-width:650px){body{padding:14px 10px}.hero,.panel,.chat{padding:17px}.stats,.filters{grid-template-columns:1fr}.composer{flex-direction:column}.send{min-height:45px}}
 </style>
 </head>
-<body><main>
-<section class="hero"><h1>自分に合う仕事を見つけよう 🌷</h1><p class="lead">好きなことや得意なことから、自分に合う仕事を探してみませんか？福井県内の企業情報とつなげて、将来の選択肢を広げます。</p><div class="stats"><div class="stat"><strong>仕事探し</strong><span>興味から職種を提案</span></div><div class="stat"><strong>企業検索</strong><span>福井県内の企業を紹介</span></div><div class="stat"><strong>条件検索</strong><span>勤務地・職種で絞り込み</span></div></div></section>
-<section class="chat"><div class="chat-title">🌷 仕事相談チャット</div><div class="messages" id="messages" aria-live="polite"><div class="message bot">こんにちは！あなたの好きなことや得意なことを教えてください。人と話すこと、パソコン、ものづくり、地域やまちづくりなど、どんなことでも大丈夫です。</div></div><div class="quick"><button class="chip" type="button">人と話すのが好き</button><button class="chip" type="button">パソコンやITに興味がある</button><button class="chip" type="button">ものづくりが好き</button><button class="chip" type="button">地域やまちづくりに興味がある</button><button class="chip" type="button">アイデアを考えるのが好き</button></div><div class="composer"><input id="userInput" placeholder="自分の好きなことを入力してください" aria-label="相談内容"><button class="send" id="sendBtn" type="button">送信</button></div></section>
+<body>
+<main>
+<section class="hero">
+<h1>自分に合う仕事を見つけよう 🌷</h1>
+<p class="lead">好きなことや得意なことから、自分に合う仕事を探してみませんか？福井県内の企業情報とつなげて、将来の選択肢を広げます。</p>
+<div class="stats"><div class="stat"><strong>仕事探し</strong><span>興味から職種を提案</span></div><div class="stat"><strong>企業検索</strong><span>福井県内の企業を紹介</span></div><div class="stat"><strong>条件検索</strong><span>勤務地・職種で絞り込み</span></div></div>
+</section>
+<section class="chat">
+<div class="chat-title">🌷 仕事相談チャット</div>
+<div class="messages" id="messages" aria-live="polite"><div class="message bot">こんにちは！
+
+あなたの好きなことや得意なことを教えてください。
+
+例えば、
+
+・人と話すことが好き
+・パソコンに興味がある
+・地域やまちづくりに興味がある
+・ものづくりが好き
+・アイデアを考えるのが好き
+
+どんなことでも大丈夫です！</div></div>
+<div class="quick"><button class="chip">人と話すのが好き</button><button class="chip">パソコンやITに興味がある</button><button class="chip">ものづくりが好き</button><button class="chip">地域やまちづくりに興味がある</button><button class="chip">アイデアを考えるのが好き</button></div>
+<div class="composer"><input id="userInput" placeholder="自分の好きなことを入力してください" aria-label="相談内容"><button class="send" id="sendBtn" type="button">送信</button></div>
+</section>
 <section class="panel" id="job-section"><h2>✨ あなたにおすすめの仕事</h2><p class="panel-intro">チャットの回答をもとに、相性のよい仕事を提案します。</p><div id="job-results" class="result-grid"><p class="notice">まずはチャットで好きなことを教えてください。</p></div></section>
-<section class="panel" id="company-section"><h2>🏢 福井県の企業を探す</h2><p class="panel-intro">福井県内の実在企業を、事業内容や勤務地から探せます。</p><div class="filters"><select id="job-filter" aria-label="職種で絞り込み"><option value="">すべての職種</option><option>営業・販売</option><option>IT・情報</option><option>製造・品質管理</option><option>建築・土木</option><option>企画・広報</option><option>事務・総務</option><option>研究・技術</option></select><select id="area-filter" aria-label="勤務地で絞り込み"><option value="">すべての勤務地</option><option>福井市</option><option>敦賀市</option><option>小浜市</option><option>大野市</option><option>勝山市</option><option>鯖江市</option><option>あわら市</option><option>越前市</option><option>坂井市</option><option>永平寺町</option><option>池田町</option><option>南越前町</option><option>越前町</option><option>美浜町</option><option>高浜町</option><option>おおい町</option><option>若狭町</option></select><input id="keyword-filter" type="search" placeholder="企業名・事業内容で検索" aria-label="企業名・事業内容で検索"></div><button class="search-button" id="searchBtn" type="button" style="margin-top:12px">企業を検索する</button><p class="status" id="searchStatus" role="status" aria-live="polite"></p><div class="result-grid" id="company-results"></div><p class="notice">※掲載企業は福井県内に本社または事業所を持つ企業の一例です。関連職種は事業内容から考えられる仕事の例で、現在の求人募集を示すものではありません。住所・事業内容は登録情報をもとにしています。公開前に各社の公式情報をご確認ください。</p></section>
+<section class="panel" id="company-section">
+<h2>🏢 福井県の企業を探す</h2><p class="panel-intro">福井県内の実在企業を、事業内容や勤務地から探せます。</p>
+<div class="filters">
+<select id="job-filter" aria-label="職種で絞り込み"><option value="">すべての職種</option><option value="営業・販売">営業・販売</option><option value="IT・情報">IT・情報</option><option value="製造・品質管理">製造・品質管理</option><option value="建築・土木">建築・土木</option><option value="企画・広報">企画・広報</option><option value="事務・総務">事務・総務</option><option value="研究・技術">研究・技術</option></select>
+<select id="area-filter" aria-label="勤務地で絞り込み"><option value="">すべての勤務地</option><option value="福井市">福井市</option><option value="敦賀市">敦賀市</option><option value="越前市">越前市</option><option value="坂井市">坂井市</option><option value="大野市">大野市</option><option value="鯖江市">鯖江市</option><option value="あわら市">あわら市</option></select>
+<input id="keyword-filter" type="search" placeholder="企業名・事業内容で検索" aria-label="企業名・事業内容で検索">
+</div>
+<button class="search-button" id="searchBtn" type="button" style="margin-top:12px">企業を検索する</button>
+<p class="status" id="searchStatus" role="status" aria-live="polite"></p><div class="result-grid" id="company-results"></div>
+<p class="notice">※掲載企業は福井県内に本社または事業所を持つ企業の一例です。<br>※関連職種は事業内容から考えられる仕事の例です。現在の求人募集を示すものではありません。<br>※住所・事業内容は登録情報をもとにしています。公開前に各社の公式情報をご確認ください。</p>
+</section>
 </main>
 <script>
-const jobs=[{title:"営業・販売",description:"お客様の希望を聞き、商品やサービスを提案する仕事。",words:["人と話す","会話","相談","接客","営業","販売","人と関わる","コミュニケーション"],tags:["営業・販売"]},{title:"IT・情報",description:"システムやパソコン、情報技術を使って課題を解決する仕事。",words:["パソコン","pc","it","プログラミング","システム","ネットワーク","情報"],tags:["IT・情報"]},{title:"製造・品質管理",description:"製品を作り、品質や安全性を確認する仕事。",words:["ものづくり","製造","工場","機械","作る","品質","加工"],tags:["製造・品質管理"]},{title:"建築・土木",description:"道路や建物など、地域の暮らしを支える仕事。",words:["建築","土木","道路","まちづくり","地域","設計","建物","橋"],tags:["建築・土木"]},{title:"企画・広報",description:"アイデアを考え、商品や会社、地域の魅力を発信する仕事。",words:["企画","アイデア","発信","イベント","広報","考える","sns","デザイン"],tags:["企画・広報"]},{title:"事務・総務",description:"書類や情報を整理し、会社の活動を支える仕事。",words:["事務","整理","資料","正��","サポート","銀行","書類"],tags:["事務・総務"]},{title:"研究・技術",description:"専門知識や技術を生かし、新しい製品や技術を開発する仕事。",words:["研究","開発","実験","化学","科学","技術","精密"],tags:["研究・技術"]}];
+'use strict';
+const jobs=[
+{title:"営業・販売",description:"お客様の希望を聞き、商品やサービスを提案する仕事。",words:["人と話す","会話","相談","接客","営業","販売","人と関わる","コミュニケーション"]},
+{title:"IT・情報",description:"システムやパソコン、情報技術を使って課題を解決する仕事。",words:["パソコン","pc","it","プログラミング","システム","ネットワーク","情報"]},
+{title:"製造・品質管理",description:"製品を作り、品質や安全性を確認する仕事。",words:["ものづくり","製造","工場","機械","作る","品質","加工"]},
+{title:"建築・土木",description:"道路や建物など、地域の暮らしを支える仕事。",words:["建築","土木","道路","まちづくり","地域","設計","建物","橋"]},
+{title:"企画・広報",description:"アイデアを考え、商品や会社、地域の魅力を発信する仕事。",words:["企画","アイデア","発信","イベント","広報","考える","sns","デザイン"]},
+{title:"事務・総務",description:"書類や情報を整理し、会社の活動を支える仕事。",words:["事務","整理","資料","正確","サポート","銀行","書類"]},
+{title:"研究・技術",description:"専門知識や技術を生かし、新しい製品や技術を開発する仕事。",words:["研究","開発","実験","化学","科学","技術","精密"]}
+];
 const companies=[
 {name:"株式会社PLANT",area:"坂井市",address:"〒919-0521 福井県坂井市坂井町下新庄15号8番地の1",business:"流通・チェーンストア",jobs:["営業・販売","事務・総務"],keywords:"流通 小売 スーパー 販売 接客 商品"},
 {name:"株式会社アイシン福井",area:"越前市",address:"〒915-8520 福井県越前市池ノ上町38",business:"輸送用機器（自動車含む）",jobs:["製造・品質管理","研究・技術"],keywords:"自動車 部品 機械 開発 製造 技術"},
@@ -39,11 +85,57 @@ const companies=[
 {name:"フクビ化学工業株式会社",area:"福井市",address:"福井県福井市三十八社町33-66",business:"建築資材・樹脂製品・精密化学製品",jobs:["製造・品質管理","研究・技術","建築・土木"],keywords:"化学 建築 住宅 樹脂 製造 開発"},
 {name:"株式会社MAEDA",area:"大野市",address:"福井県大野市中野39-25-1",business:"撚糸・整経業",jobs:["製造・品質管理"],keywords:"繊維 糸 製造 ものづくり 加工"}
 ];
-const messages=document.getElementById("messages"),input=document.getElementById("userInput");let conversation="";
+const messages=document.getElementById("messages");
+const input=document.getElementById("userInput");
+let conversation="";
 function addMessage(text,type){const div=document.createElement("div");div.className="message "+type;div.textContent=text;messages.appendChild(div);messages.scrollTop=messages.scrollHeight}
-function recommendJobs(){const results=document.getElementById("job-results");const ranked=jobs.map(job=>({...job,score:job.words.filter(word=>conversation.includes(word.toLowerCase())).length})).sort((a,b)=>b.score-a.score);const selected=ranked.filter(job=>job.score>0).slice(0,3);const list=selected.length?selected:[jobs[0],jobs[4],jobs[2]];results.replaceChildren();list.forEach(job=>{const card=document.createElement("article");card.className="job-card";const title=document.createElement("h3");title.textContent=job.title;const desc=document.createElement("p");desc.textContent=job.description;const button=document.createElement("button");button.className="chip";button.textContent="関連企業を見る";button.addEventListener("click",()=>{document.getElementById("job-filter").value=job.title;searchCompanies();document.getElementById("company-section").scrollIntoView({behavior:"smooth"})});card.append(title,desc,button);results.appendChild(card)})}
-function sendMessage(){const value=input.value.trim();if(!value)return;conversation+=" "+value.toLowerCase();addMessage(value,"user");input.value="";recommendJobs();addMessage("ありがとうございます！入力内容から仕事の候補を更新しました。下のおすすめを見て、気になる仕事の「関連企業を見る」を押してみてください。","bot")}
-document.getElementById("sendBtn").addEventListener("click",sendMessage);input.addEventListener("keydown",event=>{if(event.key==="Enter")sendMessage()});document.querySelectorAll(".quick .chip").forEach(button=>button.addEventListener("click",()=>{input.value=button.textContent;sendMessage()}));
-function searchCompanies(){const job=document.getElementById("job-filter").value,area=document.getElementById("area-filter").value,keyword=document.getElementById("keyword-filter").value.trim().toLowerCase(),results=document.getElementById("company-results"),status=document.getElementById("searchStatus");const matched=companies.filter(company=>{const text=[company.name,company.business,company.keywords,company.area,company.address].join(" ").toLowerCase();return(!job||company.jobs.includes(job))&&(!area||company.area===area)&&(!keyword||text.includes(keyword))});results.replaceChildren();status.textContent=matched.length+"社が見つかりました。";if(!matched.length){const empty=document.createElement("p");empty.textContent="条件に合う企業が見つかりませんでした。検索条件を変更してください。";results.appendChild(empty);return}matched.forEach(company=>{const card=document.createElement("article");card.className="company-card";const title=document.createElement("h3");title.textContent=company.name;const areaText=document.createElement("div");areaText.className="company-area";areaText.textContent="📍 "+company.area;const address=document.createElement("p");address.textContent=company.address;const business=document.createElement("p");business.textContent=company.business;const jobsText=document.createElement("p");jobsText.textContent="関連する仕事の例："+company.jobs.join("・");const mapLink=document.createElement("a");mapLink.className="map-link";mapLink.textContent="地図を見る";mapLink.href="./map.html?name="+encodeURIComponent(company.name);mapLink.setAttribute("aria-label",company.name+"の地図を見る");card.append(title,areaText,address,business,jobsText,mapLink);results.appendChild(card)})}
-document.getElementById("searchBtn").addEventListener("click",searchCompanies);searchCompanies();
-</script></body></html>
+function recommendJobs(){
+ const results=document.getElementById("job-results");
+ const scored=jobs.map(job=>({...job,score:job.words.filter(word=>conversation.includes(word.toLowerCase())).length})).sort((a,b)=>b.score-a.score);
+ const selected=scored.filter(job=>job.score>0).slice(0,3);
+ const finalJobs=selected.length?selected:[jobs[0],jobs[4],jobs[2]];
+ results.replaceChildren();
+ finalJobs.forEach(job=>{
+  const card=document.createElement("article");card.className="job-card";
+  const title=document.createElement("h3");title.textContent=job.title;
+  const desc=document.createElement("p");desc.textContent=job.description;
+  const button=document.createElement("button");button.className="chip";button.type="button";button.textContent="関連企業を見る";
+  button.addEventListener("click",()=>{document.getElementById("job-filter").value=job.title;searchCompanies();document.getElementById("company-section").scrollIntoView({behavior:"smooth"})});
+  card.append(title,desc,button);results.appendChild(card);
+ });
+}
+function sendMessage(){
+ const value=input.value.trim();if(!value)return;
+ conversation+=" "+value.toLowerCase();addMessage(value,"user");input.value="";recommendJobs();
+ addMessage("ありがとうございます！入力内容から仕事の候補を更新しました。\n下のおすすめを見て、気になる仕事の「関連企業を見る」を押してみてください！","bot");
+}
+document.getElementById("sendBtn").addEventListener("click",sendMessage);
+input.addEventListener("keydown",event=>{if(event.key==="Enter")sendMessage()});
+document.querySelectorAll(".quick .chip").forEach(button=>button.addEventListener("click",()=>{input.value=button.textContent;sendMessage()}));
+function searchCompanies(){
+ const job=document.getElementById("job-filter").value;
+ const area=document.getElementById("area-filter").value;
+ const keyword=document.getElementById("keyword-filter").value.trim().toLowerCase();
+ const results=document.getElementById("company-results");
+ const status=document.getElementById("searchStatus");
+ const matched=companies.filter(company=>{
+  const text=(company.name+" "+company.business+" "+company.keywords+" "+company.area+" "+company.address).toLowerCase();
+  return (!job||company.jobs.includes(job))&&(!area||company.area===area)&&(!keyword||text.includes(keyword));
+ });
+ results.replaceChildren();status.textContent=matched.length+"社が見つかりました。";
+ if(matched.length===0){const empty=document.createElement("p");empty.textContent="条件に合う企業が見つかりませんでした。検索条件を変更してください。";results.appendChild(empty);return}
+ matched.forEach(company=>{
+  const card=document.createElement("article");card.className="company-card";
+  const title=document.createElement("h3");title.textContent=company.name;
+  const areaLabel=document.createElement("div");areaLabel.className="company-area";areaLabel.textContent="📍 "+company.area;
+  const address=document.createElement("p");address.textContent=company.address;
+  const business=document.createElement("p");business.textContent=company.business;
+  const jobsText=document.createElement("p");jobsText.textContent="関連する仕事の例："+company.jobs.join("・");
+  card.append(title,areaLabel,address,business,jobsText);results.appendChild(card);
+ });
+}
+document.getElementById("searchBtn").addEventListener("click",searchCompanies);
+searchCompanies();
+</script>
+</body>
+</html>
