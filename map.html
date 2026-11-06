@@ -43,6 +43,7 @@
     const messageElement = document.getElementById("message");
     const map = L.map("map");
     const markerLayer = L.layerGroup().addTo(map);
+    const requestedName = new URLSearchParams(window.location.search).get("name");
 
     L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
       maxZoom: 18,
@@ -61,22 +62,18 @@
       markerLayer.clearLayers();
       addressElement.textContent = `住所：${location.address}`;
       messageElement.textContent = "住所を調べています…";
-
       if (!location.address || !location.address.trim()) {
         messageElement.textContent = "住所が登録されていません。";
         return;
       }
-
       try {
         const { normalize } = await import("https://esm.sh/@geolonia/normalize-japanese-addresses@3.1.3");
         const result = await normalize(location.address, { level: 8 });
         const point = result.point;
-
         if (!point || point.level < 3) {
           messageElement.textContent = "この住所の位置を調べられませんでした。住所をご確認ください。";
           return;
         }
-
         const position = [point.lat, point.lng];
         map.setView(position, 16);
         L.marker(position).addTo(markerLayer).bindPopup(location.name).openPopup();
@@ -95,8 +92,10 @@
       if (location) showLocation(location);
     });
     if (locations.length) {
-      select.value = "0";
-      showLocation(locations[0]);
+      const matchingIndex = locations.findIndex(location => location.name === requestedName);
+      const initialIndex = matchingIndex >= 0 ? matchingIndex : 0;
+      select.value = String(initialIndex);
+      showLocation(locations[initialIndex]);
     }
   </script>
 </body>
