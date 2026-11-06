@@ -28,7 +28,11 @@
         radial-gradient(circle at 86% 38%,rgba(255,255,255,.8) 0 5.2%,transparent 6.1%);
       filter: blur(3px);
     }
-    body::after { background: radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%), radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%); filter: blur(6px); }
+    body::after {
+      background: radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%),
+        radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%);
+      filter: blur(6px);
+    }
     main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; }
     .hero { display: grid; grid-template-columns: .9fr 1.1fr; gap: 24px; align-items: stretch; }
     .hero-card, .chat-card, .panel {
@@ -48,14 +52,15 @@
     .chat-title { color: var(--primary-dark); font-weight: 700; font-size: 1.08rem; }
     .online { display: inline-flex; align-items: center; gap: 8px; color: #1e8f7a; font-size: .8rem; font-weight: 700; }
     .online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 6px rgba(105,199,173,.18); }
-    .messages { flex: 1; min-height: 220px; max-height: 560px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px 14px; background: rgba(255,255,255,.3); border: 1px solid rgba(111,191,195,.6); border-radius: 24px; }
+    .messages { flex: 1; min-height: 220px; max-height: 560px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px 14px; background: rgba(255,255,255,.3); border: 1px solid rgba(111,191,195,.4); border-radius: 20px; }
     .message { max-width: 94%; padding: 12px 14px; border-radius: 18px; line-height: 1.6; font-size: .94rem; box-shadow: 0 8px 18px rgba(41,116,124,.06); white-space: pre-line; }
     .message.bot { align-self: flex-start; background: rgba(255,255,255,.9); color: var(--text); border-top-left-radius: 8px; }
     .message.user { align-self: flex-end; background: rgba(122,219,215,.3); color: var(--primary-dark); border-top-right-radius: 8px; }
     .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
-    .chip, .search-button { padding: 9px 13px; border-radius: 999px; border: 1px solid rgba(111,191,195,.72); background: rgba(255,255,255,.78); color: var(--primary-dark); cursor: pointer; font-size: .85rem; font-weight: 700; }
+    .chip, .search-button { padding: 9px 13px; border-radius: 999px; border: 1px solid rgba(111,191,195,.72); background: rgba(255,255,255,.78); color: var(--primary-dark); cursor: pointer; font-size: .88rem; }
+    .chip:hover, .search-button:hover { filter: brightness(.97); }
     .composer { display: flex; gap: 10px; margin-top: 10px; }
-    .composer input, .search-box input, .search-box select { width: 100%; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font-size: 16px; }
+    .composer input, .search-box input, .search-box select { width: 100%; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font: inherit; }
     .composer input { flex: 1; min-width: 0; }
     .composer button { min-width: 100px; border: 0; border-radius: 999px; background: linear-gradient(135deg,var(--primary),#9ae3d8); color: white; font-weight: 700; cursor: pointer; }
     .panel { padding: 22px 20px 18px; margin-top: 24px; }
@@ -78,7 +83,7 @@
     <section class="hero">
       <div class="hero-card">
         <h1>自分に合う仕事を見つけよう</h1>
-        <p class="lead">仕事探しは不安で、何から始めればいいかわからないことがあります。<br>好きなことや得意なことをチャットで教えてください。会話と希望条件をもとに、おすすめの仕事を提案します。</p>
+        <p class="lead">仕事探しは不安で、何から始めればいいかわからないことがあります。<br>好きなことや得意なことをチャットで教えてください。あなたに合いそうな仕事を一緒に考えます。</p>
         <div class="stats">
           <div class="stat"><strong>チャット</strong><span>気軽に相談</span></div>
           <div class="stat"><strong>条件検索</strong><span>希望に合わせて探す</span></div>
@@ -87,12 +92,12 @@
       <div class="chat-card">
         <div class="chat-header"><div class="chat-title">仕事相談チャット</div><div class="online">オンライン</div></div>
         <div class="messages" id="messages" aria-live="polite">
-          <div class="message bot">こんにちは！どんなことが好きですか？人と話すこと、PC、ものづくりなど、興味や得意なことを教えてください。何回かお話ししたあと、あなたに合いそうな仕事を提案します。</div>
+          <div class="message bot">こんにちは！どんなことが好きですか？人と話すこと、PC、ものづくりなど、興味や得意なことを教えてください。何回かやりとりしたあと、おすすめの仕事を提案します。</div>
         </div>
         <div class="quick-replies">
           <button class="chip" type="button">人と話すのが好き</button>
           <button class="chip" type="button">PCやITに興味がある</button>
-          <button class="chip" type="button">創作・デザインが好き</button>
+          <button class="chip" type="button">建物やまちづくりに興味がある</button>
           <button class="chip" type="button">福井で働きたい</button>
         </div>
         <div class="composer">
@@ -115,6 +120,13 @@
           <option value="製造">ものづくり・製造</option>
           <option value="福祉">福祉・教育</option>
           <option value="企画">企画・広報</option>
+          <option value="建築・土木">建築・土木</option>
+          <option value="医療">医療・看護</option>
+          <option value="物流">物流・運輸</option>
+          <option value="飲食">飲食・調理</option>
+          <option value="販売">販売・小売</option>
+          <option value="農林水産">農林水産</option>
+          <option value="美容">美容・生活サービス</option>
         </select>
         <select id="work-area" aria-label="希望する勤務地">
           <option value="">勤務地を指定しない</option>
@@ -153,13 +165,22 @@
     let recommendationsShown = false;
 
     const jobOptions = [
-      { title: "営業・接客", about: "人と話し、相手の希望に合わせて商品やサービスを提案する仕事です。", category: "営業・接客", words: ["人と", "話", "接客", "営業", "相談", "コミュニケーション", "販売", "人が好き"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業", "小規模企業"], keywords: ["未経験", "人と関わる", "福井県"] },
-      { title: "ITサポート・システム運用", about: "PCやシステムの困りごとを解決し、利用する人を支える仕事です。", category: "IT", words: ["pc", "it", "パソコン", "技術", "コンピューター", "プログラミング", "データ", "機械"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"], keywords: ["未経験", "PC", "福井県"] },
-      { title: "Web・グラフィックデザイン", about: "アイデアや色・形の工夫を使い、Webサイトや制作物を形にする仕事です。", category: "デザイン", words: ["デザイン", "創作", "作る", "美術", "イラスト", "絵", "動画", "写真"], employment: ["正社員", "契約社員", "柔軟な働き方"], size: ["中小企業", "小規模企業"], keywords: ["未経験", "創作", "福井県"] },
-      { title: "事務・総務", about: "書類やデータを整理し、チームの仕事が進むように支える仕事です。", category: "事務", words: ["事務", "整理", "正確", "コツコツ", "書類", "計画", "落ち着"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業", "小規模企業"], keywords: ["未経験", "落ち着いて働く", "福井県"] },
-      { title: "ものづくり・製造", about: "製品を作ったり品質を確かめたりして、形に残る成果を生み出す仕事です。", category: "製造", words: ["ものづくり", "製造", "工場", "手を動か", "作業", "細かい", "品質"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"], keywords: ["未経験", "手を動かす", "福井県"] },
-      { title: "福祉・教育サポート", about: "相手の成長や日々の暮らしに寄り添い、必要な支援を行う仕事です。", category: "福祉", words: ["子ども", "教育", "福祉", "助け", "支援", "人の役に", "教える", "保育"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"], keywords: ["未経験", "人の役に立つ", "福井県"] },
-      { title: "企画・広報", about: "情報を集めてアイデアを考え、イベントやサービスの魅力を伝える仕事です。", category: "企画", words: ["企画", "広報", "発信", "イベント", "アイデア", "考える", "文章"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"], keywords: ["未経験", "アイデア", "福井県"] }
+      { title: "営業・接客", about: "人と話し、相手の希望に合わせて商品やサービスを提案する仕事です。", category: "営業・接客", words: ["人と", "話", "接客", "提案"], keywords: ["福井市", "鯖江市", "正社員", "未経験"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業"] },
+      { title: "ITサポート・システム運用", about: "PCやシステムの困りごとを解決し、利用する人を支える仕事です。", category: "IT", words: ["pc", "it", "パソコン", "技術", "システム"], keywords: ["福井市", "鯖江市", "正社員", "未経験"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"] },
+      { title: "Web・グラフィックデザイン", about: "アイデアや色・形の工夫を使い、Webサイトや制作物を形にする仕事です。", category: "デザイン", words: ["デザイン", "創作", "絵", "色", "web"], keywords: ["福井市", "坂井市", "正社員", "柔軟な働き方"], employment: ["正社員", "契約社員", "パート・アルバイト", "柔軟な働き方"], size: ["中小企業", "小規模企業"] },
+      { title: "事務・総務", about: "書類やデータを整理し、チームの仕事が進むように支える仕事です。", category: "事務", words: ["事務", "整理", "正確", "コツコツ"], keywords: ["福井市", "敦賀市", "正社員", "未経験"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業", "小規模企業"] },
+      { title: "ものづくり・製造", about: "製品を作ったり品質を確かめたりして、形に残る成果を生み出す仕事です。", category: "製造", words: ["ものづくり", "製造", "作る", "機械"], keywords: ["鯖江市", "坂井市", "正社員", "未経験"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業"] },
+      { title: "福祉・教育サポート", about: "相手の成長や日々の暮らしに寄り添い、必要な支援を行う仕事です。", category: "福祉", words: ["子ども", "教育", "福祉", "支援", "人を助ける"], keywords: ["福井市", "勝山市", "正社員", "パート・アルバイト"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"] },
+      { title: "企画・広報", about: "情報を集めてアイデアを考え、イベントやサービスの魅力を伝える仕事です。", category: "企画", words: ["企画", "広報", "アイデア", "イベント"], keywords: ["福井市", "坂井市", "正社員"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"] },
+      { title: "建築設計・CADオペレーター", about: "建物の図面を作成・修正し、設計者や施工チームを支える仕事です。", category: "建築・土木", words: ["建築", "設計", "図面", "cad", "建物"], keywords: ["福井市", "鯖江市", "坂井市", "正社員", "未経験"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"] },
+      { title: "施工管理・現場監督", about: "建築や土木の工事現場で、安全・品質・スケジュールを管理する仕事です。", category: "建築・土木", words: ["建築", "土木", "現場", "施工", "まちづくり"], keywords: ["福井市", "敦賀市", "勝山市", "正社員"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"] },
+      { title: "土木技術者・測量", about: "道路や橋などのインフラ整備に関わり、測量や工事計画を行う仕���です。", category: "建築・土木", words: ["土木", "測量", "道路", "橋", "インフラ"], keywords: ["福井市", "敦賀市", "坂井市", "正社員"], employment: ["正社員", "契約社員"], size: ["大企業", "中小企業"] },
+      { title: "看護師・医療事務", about: "医療機関で患者さんのケアや受付、診療を支える仕事です。", category: "医療", words: ["医療", "看護", "病院", "患者"], keywords: ["福井市", "敦賀市", "勝山市", "正社員", "パート・アルバイト"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業"] },
+      { title: "物流・倉庫スタッフ", about: "商品の入出荷や在庫管理を行い、必要なものを届ける仕事です。", category: "物流", words: ["物流", "倉庫", "運ぶ", "配送"], keywords: ["福井市", "敦賀市", "坂井市", "正社員", "未経験"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["大企業", "中小企業"] },
+      { title: "調理スタッフ・飲食店スタッフ", about: "料理を作ったり、お客様を迎えたりして食事の時間を支える仕事です。", category: "飲食", words: ["料理", "飲食", "調理", "食べ物"], keywords: ["福井市", "鯖江市", "敦賀市", "パート・アルバイト"], employment: ["正社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"] },
+      { title: "販売スタッフ", about: "商品選びをお手伝いし、お店づくりや売り場の管理にも関わる仕事です。", category: "販売", words: ["販売", "小売", "商品", "買い物"], keywords: ["福井市", "鯖江市", "坂井市", "パート・アルバイト"], employment: ["正社員", "パート・アルバイト"], size: ["大企業", "中小企業", "小規模企業"] },
+      { title: "農業・林業スタッフ", about: "農作物の栽培や森林の手入れなど、自然や地域の資源に関わる仕事です。", category: "農林水産", words: ["農業", "林業", "自然", "植物", "畑"], keywords: ["坂井市", "勝山市", "福井県", "正社員"], employment: ["正社員", "契約社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"] },
+      { title: "美容師・美容スタッフ", about: "ヘアや身だしなみのサービスを通じて、お客様の希望をかなえる仕事です。", category: "美容", words: ["美容", "ヘア", "髪", "身だしなみ"], keywords: ["福井市", "鯖江市", "敦賀市", "正社員"], employment: ["正社員", "パート・アルバイト"], size: ["中小企業", "小規模企業"] }
     ];
 
     function addMessage(text, role = "bot") {
@@ -231,7 +252,7 @@
 
     function replyToConversation() {
       if (userMessages.length === 1) {
-        return "教えてくれてありがとうございます。ほかに好きなことや、仕事で大切にしたいこと（人と関わる・落ち着いて作業する・勤務地など）はありますか？もう少し聞いてからおすすめを考えます。";
+        return "教えてくれてありがとうございます。ほかに好きなことや、仕事で大切にしたいこと（人と関わる・落ち着いて作業する・勤務地など）もありますか？";
       }
       if (userMessages.length === 2) {
         addMessage("ありがとうございます。お話に出た興味や希望をもとに、おすすめの仕事を考えました。");
