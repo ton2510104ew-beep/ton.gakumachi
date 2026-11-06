@@ -3,69 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>福井県 企業情報一覧</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <title>仕事相談・おすすめ提案</title>
   <style>
     :root {
-      --bg-1: #eefcf9; --bg-2: #e9f9fb; --bg-3: #dff8f1;
-      --primary: #61c6c0; --primary-deep: #2a8a8a; --primary-dark: #1a4d5a;
-      --text: #234c54; --muted: #5d7b7d; --success: #69c7ad;
+      --bg-1: #eefcf9;
+      --bg-2: #e9f9fb;
+      --bg-3: #dff8f1;
+      --primary: #61c6c0;
+      --primary-deep: #2a8a8a;
+      --primary-dark: #1a4d5a;
+      --text: #234c54;
+      --muted: #5d7b7d;
+      --success: #69c7ad;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      position: relative; overflow-x: hidden; margin: 0; padding: 32px 18px 52px;
-      color: var(--text); font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
-      background: radial-gradient(circle at 15% 12%, rgba(255,255,255,.8), transparent 20%),
+      position: relative;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 32px 18px 52px;
+      color: var(--text);
+      font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
+      background:
+        radial-gradient(circle at 15% 12%, rgba(255,255,255,.8), transparent 20%),
         radial-gradient(circle at 82% 18%, rgba(176,245,236,.28), transparent 18%),
         linear-gradient(180deg,var(--bg-1),var(--bg-2) 40%,var(--bg-3));
     }
-    body::before, body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-    body::before { background: radial-gradient(circle at 10% 18%,rgba(255,255,255,.9) 0 5%,transparent 5.5%), radial-gradient(circle at 24% 44%,rgba(255,255,255,.82) 0 6%,transparent 6.7%), radial-gradient(circle at 62% 25%,rgba(255,255,255,.78) 0 4.8%,transparent 5.5%), radial-gradient(circle at 58% 72%,rgba(255,255,255,.86) 0 4.5%,transparent 5.2%), radial-gradient(circle at 86% 38%,rgba(255,255,255,.8) 0 5.2%,transparent 6.1%); filter: blur(3px); }
-    body::after { background: radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%), radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%); filter: blur(6px); }
-    main { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; }
-    .hero { display: grid; grid-template-columns: 1.08fr .92fr; gap: 24px; align-items: stretch; margin-bottom: 28px; }
-    .hero-card,.chat-card,.panel { background: rgba(255,255,255,.48); border: 2px solid rgba(255,255,255,.85); border-radius: 30px; box-shadow: 0 18px 30px rgba(55,128,133,.1),inset 0 0 20px rgba(255,255,255,.2); backdrop-filter: blur(10px); }
+    body::before, body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::before {
+      background:
+        radial-gradient(circle at 10% 18%,rgba(255,255,255,.9) 0 5%,transparent 5.5%),
+        radial-gradient(circle at 24% 44%,rgba(255,255,255,.82) 0 6%,transparent 6.7%),
+        radial-gradient(circle at 62% 25%,rgba(255,255,255,.78) 0 4.8%,transparent 5.5%),
+        radial-gradient(circle at 58% 72%,rgba(255,255,255,.86) 0 4.5%,transparent 5.2%),
+        radial-gradient(circle at 86% 38%,rgba(255,255,255,.8) 0 5.2%,transparent 6.1%);
+      filter: blur(3px);
+    }
+    body::after {
+      background:
+        radial-gradient(circle at 18% 10%,rgba(163,233,238,.22) 0 9%,transparent 9.6%),
+        radial-gradient(circle at 72% 12%,rgba(163,233,238,.18) 0 8%,transparent 8.8%);
+      filter: blur(6px);
+    }
+    main { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; }
+    .hero {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+    .hero-card, .chat-card {
+      background: rgba(255,255,255,.48);
+      border: 2px solid rgba(255,255,255,.85);
+      border-radius: 30px;
+      box-shadow: 0 18px 30px rgba(55,128,133,.1), inset 0 0 20px rgba(255,255,255,.2);
+      backdrop-filter: blur(10px);
+    }
     .hero-card { padding: 28px 26px 22px; }
-    h1 { margin: 16px 0 12px; color: var(--primary-dark); font-size: clamp(2.1rem,4vw,3.6rem); letter-spacing: .04em; line-height: 1.1; }
-    .lead { max-width: 620px; margin: 0; color: var(--muted); line-height: 1.8; font-size: 1.05rem; }
-    .stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
+    h1 {
+      margin: 16px 0 12px;
+      color: var(--primary-dark);
+      font-size: clamp(2.1rem,4vw,3.6rem);
+      letter-spacing: .04em;
+      line-height: 1.1;
+    }
+    .lead { margin: 0; color: var(--muted); line-height: 1.8; font-size: 1.05rem; }
+    .stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 22px; }
     .stat { padding: 14px 10px; background: rgba(255,255,255,.45); border: 1px solid rgba(111,191,195,.65); border-radius: 18px; text-align: center; }
-    .stat strong { display: block; color: var(--primary-dark); font-size: 1.4rem; margin-bottom: 4px; }
+    .stat strong { display: block; color: var(--primary-dark); font-size: 1.2rem; margin-bottom: 4px; }
     .stat span { color: var(--muted); font-size: .82rem; }
-    .chat-card { padding: 18px; display: flex; flex-direction: column; min-height: 420px; }
+    .chat-card { padding: 18px; display: flex; flex-direction: column; min-height: 520px; }
     .chat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 4px 4px 10px; }
     .chat-title { color: var(--primary-dark); font-weight: 700; font-size: 1.08rem; }
     .online { display: inline-flex; align-items: center; gap: 8px; color: #1e8f7a; font-size: .8rem; font-weight: 700; }
     .online::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 6px rgba(105,199,173,.18); }
-    .messages { flex: 1; min-height: 180px; max-height: 440px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px 14px; background: rgba(255,255,255,.3); border: 1px solid rgba(111,191,195,.6); border-radius: 24px; }
-    .message { max-width: 92%; padding: 12px 14px; border-radius: 18px; line-height: 1.6; font-size: .94rem; box-shadow: 0 8px 18px rgba(41,116,124,.06); white-space: pre-line; }
+    .messages { flex: 1; min-height: 220px; max-height: 560px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px 14px; background: rgba(255,255,255,.3); border: 1px solid rgba(111,191,195,.6); border-radius: 24px; }
+    .message { max-width: 94%; padding: 12px 14px; border-radius: 18px; line-height: 1.6; font-size: .94rem; box-shadow: 0 8px 18px rgba(41,116,124,.06); white-space: pre-line; }
     .message.bot { align-self: flex-start; background: rgba(255,255,255,.9); color: var(--text); border-top-left-radius: 8px; }
     .message.user { align-self: flex-end; background: rgba(122,219,215,.3); color: var(--primary-dark); border-top-right-radius: 8px; }
     .quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 8px; }
     .chip { padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(111,191,195,.72); background: rgba(255,255,255,.75); color: var(--primary-dark); cursor: pointer; font-size: .8rem; font-weight: 700; }
     .composer { display: flex; gap: 10px; margin-top: 10px; }
-    .composer input,.search-box input,.search-box select { width: 100%; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font-size: 16px; }
+    .composer input { flex: 1; min-width: 0; padding: 14px 16px; border: 1px solid rgba(111,191,195,.7); border-radius: 999px; background: rgba(255,255,255,.76); color: var(--text); font-size: 16px; }
     .composer button { min-width: 100px; border: 0; border-radius: 999px; background: linear-gradient(135deg,var(--primary),#9ae3d8); color: white; font-weight: 700; cursor: pointer; }
-    .panel { padding: 22px 20px 18px; margin-top: 24px; }
-    .panel h2 { margin: 0 0 16px; color: var(--primary-dark); font-size: 1.3rem; letter-spacing: .04em; }
-    .search-box { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; }
-    #count { margin: 10px 0 0; color: var(--primary-deep); font-weight: 700; }
-    .company-list { display: grid; gap: 14px; margin-top: 18px; }
-    .company { position: relative; overflow: hidden; isolation: isolate; border: 2px solid rgba(255,255,255,.88); border-radius: 24px; background: linear-gradient(180deg,rgba(255,255,255,.72),rgba(228,247,248,.78)); box-shadow: 0 14px 20px rgba(80,158,160,.08); }
-    .company button { width: 100%; display: flex; justify-content: space-between; gap: 12px; padding: 16px 18px; border: 0; background: transparent; color: var(--primary-dark); text-align: left; font-size: 1rem; font-weight: 700; cursor: pointer; }
-    .company .detail { padding: 0 18px 16px; border-top: 1px solid rgba(111,191,195,.62); line-height: 1.8; }
-    .company .detail p { margin: 10px 0 0; font-size: .95rem; }
-    .company-map { width: 100%; height: 260px; margin-top: 12px; border-radius: 18px; overflow: hidden; border: 1px solid rgba(111,191,195,.7); background: rgba(255,255,255,.6); }
-    .map-status { margin: 8px 0 0; color: var(--muted); font-size: .82rem; }
-    [hidden] { display: none !important; }
-    .recommendations { display: grid; gap: 8px; width: min(100%, 420px); }
+    .recommendations { display: grid; gap: 8px; width: min(100%, 460px); }
     .recommendation { padding: 12px; border: 1px solid rgba(111,191,195,.65); border-radius: 16px; background: linear-gradient(135deg,rgba(255,255,255,.94),rgba(224,250,248,.9)); }
     .recommendation strong { display: block; margin-bottom: 4px; color: var(--primary-dark); }
     .recommendation p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.6; }
     .recommendation-note { margin: 0; color: var(--muted); font-size: .8rem; }
-    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } .search-box { grid-template-columns: repeat(2,minmax(0,1fr)); } }
-    @media (max-width: 600px) { body { padding: 18px 12px 36px; } .hero-card,.chat-card,.panel { padding: 16px; } .stats,.search-box { grid-template-columns: 1fr; } .composer { flex-direction: column; } .composer button { min-height: 46px; } }
+    @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } .chat-card { min-height: 480px; } }
+    @media (max-width: 600px) { body { padding: 18px 12px 36px; } .hero-card,.chat-card { padding: 16px; } .stats { grid-template-columns: 1fr; } .composer { flex-direction: column; } .composer button { min-height: 46px; } }
   </style>
 </head>
 <body>
@@ -77,7 +111,6 @@
         <div class="stats">
           <div class="stat"><strong>チャット</strong><span>気軽に相談</span></div>
           <div class="stat"><strong>おすすめ</strong><span>興味に合わせて提案</span></div>
-          <div class="stat"><strong>福井</strong><span>地域の企業も検索</span></div>
         </div>
       </div>
       <div class="chat-card">
@@ -92,142 +125,17 @@
           <button class="chip" type="button">福井で働きたい</button>
         </div>
         <div class="composer">
-          <input id="userInput" type="text" placeholder="例：人と話すのが好きで、福井で働きたいです" aria-label="相談内容を入力">
+          <input id="userInput" type="text" placeholder="例：人と話すのが好きです" aria-label="相談内容を入力">
           <button type="button" id="sendBtn">送信</button>
         </div>
       </div>
     </section>
-
-    <section class="panel" id="companies-panel">
-      <h2>福井県の企業を探す</h2>
-      <div class="search-box">
-        <input id="search" type="text" placeholder="企業名・住所・キーワードで検索" aria-label="企業検索">
-        <select id="city" aria-label="市町村で絞り込み">
-          <option value="">市町村を選択</option><option value="福井市">福井市</option><option value="鯖江市">鯖江市</option><option value="敦賀市">敦賀市</option><option value="坂井市">坂井市</option><option value="勝山市">勝山市</option><option value="複数地域">複数地域</option>
-        </select>
-        <select id="industry" aria-label="業種で絞り込み">
-          <option value="">すべての業種</option><option value="IT">IT・情報通信</option><option value="金融">金融</option><option value="小売">小売・流通</option><option value="その他">その他</option>
-        </select>
-        <select id="scale" aria-label="企業規模で絞り込み">
-          <option value="">企業規模を選択</option><option value="大企業">大企業</option><option value="中小企業">中小企業</option><option value="小規模企業">小規模企業</option>
-        </select>
-        <select id="employment" aria-label="雇用形態で絞り込み">
-          <option value="">雇用形態を選択</option><option value="正社員">正社員</option><option value="契約・派遣">契約・派遣</option><option value="パート・アルバイト">パート・アルバイト</option>
-        </select>
-      </div>
-      <p id="count" aria-live="polite"></p>
-      <div id="list" class="company-list"></div>
-    </section>
   </main>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const companies = [
-      { name: "jig.jp", industry: "IT", city: "鯖江市", scale: "中小企業", employment: "正社員", address: "福井県鯖江市", info: "ソフトウェア・情報通信" },
-      { name: "福井銀行", industry: "金融", city: "福井市", scale: "大企業", employment: "正社員", address: "福井県福井市", info: "銀行・金融サービス" },
-      { name: "ゲンキー", industry: "小売", city: "複数地域", scale: "大企業", employment: "正社員", address: "福井県を含む複数地域", info: "ドラッグストア" },
-      { name: "株式会社PLANT", industry: "その他", city: "坂井市", scale: "中小企業", employment: "契約・派遣", address: "〒919-0521 福井県坂井市坂井町下新庄15号8番地の1", info: "事業者情報" },
-      { name: "株式会社ジャクエツ", industry: "その他", city: "敦賀市", scale: "中小企業", employment: "正社員", address: "福井県敦賀市若葉町2-1770", info: "保育教材、遊具・空間づくり" },
-      { name: "清川メッキ工業株式会社", industry: "その他", city: "福井市", scale: "中小企業", employment: "正社員", address: "福井県福井市和田中1-414", info: "めっき加工" },
-      { name: "勝山ファーマ株式会社", industry: "その他", city: "勝山市", scale: "小規模企業", employment: "正社員", address: "福井県勝山市猪野口37字2番1号", info: "化粧品・医薬品" },
-      { name: "株式会社永和システムマネジメント", industry: "IT", city: "福井市", scale: "中小企業", employment: "正社員", address: "福井県福井市問屋町3-111", info: "ソフトウェア・情報処理" },
-      { name: "有限会社増米商店", industry: "小売", city: "敦賀市", scale: "小規模企業", employment: "パート・アルバイト", address: "福井県敦賀市松島町18-10", info: "専門店（食品関連）" }
-    ];
-
-    const search = document.getElementById("search");
-    const citySelect = document.getElementById("city");
-    const industrySelect = document.getElementById("industry");
-    const scaleSelect = document.getElementById("scale");
-    const employmentSelect = document.getElementById("employment");
-    const list = document.getElementById("list");
-    const count = document.getElementById("count");
-
-    async function showCompanyMap(company, mapElement, status) {
-      status.textContent = "住所を調べています…";
-      try {
-        const { normalize } = await import("https://esm.sh/@geolonia/normalize-japanese-addresses@3.1.3");
-        const result = await normalize(company.address, { level: 8 });
-        const point = result && result.point;
-        if (!point || !Number.isFinite(point.lat) || !Number.isFinite(point.lng) || point.level < 3) {
-          status.textContent = "この住所の位置を調べられませんでした。住所を確認してください。";
-          return;
-        }
-        const position = [point.lat, point.lng];
-        const map = L.map(mapElement).setView(position, point.level === 8 ? 16 : 13);
-        L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
-          maxZoom: 18,
-          attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>'
-        }).addTo(map);
-        const popup = document.createElement("span");
-        popup.textContent = company.name;
-        L.marker(position).addTo(map).bindPopup(popup).openPopup();
-        status.textContent = point.level === 8 ? "住所から調べた位置です。正確な場所は企業にご確認ください。" : "市町村などの代表地点です。正確な場所とは異なる場合があります。";
-        requestAnimationFrame(() => map.invalidateSize());
-      } catch (error) {
-        status.textContent = "地図を表示できませんでした。通信環境を確認してください。";
-        console.error(error);
-      }
-    }
-
-    function showCompanies() {
-      const keyword = search.value.trim().toLowerCase();
-      const filtered = companies.filter(company => {
-        const text = `${company.name}${company.address}${company.city}${company.info}${company.scale}${company.employment}`.toLowerCase();
-        return text.includes(keyword) && (!citySelect.value || company.city === citySelect.value)
-          && (!industrySelect.value || company.industry === industrySelect.value)
-          && (!scaleSelect.value || company.scale === scaleSelect.value)
-          && (!employmentSelect.value || company.employment === employmentSelect.value);
-      });
-      list.replaceChildren();
-      count.textContent = `${filtered.length}社の企業が見つかりました`;
-      filtered.forEach(company => {
-        const card = document.createElement("article");
-        card.className = "company";
-        const button = document.createElement("button");
-        button.type = "button";
-        button.setAttribute("aria-expanded", "false");
-        const companyName = document.createElement("span");
-        companyName.textContent = `＋ ${company.name}`;
-        const industry = document.createElement("span");
-        industry.textContent = company.industry;
-        button.append(companyName, industry);
-        const detail = document.createElement("div");
-        detail.className = "detail";
-        detail.hidden = true;
-        for (const [label, value] of [["所在地", company.address], ["市町村", company.city], ["業種", company.industry], ["企業規模", company.scale], ["雇用形態", company.employment], ["企業情報", company.info]]) {
-          const p = document.createElement("p");
-          p.textContent = `${label}：${value}`;
-          detail.appendChild(p);
-        }
-        const mapElement = document.createElement("div");
-        mapElement.className = "company-map";
-        mapElement.setAttribute("aria-label", `${company.name}の所在地マップ`);
-        const status = document.createElement("p");
-        status.className = "map-status";
-        status.setAttribute("role", "status");
-        status.setAttribute("aria-live", "polite");
-        let mapLoaded = false;
-        detail.append(mapElement, status);
-        button.addEventListener("click", () => {
-          detail.hidden = !detail.hidden;
-          button.setAttribute("aria-expanded", String(!detail.hidden));
-          companyName.textContent = `${detail.hidden ? "＋" : "－"} ${company.name}`;
-          if (!detail.hidden && !mapLoaded) {
-            mapLoaded = true;
-            showCompanyMap(company, mapElement, status);
-          }
-        });
-        card.append(button, detail);
-        list.appendChild(card);
-      });
-    }
-    [search, citySelect, industrySelect, scaleSelect, employmentSelect].forEach(element => element.addEventListener(element === search ? "input" : "change", showCompanies));
-    showCompanies();
-
     const messages = document.getElementById("messages");
     const userInput = document.getElementById("userInput");
     const userMessages = [];
-    let recommendationsShown = false;
 
     const jobOptions = [
       { title: "営業・接客", about: "人と話し、相手の希望に合わせて商品やサービスを提案する仕事です。", words: ["人と", "話", "接客", "営業", "相談", "コミュニケーション", "販売", "人が好き"] },
@@ -245,7 +153,6 @@
       div.textContent = text;
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
-      return div;
     }
 
     function recommendJobs() {
@@ -273,7 +180,6 @@
       });
       messages.appendChild(recommendations);
       messages.scrollTop = messages.scrollHeight;
-      recommendationsShown = true;
     }
 
     function replyToConversation() {
@@ -283,7 +189,7 @@
       if (userMessages.length === 2) {
         addMessage("ありがとうございます。お話に出た興味や希望をもとに、おすすめの仕事を考えました。");
         recommendJobs();
-        return "この中で気になる仕事はありますか？選んだ理由や、福井県内の企業についても一緒に見ていけます。";
+        return "この中で気になる仕事はありますか？選んだ理由や仕事内容についても一緒に考えられます。";
       }
       return "なるほど、その希望も大切ですね。先ほどのおすすめの中から、気になるものを教えてください。希望に合わせて候補を絞り込めます。";
     }
@@ -296,8 +202,11 @@
       userInput.value = "";
       window.setTimeout(() => addMessage(replyToConversation()), 250);
     }
+
     document.getElementById("sendBtn").addEventListener("click", sendMessage);
-    userInput.addEventListener("keydown", event => { if (event.key === "Enter") sendMessage(); });
+    userInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") sendMessage();
+    });
     document.querySelectorAll(".chip").forEach(button => button.addEventListener("click", () => {
       userInput.value = button.textContent;
       sendMessage();
