@@ -13,20 +13,22 @@
     section { padding: 24px; margin-bottom: 22px; background: rgba(255,255,255,.9); border: 1px solid #fff; border-radius: 22px; box-shadow: 0 12px 28px rgba(55,128,133,.1); }
     h1, h2, h3 { color: var(--dark); }
     h1 { margin-top: 0; font-size: clamp(28px, 5vw, 42px); }
-    .muted, #map-message { color: var(--muted); }
+    .muted, .map-message { color: var(--muted); }
     .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
     input, select { width: 100%; min-width: 0; padding: 12px; border: 1px solid #a8dcd5; border-radius: 12px; background: #fff; color: var(--text); font: inherit; }
     :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
-    .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 16px; }
-    .company-card { padding: 16px; border: 1px solid #b6e2dc; border-radius: 16px; background: linear-gradient(135deg, #fff, #e9faf6); }
+    .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 16px; }
+    .company-card { min-width: 0; padding: 16px; border: 1px solid #b6e2dc; border-radius: 16px; background: linear-gradient(135deg, #fff, #e9faf6); }
     .company-card h3 { margin: 0 0 4px; }
     .company-card p { margin: 5px 0; overflow-wrap: anywhere; color: var(--muted); font-size: 14px; }
     button { padding: 9px 14px; border: 0; border-radius: 22px; color: white; background: linear-gradient(135deg, #61c6c0, #2a8a8a); font: inherit; font-weight: 700; cursor: pointer; }
     button:hover { filter: brightness(.96); }
-    #location-map { display: block; width: 100%; height: 420px; margin-top: 14px; border: 0; border-radius: 14px; background: #e8f3f2; }
-    .map-link { display: inline-block; margin-top: 10px; color: var(--primary); font-weight: 700; }
+    .company-map { margin-top: 16px; padding-top: 12px; border-top: 1px solid #b6e2dc; }
+    .company-map h4 { margin: 0; color: var(--dark); }
+    .company-map iframe { display: block; width: 100%; height: 300px; margin-top: 10px; border: 0; border-radius: 12px; background: #e8f3f2; }
+    .map-link { display: inline-block; margin-top: 8px; color: var(--primary); font-weight: 700; }
     .notice { color: var(--muted); font-size: 12px; }
-    @media (max-width: 600px) { body { padding: 14px 10px 32px; } section { padding: 18px 14px; } #location-map { height: 340px; } }
+    @media (max-width: 600px) { body { padding: 14px 10px 32px; } section { padding: 18px 14px; } .company-grid { grid-template-columns: 1fr; } .company-map iframe { height: 260px; } }
   </style>
 </head>
 <body>
@@ -44,13 +46,6 @@
     </div>
     <p id="company-count" role="status" aria-live="polite"></p>
     <div id="company-results" class="company-grid"></div>
-  </section>
-  <section aria-labelledby="map-heading">
-    <h2 id="map-heading">📍 企業所在地マップ</h2>
-    <p id="map-address" class="muted"></p>
-    <p id="map-message" role="status" aria-live="polite">企業を選択してください。</p>
-    <iframe id="location-map" title="選択した企業の所在地地図" src="https://maps.google.com/maps?q=福井県&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
-    <a id="map-link" class="map-link" href="https://www.google.com/maps/search/?api=1&query=福井県" target="_blank" rel="noopener noreferrer">Google マップで開く</a>
     <p class="notice">※地図はGoogleマップの住所検索結果を表示します。住所によっては会社の正確な位置が特定できない場合があります。</p>
   </section>
 </main>
@@ -62,10 +57,7 @@
   const search = document.getElementById('company-search');
   const resultElement = document.getElementById('company-results');
   const countElement = document.getElementById('company-count');
-  const addressElement = document.getElementById('map-address');
-  const messageElement = document.getElementById('map-message');
-  const mapFrame = document.getElementById('location-map');
-  const mapLink = document.getElementById('map-link');
+  let activeIndex = null;
 
   companyList.forEach((company, index) => {
     const option = document.createElement('option');
@@ -74,19 +66,51 @@
     select.appendChild(option);
   });
 
-  function showCompany(index) {
-    const company = companyList[index];
-    if (!company) return;
+  function addMapToCard(card, company) {
     const address = (company.address || '').trim();
+    const mapSection = document.createElement('div');
+    mapSection.className = 'company-map';
+    mapSection.setAttribute('aria-label', `${company.name}の所在地マップ`);
+
+    const heading = document.createElement('h4');
+    heading.textContent = '📍 企業所在地マップ';
+    const addressElement = document.createElement('p');
     addressElement.textContent = `所在地：${address || '住所が登録されていません。'}`;
+    mapSection.append(heading, addressElement);
+
     if (!address) {
-      messageElement.textContent = '住所が登録されていないため、地図を検索できません。';
+      const message = document.createElement('p');
+      message.className = 'map-message';
+      message.setAttribute('role', 'status');
+      message.textContent = '住所が登録されていないため、地図を検索できません。';
+      mapSection.appendChild(message);
+      card.appendChild(mapSection);
       return;
     }
+
     const query = `${company.name} ${address}`;
-    mapFrame.src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
-    mapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-    messageElement.textContent = 'Googleマップで住所を検索しています。表示に時間がかかる場合があります。';
+    const encodedQuery = encodeURIComponent(query);
+    const message = document.createElement('p');
+    message.className = 'map-message';
+    message.setAttribute('role', 'status');
+    message.textContent = 'Googleマップで住所を検索しています。表示に時間がかかる場合があります。';
+
+    const mapFrame = document.createElement('iframe');
+    mapFrame.title = `${company.name}の所在地地図`;
+    mapFrame.src = `https://maps.google.com/maps?q=${encodedQuery}&output=embed`;
+    mapFrame.loading = 'lazy';
+    mapFrame.referrerPolicy = 'no-referrer-when-downgrade';
+    mapFrame.allowFullscreen = true;
+
+    const mapLink = document.createElement('a');
+    mapLink.className = 'map-link';
+    mapLink.href = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
+    mapLink.target = '_blank';
+    mapLink.rel = 'noopener noreferrer';
+    mapLink.textContent = 'Google マップで開く';
+
+    mapSection.append(message, mapFrame, mapLink);
+    card.appendChild(mapSection);
   }
 
   function renderCompanies() {
@@ -107,21 +131,28 @@
       info.textContent = `事業内容：${company.info}`;
       const button = document.createElement('button');
       button.type = 'button';
-      button.textContent = '地図で見る';
+      button.textContent = activeIndex === index ? '地図を表示中' : '地図で見る';
+      button.setAttribute('aria-expanded', String(activeIndex === index));
       button.addEventListener('click', () => {
+        activeIndex = index;
         select.value = String(index);
-        showCompany(index);
-        document.getElementById('map-heading').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        renderCompanies();
+        resultElement.querySelector(`[data-company-index="${index}"] .company-map`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
+      card.dataset.companyIndex = String(index);
       card.append(title, address, info, button);
+      if (activeIndex === index) addMapToCard(card, company);
       resultElement.appendChild(card);
     });
   }
 
-  select.addEventListener('change', () => showCompany(Number(select.value)));
+  select.addEventListener('change', () => {
+    activeIndex = Number(select.value);
+    renderCompanies();
+    resultElement.querySelector(`[data-company-index="${activeIndex}"] .company-map`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
   search.addEventListener('input', renderCompanies);
   renderCompanies();
-  if (companyList.length) showCompany(0);
 </script>
 </body>
 </html>
