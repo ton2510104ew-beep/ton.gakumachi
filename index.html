@@ -44,6 +44,17 @@
     .chat-results li { margin: 8px 0; }
     .chat-results a { color: var(--primary); font-weight: 700; }
     .chat-reset { margin-top: 14px; }
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
     @media (max-width: 600px) { body { padding: 14px 10px 32px; } section { padding: 18px 14px; } .company-grid { grid-template-columns: 1fr; } .company-map iframe { height: 260px; } .chat-entry { align-items: stretch; } }
   </style>
 </head>
@@ -54,20 +65,20 @@
     <p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p>
   </section>
   <section aria-labelledby="career-heading">
-    <h2 id="career-heading">💬 チャットで自分に合う仕事を見つけよう</h2>
-    <p class="muted">興味や大切にしたいことを教えてください。回答をもとに、福井県内の企業・業界を提案します。</p>
+    <h2 id="career-heading">💬 あなたに合う仕事を一緒に考えよう</h2>
+    <p class="muted">少しだけ話してくれたら、あなたの考え方に合いそうな仕事や企業を提案します。</p>
     <div class="career-chat">
       <div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
       <div id="chat-choices" class="chat-choices" aria-label="回答を選択"></div>
       <form id="chat-form" class="chat-entry">
-        <label for="chat-input" class="visually-hidden">回答を入力</label>
-        <input id="chat-input" type="text" placeholder="自由に入力してください" autocomplete="off" aria-label="回答を入力">
+        <label for="chat-input" class="visually-hidden">自由に入力</label>
+        <input id="chat-input" type="text" placeholder="自由に話してみてください（例：人と話すのが好き）」 autocomplete="off" aria-label="自由に入力">
         <button type="submit">送信</button>
       </form>
       <div id="chat-results" class="chat-results" hidden></div>
       <button id="chat-reset" class="chat-reset" type="button" hidden>もう一度相談する</button>
     </div>
-    <p class="notice">※現在は回答内容と企業データを使った簡易マッチングです。生成AIとの自然な対話を行うには、APIキーを安全に管理するサーバー側の仕組みが別途必要です。</p>
+    <p class="notice">※この機能は、あなたの回答と福井県の企業データをもとに、あなただけの候補を簡単に絞り込むものです。より自然な会話に近づけるには、将来生成AIのAPI連携を追加できます。</p>
   </section>
   <section aria-labelledby="company-heading">
     <h2 id="company-heading">🏢 福井県の企業を探す</h2>
@@ -97,11 +108,22 @@
   const chatInput = document.getElementById('chat-input');
   const chatResults = document.getElementById('chat-results');
   const chatReset = document.getElementById('chat-reset');
+
   const careerQuestions = [
-    { text: 'まず、どんな分野に興味がありますか？複数選んでも大丈夫です。', choices: ['IT・プログラミング', 'ものづくり・機械', '人を支える・医療', 'お金・ビジネス', '食・販売', '自然・環境'] },
-    { text: 'どんなことをしている時に「楽しい」「得意」と感じますか？', choices: ['考えて工夫する', '手を動かして作る', '人と話して助ける', '数字や情報を分析する'] },
-    { text: '働くうえで、特に大切にしたいことは何ですか？', choices: ['地域や社会に貢献', '安定して長く働く', '新しいことに挑戦', '自分のアイデアを活かす'] }
+    {
+      text: 'まず、あなたが「楽しい」と感じる仕事のタイプを選んでください。',
+      choices: ['頭を使って考える仕事', '手を動かして作る仕事', '人と関わる仕事', '数字や情報を扱う仕事', '地域や社会に役立つ仕事']
+    },
+    {
+      text: '次に、こんなときにやる気が出ますか？',
+      choices: ['新しいアイデアを考えるとき', 'ものづくりをしているとき', '人の役に立てているとき', '予定を立てて進めるとき', '地域に貢献しているとき']
+    },
+    {
+      text: '最後に、働くうえで大事にしたいことはどれですか？',
+      choices: ['安定した仕事', '成長できる環境', '自分の考えを活かせる', '人間関係が良い', '社会に貢献したい']
+    }
   ];
+
   let careerAnswers = [];
   let careerStep = 0;
 
@@ -118,9 +140,11 @@
       showCareerRecommendations();
       return;
     }
+
     const question = careerQuestions[careerStep];
     addChatMessage(question.text, 'assistant');
     chatChoices.replaceChildren();
+
     question.choices.forEach((choice) => {
       const button = document.createElement('button');
       button.type = 'button';
@@ -131,8 +155,9 @@
   }
 
   function submitCareerAnswer(answer) {
-    const cleanAnswer = answer.trim();
+    const cleanAnswer = String(answer || '').trim();
     if (!cleanAnswer || careerStep >= careerQuestions.length) return;
+
     careerAnswers.push(cleanAnswer);
     addChatMessage(cleanAnswer, 'user');
     careerStep += 1;
@@ -144,24 +169,56 @@
   function getCareerMatches() {
     const answerText = careerAnswers.join(' ').toLocaleLowerCase();
     const interestMap = [
-      { keywords: ['it', 'プログラミング', 'ソフトウェア', '情報', 'システム', '分析', '新しい'], industries: ['ソフトウェア・情報処理', 'IT・ロボット代筆サービス・通販'] },
-      { keywords: ['ものづくり', '機械', '手を動か', '作る', '工夫', 'アイデア'], industries: ['精密機器', '鉱業・金属製品・鉄鋼', '半導体・電子・電気機器', '金属製品', '繊維'] },
-      { keywords: ['人を支える', '医療', '助ける', '人と話', '社会に貢献'], industries: ['医療用機器・医療関連', '化粧品・医薬品', '化学・医療関連', '人材派遣・人材紹介', '生活協同組合'] },
-      { keywords: ['お金', 'ビジネス', '数字', '金融', '安定'], industries: ['銀行', '信用金庫・金融サービス', '総合商社', '専門商社', '専門商店'] },
-      { keywords: ['食', '販売', '接客'], industries: ['食品', '流通・チェーンストア', '食品関連の専門店', '専門店（食品関連）', '通信販売・ネット販売'] },
-      { keywords: ['自然', '環境', '地域'], industries: ['環境・リサイクル', '水処理・環境関連サービス', '電力・ガス・エネルギー', '建設・土木', '地域経済・企業支援'] }
+      {
+        keywords: ['考える', '頭', 'アイデア', '新しい', '分析', '情報', 'it', 'プログラミング', 'システム'],
+        industries: ['ソフトウェア・情報処理', 'IT・ロボット代筆サービス・通販', '建設コンサルタント']
+      },
+      {
+        keywords: ['作る', '手を動かす', 'ものづくり', '機械', '工夫', '技術', '設計'],
+        industries: ['精密機器', '鉱業・金属製品・鉄鋼', '半導体・電子・電気機器', '金属製品', '設備工事']
+      },
+      {
+        keywords: ['人', '助ける', '支える', '医療', '社会', '地域', '関わる', '接する'],
+        industries: ['医療用機器・医療関連', '化粧品・医薬品', '化学・医療関連', '人材派遣・人材紹介', '生活協同組合']
+      },
+      {
+        keywords: ['数字', '計画', '安定', 'ビジネス', '金融', '管理'],
+        industries: ['銀行', '信用金庫・金融サービス', '総合商社', '専門商社', '物流・倉庫']
+      },
+      {
+        keywords: ['地域', '社会', '環境', '自然', 'エネル��ー', '貢献'],
+        industries: ['環境・リサイクル', '水処理・環境関連サービス', '電力・ガス・エネルギー', '建設・土木', '地域経済・企業支援']
+      },
+      {
+        keywords: ['販売', '食', '接客', '商売', 'お客様'],
+        industries: ['食品', '流通・チェーンストア', '食品関連の専門店', '専門店（食品関連）', '通信販売・ネット販売']
+      }
     ];
+
     const ranked = new Map();
     interestMap.forEach(({ keywords, industries }) => {
       const points = keywords.reduce((total, word) => total + (answerText.includes(word) ? 2 : 0), 0);
-      if (points > 0) industries.forEach((industry) => ranked.set(industry, (ranked.get(industry) || 0) + points));
+      if (points > 0) {
+        industries.forEach((industry) => {
+          ranked.set(industry, (ranked.get(industry) || 0) + points);
+        });
+      }
     });
-    const chosenIndustries = [...ranked.entries()].sort((a, b) => b[1] - a[1]).map(([industry]) => industry);
+
+    const chosenIndustries = [...ranked.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([industry]) => industry);
+
     const matches = companyList
-      .map((company, index) => ({ company, index, score: chosenIndustries.findIndex((industry) => `${company.info || ''} ${company.industry || ''}`.includes(industry)) }))
+      .map((company, index) => ({
+        company,
+        index,
+        score: chosenIndustries.findIndex((industry) => `${company.info || ''} ${company.industry || ''}`.includes(industry))
+      }))
       .filter(({ score }) => score >= 0)
       .sort((a, b) => a.score - b.score)
       .slice(0, 5);
+
     return { chosenIndustries, matches };
   }
 
@@ -169,16 +226,19 @@
     chatChoices.replaceChildren();
     chatInput.disabled = true;
     chatForm.querySelector('button').disabled = true;
-    addChatMessage('回答ありがとうございます。あなたの興味に近そうな業界・企業をまとめました。', 'assistant');
+    addChatMessage('ありがとうございます。あなたの回答をもとに、少し合いそうな仕事の方向を整理してみました。', 'assistant');
+
     const { chosenIndustries, matches } = getCareerMatches();
     const heading = document.createElement('h3');
-    heading.textContent = 'おすすめの業界・企業';
+    heading.textContent = 'おすすめの働き方・企業';
     chatResults.replaceChildren(heading);
+
     if (chosenIndustries.length) {
       const industryText = document.createElement('p');
-      industryText.textContent = `興味との関連がありそうな業界：${chosenIndustries.slice(0, 4).join('、')}`;
+      industryText.textContent = `あなたに合いそうな方向：${chosenIndustries.slice(0, 4).join('、')}`;
       chatResults.appendChild(industryText);
     }
+
     if (matches.length) {
       const list = document.createElement('ul');
       matches.forEach(({ company, index }) => {
@@ -197,23 +257,28 @@
         list.appendChild(item);
       });
       chatResults.appendChild(list);
+
       const hint = document.createElement('p');
       hint.className = 'notice';
-      hint.textContent = '企業名を選ぶと、企業一覧で詳細を確認できます。提案は参考情報としてご利用ください。';
+      hint.textContent = '気になる企業を押すと、企業一覧の詳細と地図をすぐ確認できます。候補は参考としてご利用ください。';
       chatResults.appendChild(hint);
     } else {
       const fallback = document.createElement('p');
-      fallback.textContent = '回答にぴったり合う企業を絞り込めませんでした。企業一覧で気になる分野を検索してみてください。';
+      fallback.textContent = '少しだけ方向が見えてきました。企業一覧で「IT」「建設」「医療」などを検索して、自分に合う働き方を探してみてください。';
       chatResults.appendChild(fallback);
     }
+
     chatResults.hidden = false;
     chatReset.hidden = false;
   }
 
   chatForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    submitCareerAnswer(chatInput.value);
+    const text = chatInput.value.trim();
+    if (!text) return;
+    submitCareerAnswer(text);
   });
+
   chatReset.addEventListener('click', () => {
     careerAnswers = [];
     careerStep = 0;
@@ -225,6 +290,7 @@
     chatForm.querySelector('button').disabled = false;
     showCareerQuestion();
   });
+
   showCareerQuestion();
 
   companyList.forEach((company, index) => {
