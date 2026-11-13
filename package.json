@@ -1,0 +1,8 @@
+{
+  "name": "gakumachi-ai-career-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-powered career guidance for Gakumachi",
+  "engines": { "node": ">=18" },
+  "dependencies": { "openai": "^5.0.0" }
+}
