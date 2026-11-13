@@ -475,5 +475,179 @@ const companies = [
     industry: "その他",
     address: "福井県福井市高木中央1-2913",
     info: "水処理・環境関連サービス"
+  },
+  {
+    name: "株式会社アイケープラスト",
+    industry: "その他",
+    address: "福井県敦賀市",
+    info: "製造業・プラスチック容器"
+  },
+  {
+    name: "株式会社アイル",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "人材派遣・職業紹介"
+  },
+  {
+    name: "社会福祉法人足羽福祉会",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "福祉・介護"
+  },
+  {
+    name: "株式会社アタゴ",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "繊維製品の製造"
+  },
+  {
+    name: "株式会社日本エー・エム・シー",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "高圧用配管継手の製造・販売"
+  },
+  {
+    name: "エネックス株式会社",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "リサイクル関連"
+  },
+  {
+    name: "株式会社江守情報",
+    industry: "IT",
+    address: "福井県坂井市",
+    info: "システム開発・情報サービス"
+  },
+  {
+    name: "株式会社エル・ローズ",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "衣料品・ヘルスケア"
+  },
+  {
+    name: "株式会社イワシタ",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "機械・製造業"
+  },
+  {
+    name: "J.P.C株式会社",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "製造業"
+  },
+  {
+    name: "株式会社田中化学研究所",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "化学・電池材料"
+  },
+  {
+    name: "田中建設株式会社",
+    industry: "その他",
+    address: "福井県越前市",
+    info: "建設・土木"
+  },
+  {
+    name: "株式会社田中地質コンサルタント",
+    industry: "その他",
+    address: "福井県越前市",
+    info: "地質調査・建設コンサルタント"
+  },
+  {
+    name: "株式会社TOP",
+    industry: "その他",
+    address: "福井県越前市",
+    info: "製造業"
+  },
+  {
+    name: "日信化学工業株式会社",
+    industry: "その他",
+    address: "福井県坂井市",
+    info: "化学製品の製造"
+  },
+  {
+    name: "福井県民生活協同組合",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "生活協同組合・福祉・小売"
+  },
+  {
+    name: "株式会社フィッシュパス",
+    industry: "IT",
+    address: "福井県坂井市",
+    info: "情報通信・地域サービス"
+  },
+  {
+    name: "株式会社金津技研",
+    industry: "その他",
+    address: "福井県あわら市",
+    info: "電気機械器具製造"
+  },
+  {
+    name: "株式会社ワカヤマ",
+    industry: "その他",
+    address: "福井県鯖江市",
+    info: "表面処理加工"
+  },
+  {
+    name: "株式会社オーディオテクニカフクイ",
+    industry: "その他",
+    address: "福井県越前市",
+    info: "電気音響機器の製造"
+  },
+  {
+    name: "株式会社オーカワパン",
+    industry: "その他",
+    address: "福井県坂井市",
+    info: "パンの製造・販売"
+  },
+  {
+    name: "株式会社タマヤ",
+    industry: "IT",
+    address: "福井県越前市",
+    info: "ICT機器のレンタル・販売"
+  },
+  {
+    name: "株式会社ササマタ",
+    industry: "その他",
+    address: "福井県鯖江市",
+    info: "製造業"
+  },
+  {
+    name: "株式会社カワグチ",
+    industry: "その他",
+    address: "福井県福井市",
+    info: "食肉販売"
+  },
+  {
+    name: "テラオライテック株式会社",
+    industry: "その他",
+    address: "福井県越前市",
+    info: "総合設備工事"
+  },
+  {
+    name: "株式会社長田工業所",
+    industry: "その他",
+    address: "福井県坂井市",
+    info: "設備工事"
+  },
+  {
+    name: "株式会社ササキ工業",
+    industry: "その他",
+    address: "福井県越前市",
+    info: "総合建設業"
+  },
+  {
+    name: "株式会社アサヒレース",
+    industry: "その他",
+    address: "福井県丹生郡越前町",
+    info: "レース生地の製造"
+  },
+  {
+    name: "株式会社リプレッド",
+    industry: "その他",
+    address: "福井県鯖江市",
+    info: "専門サービス"
   }
 ];
