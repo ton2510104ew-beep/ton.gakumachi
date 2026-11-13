@@ -61,25 +61,17 @@
 </head>
 <body>
 <main>
-  <section>
-    <h1>福井で見つける企業・仕事</h1>
-    <p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p>
-  </section>
+  <section><h1>福井で見つける企業・仕事</h1><p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p></section>
   <section aria-labelledby="career-heading">
-    <h2 id="career-heading">あなたに合う仕事を一緒に考えよう</h2>
-    <p class="muted">少しだけ話してくれたら、あなたの考え方に合いそうな仕事や企業を提案します。</p>
+    <h2 id="career-heading">あなたに合う仕事を一緒に考えよう</h2><p class="muted">少しだけ話してくれたら、あなたの考え方に合いそうな仕事や企業を提案します。</p>
     <div class="career-chat">
-      <div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
-      <div id="chat-choices" class="chat-choices" aria-label="回答を選択"></div>
+      <div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div><div id="chat-choices" class="chat-choices" aria-label="回答を選択"></div>
       <form id="chat-form" class="chat-entry"><label for="chat-input" class="visually-hidden">自由に入力</label><input id="chat-input" type="text" placeholder="自由に話してみてください（例：人と話すのが好き）" autocomplete="off" aria-label="自由に入力"><button type="submit">送信</button></form>
-      <div id="chat-results" class="chat-results" hidden></div>
-      <button id="chat-reset" type="button" hidden>もう一度相談する</button>
-    </div>
-    <p class="notice">※回答をもとに、福井県の企業データから候補を簡単に絞り込みます。</p>
+      <div id="chat-results" class="chat-results" hidden></div><button id="chat-reset" type="button" hidden>もう一度相談する</button>
+    </div><p class="notice">※回答をもとに、福井県の企業データから候補を簡単に絞り込みます。</p>
   </section>
   <section aria-labelledby="company-heading">
-    <h2 id="company-heading">福井県の企業を探す</h2>
-    <p class="muted">企業名・住所・事業内容から検索し、業種や市町村で絞り込めます。</p>
+    <h2 id="company-heading">福井県の企業を探す</h2><p class="muted">企業名・住所・事業内容から検索し、業種や市町村で絞り込めます。</p>
     <div class="filters">
       <div class="search-filter-group">
         <label for="company-search">企業を検索<input id="company-search" type="search" placeholder="企業名・住所・事業内容" aria-label="企業名・住所・事業内容で検索"></label>
@@ -88,165 +80,71 @@
       </div>
       <label for="company-select">地図に表示する企業<select id="company-select" aria-label="地図に表示する企業"></select></label>
     </div>
-    <p id="company-count" role="status" aria-live="polite"></p>
-    <div id="company-results" class="company-grid"></div>
+    <p id="company-count" role="status" aria-live="polite"></p><div id="company-results" class="company-grid"></div>
     <p class="notice">※住所が市町村までの登録の場合、その市町村で絞り込みます。地図はGoogleマップの住所検索結果を表示します。</p>
   </section>
 </main>
 <script src="./companies.js"></script>
 <script>
 'use strict';
-const companyList = Array.isArray(companies) ? companies : [];
-const select = document.getElementById('company-select');
-const search = document.getElementById('company-search');
-const industryButtons = document.getElementById('industry-filter-buttons');
-const municipalityButtons = document.getElementById('municipality-filter-buttons');
-const resultElement = document.getElementById('company-results');
-const countElement = document.getElementById('company-count');
-let activeIndex = null;
-let selectedIndustry = '';
-let selectedMunicipality = '';
-
-const careerQuestions = [
-  { text:'まず、あなたが「楽しい」と感じる仕事のタイプを選んでください。', choices:['頭を使って考える仕事','手を動かして作る仕事','人と関わる仕事','数字や情報を扱う仕事','地域や社会に役立つ仕事'] },
-  { text:'次に、こんなときにやる気が出ますか？', choices:['新しいアイデアを考えるとき','ものづくりをしているとき','人の役に立てているとき','予定を立てて進めるとき','地域に貢献しているとき'] },
-  { text:'最後に、働くうえで大事にしたいことはどれですか？', choices:['安定した仕事','成長できる環境','自分の考えを活かせる','人間関係が良い','社会に貢献したい'] }
+const companyList=Array.isArray(companies)?companies:[];
+const select=document.getElementById('company-select');
+const search=document.getElementById('company-search');
+const industryButtons=document.getElementById('industry-filter-buttons');
+const municipalityButtons=document.getElementById('municipality-filter-buttons');
+const resultElement=document.getElementById('company-results');
+const countElement=document.getElementById('company-count');
+let activeIndex=null,selectedIndustry='',selectedMunicipality='';
+const chatMessages=document.getElementById('chat-messages'),chatChoices=document.getElementById('chat-choices'),chatForm=document.getElementById('chat-form'),chatInput=document.getElementById('chat-input'),chatResults=document.getElementById('chat-results'),chatReset=document.getElementById('chat-reset');
+const careerQuestions=[
+ {text:'まず、あなたが「楽しい」と感じる仕事のタイプを選んでください。',choices:['頭を使って考える仕事','手を動かして作る仕事','人と関わる仕事','数字や情報を扱う仕事','地域や社会に役立つ仕事']},
+ {text:'次に、こんなときにやる気が出ますか？',choices:['新しいアイデアを考えるとき','ものづくりをしているとき','人の役に立てているとき','予定を立てて進めるとき','地域に貢献しているとき']},
+ {text:'最後に、働くうえで大事にしたいことはどれですか？',choices:['安定した仕事','成長できる環境','自分の考えを活かせる','人間関係が良い','社会に貢献したい']}
 ];
-let careerAnswers = [];
-let careerStep = 0;
-const chatMessages = document.getElementById('chat-messages');
-const chatChoices = document.getElementById('chat-choices');
-const chatForm = document.getElementById('chat-form');
-const chatInput = document.getElementById('chat-input');
-const chatResults = document.getElementById('chat-results');
-const chatReset = document.getElementById('chat-reset');
-
-function addChatMessage(text, speaker) {
-  const message = document.createElement('div');
-  message.className = `chat-message ${speaker}`;
-  message.textContent = text;
-  chatMessages.appendChild(message);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-function showCareerQuestion() {
-  if (careerStep >= careerQuestions.length) return showCareerRecommendations();
-  const question = careerQuestions[careerStep];
-  addChatMessage(question.text, 'assistant');
-  chatChoices.replaceChildren();
-  question.choices.forEach((choice) => {
-    const button = document.createElement('button');
-    button.type = 'button'; button.textContent = choice;
-    button.addEventListener('click', () => submitCareerAnswer(choice));
-    chatChoices.appendChild(button);
-  });
-}
-function submitCareerAnswer(answer) {
-  const cleanAnswer = String(answer || '').trim();
-  if (!cleanAnswer || careerStep >= careerQuestions.length) return;
-  careerAnswers.push(cleanAnswer); addChatMessage(cleanAnswer, 'user'); careerStep += 1; chatInput.value = ''; chatChoices.replaceChildren(); showCareerQuestion();
-}
-function getCareerMatches() {
-  const text = careerAnswers.join(' ').toLocaleLowerCase();
-  const map = [
-    { words:['考える','頭','アイデア','新しい','分析','情報','it','プログラミング','システム'], industries:['ソフトウェア・情報処理','IT・ロボット代筆サービス・通販','建設コンサルタント'] },
-    { words:['作る','手を動かす','ものづくり','機械','工夫','技術','設計'], industries:['精密機器','鉱業・金属製品・鉄鋼','半導体・電子・電気機器','金属製品','設備工事'] },
-    { words:['人','助ける','支える','医療','社会','地域','関わる','接する'], industries:['医療用機器・医療関連','化粧品・医薬品','化学・医療関連','人材派遣・人材紹介','生活協同組合'] },
-    { words:['数字','計画','安定','ビジネス','金融','管理'], industries:['銀行','信用金庫・金融サービス','総合商社','専門商社','物流・倉庫'] },
-    { words:['地域','社会','環境','自然','エネルギー','貢献'], industries:['環境・リサイクル','水処理・環境関連サービス','電力・ガス・エネルギー','建設・土木','地域経済・企業支援'] },
-    { words:['販売','食','接客','商売','お客様'], industries:['食品','流通・チェーンストア','食品関連の専門店','専門店（食品関連）','通信販売・ネット販売'] }
-  ];
-  const ranked = new Map();
-  map.forEach(({words,industries}) => {
-    const points = words.reduce((sum, word) => sum + (text.includes(word) ? 2 : 0), 0);
-    if (points) industries.forEach((industry) => ranked.set(industry, (ranked.get(industry) || 0) + points));
-  });
-  const ordered = [...ranked.entries()].sort((a,b) => b[1]-a[1]).map(([industry]) => industry);
-  const matches = companyList.map((company,index) => ({company,index,score:ordered.findIndex((industry) => `${company.info || ''} ${company.industry || ''}`.includes(industry))})).filter((item) => item.score >= 0).sort((a,b) => a.score-b.score).slice(0,5);
-  return {ordered,matches};
-}
-function showCareerRecommendations() {
-  chatChoices.replaceChildren(); chatInput.disabled = true; chatForm.querySelector('button').disabled = true;
-  addChatMessage('ありがとうございます。あなたの回答をもとに、合いそうな仕事の方向を整理してみました。','assistant');
-  const {ordered,matches} = getCareerMatches();
-  const heading = document.createElement('h3'); heading.textContent = 'おすすめの働き方・企業'; chatResults.replaceChildren(heading);
-  if (ordered.length) { const p=document.createElement('p'); p.textContent=`あなたに合いそうな方向：${ordered.slice(0,4).join('、')}`; chatResults.appendChild(p); }
-  if (matches.length) {
-    const list=document.createElement('ul');
-    matches.forEach(({company,index}) => {
-      const item=document.createElement('li'); const link=document.createElement('a'); link.href='#company-heading'; link.textContent=company.name;
-      link.addEventListener('click',()=>{search.value=company.name; selectedIndustry=''; selectedMunicipality=''; updateFilterButtons(); activeIndex=index; select.value=String(index); renderCompanies();});
-      item.append(link,document.createTextNode(` — ${company.info || company.industry || '事業内容は未登録です'}`)); list.appendChild(item);
-    });
-    chatResults.appendChild(list);
-  } else { const p=document.createElement('p'); p.textContent='企業一覧で「IT」「建設」「医療」などを検索して、自分に合う働き方を探してみてください。'; chatResults.appendChild(p); }
-  chatResults.hidden=false; chatReset.hidden=false;
-}
-chatForm.addEventListener('submit',(event)=>{event.preventDefault(); const text=chatInput.value.trim(); if(text) submitCareerAnswer(text);});
-chatReset.addEventListener('click',()=>{careerAnswers=[]; careerStep=0; chatMessages.replaceChildren(); chatResults.replaceChildren(); chatResults.hidden=true; chatReset.hidden=true; chatInput.disabled=false; chatForm.querySelector('button').disabled=false; showCareerQuestion();});
-showCareerQuestion();
-
-companyList.forEach((company,index)=>{const option=document.createElement('option'); option.value=String(index); option.textContent=company.name; select.appendChild(option);});
-const industryCategories = [
-  {label:'IT',pattern:/\bIT\b|ソフトウェア|情報処理|システム|ICT|情報通信/i},
-  {label:'金融',pattern:/銀行|信用金庫|金融/},
-  {label:'建設・土木',pattern:/建設|土木|建築|設備工事|住宅建設/},
-  {label:'製造',pattern:/製造|メーカー|機器|金属|繊維|化学|精密|鉄鋼|プラスチック|加工/},
-  {label:'医療・福祉',pattern:/医療|福祉|介護|医薬|ヘルスケア/},
-  {label:'販売・食品',pattern:/食品|販売|小売|流通|商店|専門店|通販|ネット販売|生活協同/}
+let careerAnswers=[],careerStep=0;
+function addChatMessage(text,speaker){const message=document.createElement('div');message.className=`chat-message ${speaker}`;message.textContent=text;chatMessages.appendChild(message);chatMessages.scrollTop=chatMessages.scrollHeight;}
+function showCareerQuestion(){if(careerStep>=careerQuestions.length)return showCareerRecommendations();const question=careerQuestions[careerStep];addChatMessage(question.text,'assistant');chatChoices.replaceChildren();question.choices.forEach((choice)=>{const button=document.createElement('button');button.type='button';button.textContent=choice;button.addEventListener('click',()=>submitCareerAnswer(choice));chatChoices.appendChild(button);});}
+function submitCareerAnswer(answer){const clean=String(answer||'').trim();if(!clean||careerStep>=careerQuestions.length)return;careerAnswers.push(clean);addChatMessage(clean,'user');careerStep++;chatInput.value='';chatChoices.replaceChildren();showCareerQuestion();}
+function getCareerMatches(){const text=careerAnswers.join(' ').toLocaleLowerCase();const map=[
+ {words:['考える','頭','アイデア','新しい','分析','情報','it','プログラミング','システム'],industries:['ソフトウェア・情報処理','IT・ロボット代筆サービス・通販','建設コンサルタント']},
+ {words:['作る','手を動かす','ものづくり','機械','工夫','技術','設計'],industries:['精密機器','鉱業・金属製品・鉄鋼','半導体・電子・電気機器','金属製品','設備工事']},
+ {words:['人','助ける','支える','医療','社会','地域','関わる','接する'],industries:['医療用機器・医療関連','化粧品・医薬品','化学・医療関連','人材派遣・人材紹介','生活協同組合']},
+ {words:['数字','計画','安定','ビジネス','金融','管理'],industries:['銀行','信用金庫・金融サービス','総合商社','専門商社','物流・倉庫']},
+ {words:['地域','社会','環境','自然','エネルギー','貢献'],industries:['環境・リサイクル','水処理・環境関連サービス','電力・ガス・エネルギー','建設・土木','地域経済・企業支援']},
+ {words:['販売','食','接客','商売','お客様'],industries:['食品','流通・チェーンストア','食品関連の専門店','専門店（食品関連）','通信販売・ネット販売']}
+];const ranked=new Map();map.forEach(({words,industries})=>{const points=words.reduce((sum,word)=>sum+(text.includes(word)?2:0),0);if(points)industries.forEach((industry)=>ranked.set(industry,(ranked.get(industry)||0)+points));});const ordered=[...ranked.entries()].sort((a,b)=>b[1]-a[1]).map(([industry])=>industry);const matches=companyList.map((company,index)=>({company,index,score:ordered.findIndex((industry)=>`${company.info||''} ${company.industry||''}`.includes(industry))})).filter((item)=>item.score>=0).sort((a,b)=>a.score-b.score).slice(0,5);return{ordered,matches};}
+function showCareerRecommendations(){chatChoices.replaceChildren();chatInput.disabled=true;chatForm.querySelector('button').disabled=true;addChatMessage('ありがとうございます。あなたの回答をもとに、合いそうな仕事の方向を整理してみました。','assistant');const{ordered,matches}=getCareerMatches();const heading=document.createElement('h3');heading.textContent='おすすめの働き方・企業';chatResults.replaceChildren(heading);if(ordered.length){const p=document.createElement('p');p.textContent=`あなたに合いそうな方向：${ordered.slice(0,4).join('、')}`;chatResults.appendChild(p);}if(matches.length){const list=document.createElement('ul');matches.forEach(({company,index})=>{const item=document.createElement('li'),link=document.createElement('a');link.href='#company-heading';link.textContent=company.name;link.addEventListener('click',()=>{search.value=company.name;selectedIndustry='';selectedMunicipality='';updateFilterButtons();activeIndex=index;select.value=String(index);renderCompanies();});item.append(link,document.createTextNode(` — ${company.info||company.industry||'事業内容は未登録です'}`));list.appendChild(item);});chatResults.appendChild(list);}else{const p=document.createElement('p');p.textContent='企業一覧で「IT」「建設」「医療」などを検索して、自分に合う働き方を探してみてください。';chatResults.appendChild(p);}chatResults.hidden=false;chatReset.hidden=false;}
+chatForm.addEventListener('submit',(event)=>{event.preventDefault();const text=chatInput.value.trim();if(text)submitCareerAnswer(text);});
+chatReset.addEventListener('click',()=>{careerAnswers=[];careerStep=0;chatMessages.replaceChildren();chatResults.replaceChildren();chatResults.hidden=true;chatReset.hidden=true;chatInput.disabled=false;chatForm.querySelector('button').disabled=false;showCareerQuestion();});showCareerQuestion();
+companyList.forEach((company,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=company.name;select.appendChild(option);});
+// 企業データにある業種を幅広くまとめ、関連するキーワードで絞り込みます。
+const industryCategories=[
+ {label:'IT・情報通信',pattern:/\bIT\b|ソフトウェア|情報処理|システム|ICT|情報通信|コンピュータ/i},
+ {label:'金融・保険',pattern:/銀行|信用金庫|金融|保険/},
+ {label:'建設・土木・設備',pattern:/建設|土木|建築|設備工事|住宅建設|空調|給排水|地質調査/},
+ {label:'製造・メーカー',pattern:/製造|メーカー|機器|金属|繊維|化学|精密|鉄鋼|プラスチック|加工|電池|配管継手|表面処理/},
+ {label:'医療・福祉',pattern:/医療|福祉|介護|医薬|ヘルスケア/},
+ {label:'食品・小売・販売',pattern:/食品|販売|小売|流通|商店|専門店|通販|ネット販売|生活協同|パン|食肉/},
+ {label:'交通・物流',pattern:/交通|鉄道|物流|倉庫|輸送|自動車/},
+ {label:'エネルギー・環境',pattern:/環境|リサイクル|電力|ガス|エネルギー|水処理/},
+ {label:'商社・卸売',pattern:/商社|卸売/},
+ {label:'人材・採用',pattern:/人材|派遣|職業紹介/},
+ {label:'住宅・不動産・建材',pattern:/住宅|不動産|建材|エクステリア|インテリア|建築資材/},
+ {label:'日用品・サービス',pattern:/日用品|雑貨|文具|事務機器|専門サービス|企業支援/},
+ {label:'教育・保育',pattern:/教育|保育|学校|学習/},
+ {label:'化学・素材',pattern:/化学|素材|石油|ガラス|塗料/}
 ];
-const municipalities = [
-  {label:'福井市',pattern:/福井市/}, {label:'敦賀市',pattern:/敦賀市/}, {label:'小浜市',pattern:/小浜市/}, {label:'大野市',pattern:/大野市/},
-  {label:'勝山市',pattern:/勝山市/}, {label:'鯖江市',pattern:/鯖江市/}, {label:'あわら市',pattern:/あわら市/}, {label:'越前市',pattern:/越前市/},
-  {label:'坂井市',pattern:/坂井市/}, {label:'永平寺町',pattern:/永平寺町/}, {label:'池田町',pattern:/池田町/}, {label:'南越前町',pattern:/南越前町/},
-  {label:'越前町',pattern:/越前町/}, {label:'美浜町',pattern:/美浜町/}, {label:'高浜町',pattern:/高浜町/}, {label:'おおい町',pattern:/おおい町/}, {label:'若狭町',pattern:/若狭町/}
+const municipalities=[
+ {label:'福井市',pattern:/福井市/},{label:'敦賀市',pattern:/敦賀市/},{label:'小浜市',pattern:/小浜市/},{label:'大野市',pattern:/大野市/},{label:'勝山市',pattern:/勝山市/},{label:'鯖江市',pattern:/鯖江市/},{label:'あわら市',pattern:/あわら市/},{label:'越前市',pattern:/越前市/},{label:'坂井市',pattern:/坂井市/},{label:'永平寺町',pattern:/永平寺町/},{label:'池田町',pattern:/池田町/},{label:'南越前町',pattern:/南越前町/},{label:'越前町',pattern:/越前町/},{label:'美浜町',pattern:/美浜町/},{label:'高浜町',pattern:/高浜町/},{label:'おおい町',pattern:/おおい町/},{label:'若狭町',pattern:/若狭町/}
 ];
-function addFilterButtons(container, options, getValue, setValue) {
-  [{label:'すべて',value:''},...options.map(({label})=>({label,value:label}))].forEach(({label,value})=>{
-    const button=document.createElement('button'); button.type='button'; button.className='filter-button'; button.textContent=label; button.dataset.value=value;
-    button.setAttribute('aria-pressed',String(value===getValue())); button.addEventListener('click',()=>setValue(value)); container.appendChild(button);
-  });
-}
-function updateFilterButtons() {
-  industryButtons.querySelectorAll('button').forEach((button)=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedIndustry)));
-  municipalityButtons.querySelectorAll('button').forEach((button)=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedMunicipality)));
-}
-function setIndustry(value) { selectedIndustry=value; updateFilterButtons(); renderCompanies(); }
-function setMunicipality(value) { selectedMunicipality=value; updateFilterButtons(); renderCompanies(); }
-addFilterButtons(industryButtons,industryCategories,()=>selectedIndustry,setIndustry);
-addFilterButtons(municipalityButtons,municipalities,()=>selectedMunicipality,setMunicipality);
-
-function addMapToCard(card,company) {
-  const address=(company.address||'').trim(); const mapSection=document.createElement('div'); mapSection.className='company-map'; mapSection.setAttribute('aria-label',`${company.name}の所在地マップ`);
-  const heading=document.createElement('h4'); heading.textContent='企業所在地マップ'; const addressElement=document.createElement('p'); addressElement.textContent=`所在地：${address||'住所が登録されていません。'}`; mapSection.append(heading,addressElement);
-  if(!address){const message=document.createElement('p'); message.className='map-message'; message.setAttribute('role','status'); message.textContent='住所が登録されていないため、地図を検索できません。'; mapSection.appendChild(message); card.appendChild(mapSection); return;}
-  const encoded=encodeURIComponent(`${company.name} ${address}`); const message=document.createElement('p'); message.className='map-message'; message.setAttribute('role','status'); message.textContent='Googleマップで住所を検索しています。';
-  const frame=document.createElement('iframe'); frame.title=`${company.name}の所在地地図`; frame.src=`https://maps.google.com/maps?q=${encoded}&output=embed`; frame.loading='lazy'; frame.referrerPolicy='no-referrer-when-downgrade'; frame.allowFullscreen=true;
-  const link=document.createElement('a'); link.className='map-link'; link.href=`https://www.google.com/maps/search/?api=1&query=${encoded}`; link.target='_blank'; link.rel='noopener noreferrer'; link.textContent='Google マップで開く';
-  mapSection.append(message,frame,link); card.appendChild(mapSection);
-}
-function renderCompanies() {
-  const keyword=search.value.trim().toLocaleLowerCase();
-  const industry=industryCategories.find(({label})=>label===selectedIndustry);
-  const municipality=municipalities.find(({label})=>label===selectedMunicipality);
-  const matched=companyList.map((company,index)=>({company,index})).filter(({company})=>{
-    const address=company.address||'';
-    const searchText=`${company.name} ${address} ${company.info||''} ${company.industry||''}`.toLocaleLowerCase();
-    return (!keyword||searchText.includes(keyword)) && (!industry||industry.pattern.test(`${company.industry||''} ${company.info||''}`)) && (!municipality||municipality.pattern.test(address));
-  });
-  resultElement.replaceChildren(); countElement.textContent=`${matched.length}社が見つかりました。`;
-  matched.forEach(({company,index})=>{
-    const card=document.createElement('article'); card.className='company-card'; card.dataset.companyIndex=String(index);
-    const title=document.createElement('h3'); title.textContent=company.name;
-    const address=document.createElement('p'); address.textContent=`所在地：${company.address||'登録なし'}`;
-    const info=document.createElement('p'); info.textContent=`事業内容：${company.info||company.industry||'登録なし'}`;
-    const button=document.createElement('button'); button.type='button'; button.textContent=activeIndex===index?'地図を表示中':'地図で見る'; button.setAttribute('aria-expanded',String(activeIndex===index));
-    button.addEventListener('click',()=>{activeIndex=index; select.value=String(index); renderCompanies(); resultElement.querySelector(`[data-company-index="${index}"] .company-map`)?.scrollIntoView({behavior:'smooth',block:'nearest'});});
-    card.append(title,address,info,button); if(activeIndex===index) addMapToCard(card,company); resultElement.appendChild(card);
-  });
-}
-select.addEventListener('change',()=>{activeIndex=Number(select.value); renderCompanies(); resultElement.querySelector(`[data-company-index="${activeIndex}"] .company-map`)?.scrollIntoView({behavior:'smooth',block:'nearest'});});
-search.addEventListener('input',renderCompanies);
-renderCompanies();
+function addFilterButtons(container,options,getValue,setValue){[{label:'すべて',value:''},...options.map(({label})=>({label,value:label}))].forEach(({label,value})=>{const button=document.createElement('button');button.type='button';button.className='filter-button';button.textContent=label;button.dataset.value=value;button.setAttribute('aria-pressed',String(value===getValue()));button.addEventListener('click',()=>setValue(value));container.appendChild(button);});}
+function updateFilterButtons(){industryButtons.querySelectorAll('button').forEach((button)=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedIndustry)));municipalityButtons.querySelectorAll('button').forEach((button)=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedMunicipality)));}
+function setIndustry(value){selectedIndustry=value;updateFilterButtons();renderCompanies();}
+function setMunicipality(value){selectedMunicipality=value;updateFilterButtons();renderCompanies();}
+addFilterButtons(industryButtons,industryCategories,()=>selectedIndustry,setIndustry);addFilterButtons(municipalityButtons,municipalities,()=>selectedMunicipality,setMunicipality);
+function addMapToCard(card,company){const address=(company.address||'').trim(),mapSection=document.createElement('div');mapSection.className='company-map';mapSection.setAttribute('aria-label',`${company.name}の所在地マップ`);const heading=document.createElement('h4');heading.textContent='企業所在地マップ';const addressElement=document.createElement('p');addressElement.textContent=`所在地：${address||'住所が登録されていません。'}`;mapSection.append(heading,addressElement);if(!address){const message=document.createElement('p');message.className='map-message';message.setAttribute('role','status');message.textContent='住所が登録されていないため、地図を検索できません。';mapSection.appendChild(message);card.appendChild(mapSection);return;}const encoded=encodeURIComponent(`${company.name} ${address}`),message=document.createElement('p');message.className='map-message';message.setAttribute('role','status');message.textContent='Googleマップで住所を検索しています。';const frame=document.createElement('iframe');frame.title=`${company.name}の所在地地図`;frame.src=`https://maps.google.com/maps?q=${encoded}&output=embed`;frame.loading='lazy';frame.referrerPolicy='no-referrer-when-downgrade';frame.allowFullscreen=true;const link=document.createElement('a');link.className='map-link';link.href=`https://www.google.com/maps/search/?api=1&query=${encoded}`;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Google マップで開く';mapSection.append(message,frame,link);card.appendChild(mapSection);}
+function renderCompanies(){const keyword=search.value.trim().toLocaleLowerCase(),industry=industryCategories.find(({label})=>label===selectedIndustry),municipality=municipalities.find(({label})=>label===selectedMunicipality);const matched=companyList.map((company,index)=>({company,index})).filter(({company})=>{const address=company.address||'',business=`${company.industry||''} ${company.info||''}`,searchText=`${company.name} ${address} ${business}`.toLocaleLowerCase();return(!keyword||searchText.includes(keyword))&&(!industry||industry.pattern.test(business))&&(!municipality||municipality.pattern.test(address));});resultElement.replaceChildren();countElement.textContent=`${matched.length}社が見つかりました。`;matched.forEach(({company,index})=>{const card=document.createElement('article');card.className='company-card';card.dataset.companyIndex=String(index);const title=document.createElement('h3');title.textContent=company.name;const address=document.createElement('p');address.textContent=`所在地：${company.address||'登録なし'}`;const info=document.createElement('p');info.textContent=`事業内容：${company.info||company.industry||'登録なし'}`;const button=document.createElement('button');button.type='button';button.textContent=activeIndex===index?'地図を表示中':'地図で見る';button.setAttribute('aria-expanded',String(activeIndex===index));button.addEventListener('click',()=>{activeIndex=index;select.value=String(index);renderCompanies();resultElement.querySelector(`[data-company-index="${index}"] .company-map`)?.scrollIntoView({behavior:'smooth',block:'nearest'});});card.append(title,address,info,button);if(activeIndex===index)addMapToCard(card,company);resultElement.appendChild(card);});}
+select.addEventListener('change',()=>{activeIndex=Number(select.value);renderCompanies();resultElement.querySelector(`[data-company-index="${activeIndex}"] .company-map`)?.scrollIntoView({behavior:'smooth',block:'nearest'});});search.addEventListener('input',renderCompanies);renderCompanies();
 </script>
 </body>
 </html>
