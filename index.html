@@ -119,7 +119,7 @@
       box-shadow: inset 0 2px 10px rgba(43, 138, 145, .07), 0 9px 24px rgba(52, 136, 145, .08);
     }
     .chat-messages { display: grid; gap: 12px; max-height: 360px; overflow-y: auto; padding: 5px; }
-    .chat-message { max-width: 88%; padding: 11px 15px; border: 1px solid rgba(255,255,255,.8); border-radius: 18px; white-space: pre-wrap; overflow-wrap: anywhere; box-shadow: 0 4px 10px rgba(42, 119, 130, .06); }
+    .chat-message { max-width: 88%; padding: 11px 15px; border: 1px solid rgba(255,255,255,.8); border-radius: 18px; white-space: pre-wrap; overflow-wrap: anywhere; box-shadow: 0 4px 10px rgba(42, 120, 128, .08); }
     .chat-message.assistant { justify-self: start; border-bottom-left-radius: 6px; background: linear-gradient(135deg, #fff, #e1f7f2); }
     .chat-message.user { justify-self: end; border-bottom-right-radius: 6px; color: #fff; background: linear-gradient(135deg, #53c4bd, #238f95); }
     .chat-choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
@@ -168,13 +168,14 @@
       <div id="chat-results" class="chat-results" hidden></div>
       <button id="chat-reset" class="chat-reset" type="button" hidden>もう一度相談する</button>
     </div>
-    <p class="notice">※この機能は、あなたの回答と福井県の企業データをもとに、あなただけの候補を簡単に絞り込むものです。より自然な会話に近づけるには、将来生成AIのAPI連携を追加できます。</p>
+    <p class="notice">※この機能は、あなたの回答と福井県の企業データをもとに、あなただけの候補を簡単に絞り込むものです。より自然な会話に近づきます。</p>
   </section>
   <section aria-labelledby="company-heading">
     <h2 id="company-heading">🏢 福井県の企業を探す</h2>
     <p class="muted">企業名・住所・事業内容から検索してください。</p>
     <div class="filters">
       <label>企業を検索<input id="company-search" type="search" placeholder="企業名・住所・事業内容" aria-label="企業名・住所・事業内容で検索"></label>
+      <label for="industry-filter">業種で絞り込む<select id="industry-filter" aria-label="業種で絞り込む"><option value="">すべての業種</option></select></label>
       <label for="company-select">地図に表示する企業<select id="company-select" aria-label="地図に表示する企業"></select></label>
     </div>
     <p id="company-count" role="status" aria-live="polite"></p>
@@ -188,6 +189,7 @@
   const companyList = Array.isArray(companies) ? companies : [];
   const select = document.getElementById('company-select');
   const search = document.getElementById('company-search');
+  const industryFilter = document.getElementById('industry-filter');
   const resultElement = document.getElementById('company-results');
   const countElement = document.getElementById('company-count');
   let activeIndex = null;
@@ -201,7 +203,7 @@
 
   const careerQuestions = [
     { text: 'まず、あなたが「楽しい」と感じる仕事のタイプを選んでください。', choices: ['頭を使って考える仕事', '手を動かして作る仕事', '人と関わる仕事', '数字や情報を扱う仕事', '地域や社会に役立つ仕事'] },
-    { text: '��に、こんなときにやる気が出ますか？', choices: ['新しいアイデアを考えるとき', 'ものづくりをしているとき', '人の役に立てているとき', '予定を立てて進めるとき', '地域に貢献しているとき'] },
+    { text: '次に、こんなときにやる気が出ますか？', choices: ['新しいアイデアを考えるとき', 'ものづくりをしているとき', '人の役に立てているとき', '予定を立てて進めるとき', '地域に貢献しているとき'] },
     { text: '最後に、働くうえで大事にしたいことはどれですか？', choices: ['安定した仕事', '成長できる環境', '自分の考えを活かせる', '人間関係が良い', '社会に貢献したい'] }
   ];
   let careerAnswers = [];
@@ -337,6 +339,17 @@
     select.appendChild(option);
   });
 
+  const industryValues = [...new Set(companyList.flatMap((company) => [company.industry, company.info].filter(Boolean)))]
+    .filter((value) => value && value !== 'その他')
+    .sort((a, b) => a.localeCompare(b, 'ja'));
+
+  industryValues.forEach((industry) => {
+    const option = document.createElement('option');
+    option.value = industry;
+    option.textContent = industry;
+    industryFilter.appendChild(option);
+  });
+
   function addMapToCard(card, company) {
     const address = (company.address || '').trim();
     const mapSection = document.createElement('div');
@@ -379,9 +392,13 @@
 
   function renderCompanies() {
     const keyword = search.value.trim().toLocaleLowerCase();
-    const matched = companyList.map((company, index) => ({ company, index })).filter(({ company }) =>
-      `${company.name} ${company.address} ${company.info || ''} ${company.industry || ''}`.toLocaleLowerCase().includes(keyword)
-    );
+    const selectedIndustry = industryFilter ? industryFilter.value : '';
+    const matched = companyList.map((company, index) => ({ company, index })).filter(({ company }) => {
+      const searchText = `${company.name} ${company.address || ''} ${company.info || ''} ${company.industry || ''}`.toLocaleLowerCase();
+      const keywordMatch = !keyword || searchText.includes(keyword);
+      const industryMatch = !selectedIndustry || `${company.industry || ''} ${company.info || ''}`.includes(selectedIndustry);
+      return keywordMatch && industryMatch;
+    });
     resultElement.replaceChildren();
     countElement.textContent = `${matched.length}社が見つかりました。`;
     matched.forEach(({ company, index }) => {
@@ -416,6 +433,7 @@
     resultElement.querySelector(`[data-company-index="${activeIndex}"] .company-map`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
   search.addEventListener('input', renderCompanies);
+  industryFilter.addEventListener('change', renderCompanies);
   renderCompanies();
 </script>
 </body>
