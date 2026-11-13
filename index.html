@@ -57,9 +57,25 @@
     .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     @media(max-width:600px) { body { padding:16px 10px 36px; } section { padding:21px 16px; border-radius:26px; } .company-grid { grid-template-columns:1fr; } .company-map iframe { height:260px; } .chat-entry { align-items:stretch; } }
     @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition-duration:.01ms!important; } }
+ .site-header {
+  max-width: 1050px;
+  margin: 0 auto 18px;
+  padding: 4px 8px;
+}
+
+.site-brand {
+  color: #164b59;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-decoration: none;
+}
   </style>
 </head>
 <body>
+  <header class="site-header">
+  <a class="site-brand" href="./" aria-label="ガクマチ ホーム">ガクマチ</a>
+</header>
 <main>
   <section><h1>福井で見つける企業・仕事</h1><p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p></section>
   <section aria-labelledby="career-heading">
