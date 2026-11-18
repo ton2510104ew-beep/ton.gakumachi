@@ -1,4 +1,4 @@
-/ 福井県内の企業データ
+// 福井県内の企業データ
 // index.html などから読み込む場合は <script src="companies.js"></script> を追加してください。
 const companies = [
   {
