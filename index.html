@@ -39,7 +39,9 @@
     .company-card::after { content:""; position:absolute; inset:-30%; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.55),transparent 58%); transform:scale(0); opacity:0; pointer-events:none; }
     .company-card:hover { transform:translateY(-3px); box-shadow:0 16px 30px rgba(72,151,151,.16); }
     .company-card:active { transform:scale(.985); }
-    .company-card h3 { margin:0 0 5px; }
+    .company-card h3 { margin:0 0 5px; padding-right:42px; }
+    .favorite-button { position:absolute; z-index:1; top:12px; right:12px; padding:5px 10px; color:#b45468; background:rgba(255,255,255,.9); font-size:20px; line-height:1.2; box-shadow:0 3px 10px rgba(72,100,100,.12); }
+    .favorite-button.active { color:#d63859; }
     .company-card p { margin:5px 0; overflow-wrap:anywhere; color:var(--muted); font-size:14px; }
     .company-map { margin-top:16px; padding-top:12px; border-top:1px solid var(--line); }
     .company-map h4 { margin:0; color:var(--dark); }
@@ -112,6 +114,12 @@ const industryButtons=document.getElementById('industry-filter-buttons');
 const municipalityButtons=document.getElementById('municipality-filter-buttons');
 const resultElement=document.getElementById('company-results');
 const countElement=document.getElementById('company-count');
+const favoriteStorageKey='gakumachi-favorite-companies';
+function loadCompanyFavorites(){try{const saved=JSON.parse(localStorage.getItem(favoriteStorageKey)||'[]');return new Set(Array.isArray(saved)?saved.filter(key=>typeof key==='string'):[]);}catch{return new Set();}}
+const favoriteCompanies=loadCompanyFavorites();
+function getCompanyFavoriteKey(company){return JSON.stringify([company.name||'',company.address||'']);}
+function saveCompanyFavorites(){try{localStorage.setItem(favoriteStorageKey,JSON.stringify([...favoriteCompanies]));}catch(error){console.warn('お気に入りを保存できませんでした。',error);}}
+function toggleCompanyFavorite(company,button){const key=getCompanyFavoriteKey(company),isFavorite=favoriteCompanies.has(key);if(isFavorite)favoriteCompanies.delete(key);else favoriteCompanies.add(key);const favoriteActive=!isFavorite;button.textContent=favoriteActive?'♥':'♡';button.classList.toggle('active',favoriteActive);button.setAttribute('aria-pressed',String(favoriteActive));button.setAttribute('aria-label',`${company.name||'この企業'}を${favoriteActive?'お気に入りから削除':'お気に入りに追加'}`);saveCompanyFavorites();}
 let activeIndex=null,selectedIndustry='',selectedMunicipality='';
 
 const chatMessages=document.getElementById('chat-messages'),chatChoices=document.getElementById('chat-choices'),chatForm=document.getElementById('chat-form'),chatInput=document.getElementById('chat-input'),chatResults=document.getElementById('chat-results'),chatReset=document.getElementById('chat-reset');
@@ -147,7 +155,18 @@ function setIndustry(value){selectedIndustry=value;updateFilterButtons();renderC
 function setMunicipality(value){selectedMunicipality=value;updateFilterButtons();renderCompanies();}
 addFilterButtons(industryButtons,industryCategories,()=>selectedIndustry,setIndustry);addFilterButtons(municipalityButtons,municipalities,()=>selectedMunicipality,setMunicipality);
 function addMapToCard(card,company){const address=(company.address||'').trim(),mapSection=document.createElement('div');mapSection.className='company-map';const title=document.createElement('h4');title.textContent='所在地';const mapMessage=document.createElement('p');mapMessage.className='map-message';if(!address){mapMessage.textContent='住所情報が登録されていません。';mapSection.append(title,mapMessage);}else{const query=encodeURIComponent(address),iframe=document.createElement('iframe');iframe.title=`${company.name}の地図`;iframe.loading='lazy';iframe.src=`https://www.google.com/maps?q=${query}&output=embed`;const link=document.createElement('a');link.className='map-link';link.href=`https://www.google.com/maps/search/?api=1&query=${query}`;link.target='_blank';link.rel='noopener';link.textContent='地図を見る';mapSection.append(title,mapMessage,iframe,link);}card.appendChild(mapSection);}
-function renderCompanies(){const keyword=search.value.trim().toLocaleLowerCase(),industry=industryCategories.find(({label})=>label===selectedIndustry),municipality=municipalities.find(({label})=>label===selectedMunicipality);const filtered=companyList.map((company,index)=>({company,index})).filter(({company})=>{const haystack=`${company.name||''} ${company.address||''} ${company.info||''}`.toLocaleLowerCase();if(keyword&&!haystack.includes(keyword))return false;if(industry&&!industry.pattern.test(`${company.info||''} ${company.address||''}`))return false;if(municipality&&!municipality.pattern.test(company.address||''))return false;return true;});countElement.textContent=`${filtered.length}件の企業が見つかりました`;resultElement.replaceChildren();filtered.forEach(({company,index})=>{const card=document.createElement('article');card.className='company-card';card.dataset.companyIndex=String(index);const name=document.createElement('h3');name.textContent=company.name||'';const address=document.createElement('p');address.textContent=company.address||'';const info=document.createElement('p');info.textContent=company.info||'';card.append(name,address,info);if(activeIndex===index)addMapToCard(card,company);card.addEventListener('click',()=>{activeIndex=activeIndex===index?null:index;renderCompanies();if(activeIndex===index)card.scrollIntoView({behavior:'smooth',block:'nearest'});});resultElement.appendChild(card);});}
+function renderCompanies(){const keyword=search.value.trim().toLocaleLowerCase(),industry=industryCategories.find(({label})=>label===selectedIndustry),municipality=municipalities.find(({label})=>label===selectedMunicipality);const filtered=companyList.map((company,index)=>({company,index})).filter(({company})=>{const haystack=`${company.name||''} ${company.address||''} ${company.info||''}`.toLocaleLowerCase();if(keyword&&!haystack.includes(keyword))return false;if(industry&&!industry.pattern.test(`${company.info||''} ${company.address||''}`))return false;if(municipality&&!municipality.pattern.test(company.address||''))return false;return true;});countElement.textContent=`${filtered.length}件の企業が見つかりました`;resultElement.replaceChildren();filtered.forEach(({company,index})=>{const card=document.createElement('article');card.className='company-card';card.dataset.companyIndex=String(index);
+// お気に入りボタン
+const favoriteButton=document.createElement('button');
+favoriteButton.type='button';
+favoriteButton.className='favorite-button';
+const favoriteActive=favoriteCompanies.has(getCompanyFavoriteKey(company));
+favoriteButton.textContent=favoriteActive?'♥':'♡';
+favoriteButton.classList.toggle('active',favoriteActive);
+favoriteButton.setAttribute('aria-pressed',String(favoriteActive));
+favoriteButton.setAttribute('aria-label',`${company.name||'この企業'}を${favoriteActive?'お気に入りから削除':'お気に入りに追加'}`);
+favoriteButton.addEventListener('click',event=>{event.stopPropagation();toggleCompanyFavorite(company,favoriteButton);});
+const name=document.createElement('h3');name.textContent=company.name||'';const address=document.createElement('p');address.textContent=company.address||'';const info=document.createElement('p');info.textContent=company.info||'';card.append(favoriteButton,name,address,info);if(activeIndex===index)addMapToCard(card,company);card.addEventListener('click',()=>{activeIndex=activeIndex===index?null:index;renderCompanies();if(activeIndex===index)card.scrollIntoView({behavior:'smooth',block:'nearest'});});resultElement.appendChild(card);});}
 select.addEventListener('change',()=>{activeIndex=Number(select.value);renderCompanies();resultElement.querySelector(`[data-company-index="${activeIndex}"]`)?.scrollIntoView({behavior:'smooth',block:'center'});});
 search.addEventListener('input',renderCompanies);
 
