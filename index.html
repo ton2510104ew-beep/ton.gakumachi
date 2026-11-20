@@ -19,9 +19,23 @@
     section::before { content:""; position:absolute; z-index:-1; top:-90px; right:-60px; width:210px; height:210px; border:1px solid rgba(255,255,255,.65); border-radius:50%; background:radial-gradient(circle at 55% 55%,rgba(255,255,255,.72),rgba(238,199,213,.12)); }
     section>* { position:relative; }
     h1,h2,h3 { color:var(--dark); font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","ヒラギノ丸ゴ ProN","Yu Gothic",sans-serif; }
-    h1 { margin:0 0 8px; font-size:clamp(29px,5vw,44px); line-height:1.35; letter-spacing:.06em; }
+    h1 { margin:0; font-size:clamp(29px,5vw,44px); line-height:1.35; letter-spacing:.06em; }
     h2 { margin-top:0; letter-spacing:.04em; }
     h3 { letter-spacing:.035em; }
+    .hero-heading-row { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .favorites-open-button { flex:0 0 auto; }
+    .favorites-count { display:inline-grid; min-width:1.6em; height:1.6em; place-items:center; margin-left:5px; padding:0 .35em; border-radius:999px; color:#9d728f; background:#fff; font-size:.8em; }
+    .favorites-dialog { width:min(680px,calc(100% - 28px)); max-height:min(80vh,720px); padding:24px; border:1px solid rgba(255,255,255,.95); border-radius:26px; color:var(--text); background:linear-gradient(145deg,#fffdfb,#f7eff4); box-shadow:0 24px 70px rgba(75,55,72,.25); }
+    .favorites-dialog::backdrop { background:rgba(49,52,65,.4); backdrop-filter:blur(4px); }
+    .favorites-dialog-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+    .favorites-dialog-header h2 { margin:0; }
+    .favorites-dialog-close { flex:0 0 auto; }
+    .favorites-list { display:grid; gap:12px; max-height:60vh; overflow:auto; }
+    .favorite-item { padding:15px; border:1px solid var(--line); border-radius:18px; background:rgba(255,255,255,.8); }
+    .favorite-item h3 { margin:0 0 5px; }
+    .favorite-item p { margin:4px 0; overflow-wrap:anywhere; color:var(--muted); font-size:14px; }
+    .favorite-item-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+    .favorite-remove-button { color:#9d5875; background:linear-gradient(135deg,#fffdfb,#f3dee7); }
     .muted,.map-message,.notice { color:var(--muted); }
     .filters { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; align-items:start; }
     .search-filter-group { display:grid; gap:12px; min-width:0; }
@@ -78,13 +92,20 @@
     @keyframes water-drop { 0% { transform:translate(0,0) scale(.8); opacity:.9; } 100% { transform:translate(var(--dx),var(--dy)) scale(.15); opacity:0; } }
     @keyframes water-press { 0% { filter:brightness(1); } 35% { filter:brightness(1.12) saturate(.9); } 100% { filter:brightness(1); } }
 
-    @media(max-width:600px) { body { padding:16px 10px 36px; } section { padding:21px 16px; border-radius:26px; } .company-grid { grid-template-columns:1fr; } .company-map iframe { height:260px; } .chat-entry { flex-direction:column; } }
+    @media(max-width:600px) { body { padding:16px 10px 36px; } section { padding:21px 16px; border-radius:26px; } .company-grid { grid-template-columns:1fr; } .company-map iframe { height:260px; } .chat-entry { flex-direction:column; } .hero-heading-row { align-items:flex-start; } .favorites-open-button { width:100%; } .favorites-dialog { padding:18px; } }
     @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition-duration:.01ms!important; } .water-ripple,.water-ripple::before,.water-ripple::after,.water-drop { animation-duration:.01ms!important; } }
   </style>
 </head>
 <body>
 <main>
-  <section><h1>福井で見つける企業・仕事</h1><p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p></section>
+  <section>
+    <div class="hero-heading-row"><h1>福井で見つける企業・仕事</h1><button id="favorites-open" class="favorites-open-button" type="button">♡ お気に入りリスト <span id="favorites-count" class="favorites-count" aria-label="お気に入り件数">0</span></button></div>
+    <p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p>
+  </section>
+  <dialog id="favorites-dialog" class="favorites-dialog" aria-labelledby="favorites-heading">
+    <div class="favorites-dialog-header"><h2 id="favorites-heading">お気に入りリスト</h2><button id="favorites-close" class="favorites-dialog-close" type="button">閉じる</button></div>
+    <div id="favorites-list" class="favorites-list"></div>
+  </dialog>
   <section aria-labelledby="career-heading">
     <h2 id="career-heading">あなたに合う仕事を一緒に考えよう</h2><p class="muted">少しだけ話してくれたら、あなたの考え方に合いそうな仕事や企業を提案します。</p>
     <div class="career-chat">
@@ -118,13 +139,21 @@ const industryButtons=document.getElementById('industry-filter-buttons');
 const municipalityButtons=document.getElementById('municipality-filter-buttons');
 const resultElement=document.getElementById('company-results');
 const countElement=document.getElementById('company-count');
+const favoritesOpenButton=document.getElementById('favorites-open');
+const favoritesCount=document.getElementById('favorites-count');
+const favoritesDialog=document.getElementById('favorites-dialog');
+const favoritesList=document.getElementById('favorites-list');
 const favoriteStorageKey='gakumachi-favorite-companies';
 function loadCompanyFavorites(){try{const saved=JSON.parse(localStorage.getItem(favoriteStorageKey)||'[]');return new Set(Array.isArray(saved)?saved.filter(key=>typeof key==='string'):[]);}catch{return new Set();}}
 const favoriteCompanies=loadCompanyFavorites();
 function getCompanyFavoriteKey(company){return JSON.stringify([company.name||'',company.address||'']);}
 function saveCompanyFavorites(){try{localStorage.setItem(favoriteStorageKey,JSON.stringify([...favoriteCompanies]));}catch(error){console.warn('お気に入りを保存できませんでした。',error);}}
-function toggleCompanyFavorite(company,button){const key=getCompanyFavoriteKey(company),isFavorite=favoriteCompanies.has(key);if(isFavorite)favoriteCompanies.delete(key);else favoriteCompanies.add(key);const favoriteActive=!isFavorite;button.textContent=favoriteActive?'♥':'♡';button.classList.toggle('active',favoriteActive);button.setAttribute('aria-pressed',String(favoriteActive));button.setAttribute('aria-label',`${company.name||'この企業'}を${favoriteActive?'お気に入りから削除':'お気に入りに追加'}`);saveCompanyFavorites();}
+function updateFavoritesCount(){favoritesCount.textContent=String(favoriteCompanies.size);}
+function renderFavoritesList(){favoritesList.replaceChildren();const favorites=companyList.filter(company=>favoriteCompanies.has(getCompanyFavoriteKey(company)));if(!favorites.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='お気に入りに登録した企業はありません。企業カードのハートを押して追加できます。';favoritesList.appendChild(empty);updateFavoritesCount();return;}favorites.forEach(company=>{const item=document.createElement('article');item.className='favorite-item';const name=document.createElement('h3');name.textContent=company.name||'企業名未登録';const address=document.createElement('p');address.textContent=company.address||'住所情報なし';const info=document.createElement('p');info.textContent=company.info||'';item.append(name,address,info);const actions=document.createElement('div');actions.className='favorite-item-actions';const removeButton=document.createElement('button');removeButton.type='button';removeButton.className='favorite-remove-button';removeButton.textContent='お気に入りから削除';removeButton.addEventListener('click',()=>{favoriteCompanies.delete(getCompanyFavoriteKey(company));saveCompanyFavorites();updateFavoritesCount();renderFavoritesList();renderCompanies();});actions.appendChild(removeButton);if(company.address){const mapLink=document.createElement('a');mapLink.className='map-link';mapLink.href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address)}`;mapLink.target='_blank';mapLink.rel='noopener';mapLink.textContent='地図を見る';actions.appendChild(mapLink);}item.appendChild(actions);favoritesList.appendChild(item);});updateFavoritesCount();}
+function toggleCompanyFavorite(company,button){const key=getCompanyFavoriteKey(company),isFavorite=favoriteCompanies.has(key);if(isFavorite)favoriteCompanies.delete(key);else favoriteCompanies.add(key);const favoriteActive=!isFavorite;button.textContent=favoriteActive?'♥':'♡';button.classList.toggle('active',favoriteActive);button.setAttribute('aria-pressed',String(favoriteActive));button.setAttribute('aria-label',`${company.name||'この企業'}を${favoriteActive?'お気に入りから削除':'お気に入りに追加'}`);saveCompanyFavorites();updateFavoritesCount();if(favoritesDialog.open)renderFavoritesList();}
 let activeIndex=null,selectedIndustry='',selectedMunicipality='';
+favoritesOpenButton.addEventListener('click',()=>{renderFavoritesList();favoritesDialog.showModal();});
+document.getElementById('favorites-close').addEventListener('click',()=>favoritesDialog.close());
 
 const chatMessages=document.getElementById('chat-messages'),chatChoices=document.getElementById('chat-choices'),chatForm=document.getElementById('chat-form'),chatInput=document.getElementById('chat-input'),chatResults=document.getElementById('chat-results'),chatReset=document.getElementById('chat-reset');
 const careerQuestions=[
@@ -166,8 +195,7 @@ search.addEventListener('input',renderCompanies);
 function createWaterEffect(x,y,target){if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const ripple=document.createElement('span');ripple.className='water-ripple';ripple.style.left=`${x}px`;ripple.style.top=`${y}px`;document.body.appendChild(ripple);ripple.addEventListener('animationend',()=>ripple.remove());for(let i=0;i<7;i++){const drop=document.createElement('span');drop.className='water-drop';const angle=(Math.PI*2*i/7)+(Math.random()*35);const distance=20+Math.random()*24;drop.style.left=`${x}px`;drop.style.top=`${y}px`;drop.style.setProperty('--dx',`${Math.cos(angle)*distance}px`);drop.style.setProperty('--dy',`${Math.sin(angle)*distance}px`);document.body.appendChild(drop);drop.addEventListener('animationend',()=>drop.remove());}if(target){target.classList.remove('water-press');void target.offsetWidth;target.classList.add('water-press');setTimeout(()=>target.classList.remove('water-press'),400);}}
 document.addEventListener('pointerdown',event=>{const target=event.target.closest('button,.filter-button,.company-card,input,select')||event.target;if(target!==document.documentElement)createWaterEffect(event.clientX,event.clientY,target);},{passive:true});
 
-showCareerQuestion();renderCompanies();
+updateFavoritesCount();showCareerQuestion();renderCompanies();
 </script>
 </body>
 </html>
-
