@@ -3,180 +3,369 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6dce7">
+  <meta name="theme-color" content="#23333F">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&family=Noto+Serif+JP:wght@500;600&display=swap" rel="stylesheet">
   <title>福井で見つける企業・仕事 | ガクマチ</title>
   <style>
-    :root { color-scheme:light; --dark:#65394e; --text:#5d4652; --muted:#886d79; --primary:#c45f88; --line:rgba(143,145,153,.48); --glass:rgba(255,249,252,.86); --silver:#aeb0b8; --silver-light:#f3f3f5; }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { min-height:100vh; margin:0; padding:34px 18px 56px; color:var(--text); font-family:"M PLUS 1p","Hiragino Sans","Yu Gothic",sans-serif; letter-spacing:.025em; line-height:1.75; background:radial-gradient(ellipse at 8% 8%,rgba(255,255,255,.98),transparent 24%),radial-gradient(ellipse at 92% 20%,rgba(241,177,202,.55),transparent 31%),linear-gradient(160deg,#fff1f6 0%,#f8dce8 58%,#f3d4e1 100%); }
-    body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.25; background-image:radial-gradient(circle at 20% 30%,rgba(255,255,255,.9) 0 1px,transparent 2px),radial-gradient(circle at 75% 65%,rgba(199,95,136,.2) 0 1px,transparent 2px); background-size:38px 38px,47px 47px; }
-    main { max-width:1050px; margin:auto; }
-    section { position:relative; isolation:isolate; overflow:hidden; padding:30px; margin-bottom:26px; border:1px solid transparent; border-radius:30px; background:linear-gradient(var(--glass),var(--glass)) padding-box,linear-gradient(145deg,#fff 0%,#a7a9b1 18%,#f9f9fa 34%,#9c9ea8 52%,#fff 72%,#b0b1b8 100%) border-box; box-shadow:0 18px 45px rgba(145,73,104,.14),inset 0 1px 0 rgba(255,255,255,.95); backdrop-filter:blur(14px); }
-    section::before { content:""; position:absolute; z-index:-1; top:-90px; right:-60px; width:210px; height:210px; border:1px solid rgba(255,255,255,.8); border-radius:50%; background:radial-gradient(circle at 55% 55%,rgba(255,255,255,.78),rgba(226,136,172,.2)); }
-    section>* { position:relative; }
-    h1,h2,h3 { color:var(--dark); font-family:"M PLUS 1p","Hiragino Sans","Yu Gothic",sans-serif; }
-    h1 { margin:0; font-size:clamp(29px,5vw,44px); line-height:1.35; letter-spacing:.06em; }
-    h2 { margin-top:0; letter-spacing:.04em; }
-    h3 { letter-spacing:.035em; }
-    .hero-heading-row { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
-    .favorites-open-button { flex:0 0 auto; }
-    .favorites-count { display:inline-grid; min-width:1.6em; height:1.6em; place-items:center; margin-left:5px; padding:0 .35em; border-radius:999px; color:#8f4967; background:linear-gradient(145deg,#fff,#f8e6ee); font-size:.8em; box-shadow:inset 0 0 0 1px rgba(167,169,177,.45); }
-    .favorites-dialog { width:min(680px,calc(100% - 28px)); max-height:min(80vh,720px); padding:24px; border:1px solid transparent; border-radius:26px; color:var(--text); background:linear-gradient(145deg,#fffafd,#f9e6ef) padding-box,linear-gradient(145deg,#fff,#a7a9b1,#f8f8f9,#999ba5,#fff) border-box; box-shadow:0 24px 70px rgba(75,55,72,.25); }
-    .favorites-dialog::backdrop { background:rgba(49,40,47,.4); backdrop-filter:blur(4px); }
-    .favorites-dialog-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
-    .favorites-dialog-header h2 { margin:0; }
-    .favorites-dialog-close { flex:0 0 auto; }
-    .favorites-list { display:grid; gap:12px; max-height:60vh; overflow:auto; }
-    .favorite-item { padding:15px; border:1px solid rgba(160,161,169,.48); border-radius:18px; background:rgba(255,255,255,.86); box-shadow:0 6px 18px rgba(145,73,104,.07); }
-    .favorite-item h3 { margin:0 0 5px; }
-    .favorite-item p { margin:4px 0; overflow-wrap:anywhere; color:var(--muted); font-size:14px; }
-    .favorite-item-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .favorite-remove-button { color:#8f4967; background:linear-gradient(135deg,#fffafd,#f5dce7); }
-    .muted,.map-message,.notice { color:var(--muted); }
-    .filters { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; align-items:start; }
-    .search-filter-group { display:grid; gap:12px; min-width:0; }
-    label { display:grid; gap:7px; }
-    input,select { width:100%; min-width:0; padding:13px 15px; border:1px solid rgba(158,160,169,.58); border-radius:16px; background:rgba(255,255,255,.92); color:var(--text); font:inherit; box-shadow:inset 0 1px 0 white,0 3px 10px rgba(145,73,104,.05); }
-    input::placeholder { color:#9c828e; }
-    :focus-visible { outline:3px solid rgba(196,95,136,.4); outline-offset:3px; }
-    .filter-group { display:grid; gap:7px; }
-    .filter-label { margin:0; color:var(--dark); font-size:14px; font-weight:700; }
-    .filter-buttons { display:flex; flex-wrap:wrap; gap:8px; }
-    .filter-button { padding:8px 13px; border:1px solid rgba(158,160,169,.55); border-radius:999px; color:var(--dark); background:linear-gradient(145deg,#fff,#f8edf2); font:inherit; font-size:13px; box-shadow:0 3px 9px rgba(145,73,104,.08); }
-    .filter-button[aria-pressed="true"] { border:1px solid transparent; color:white; background:linear-gradient(#cd6f96,#b8527d) padding-box,linear-gradient(145deg,#fff,#9699a3,#fff) border-box; }
-    button { position:relative; overflow:hidden; padding:10px 17px; border:1px solid transparent; border-radius:999px; color:white; background:linear-gradient(#ce7198,#b9517c) padding-box,linear-gradient(145deg,#fff 0%,#9c9ea7 35%,#fefeff 58%,#999ba5 82%,#fff 100%) border-box; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 8px 18px rgba(171,81,119,.2),inset 0 1px 0 rgba(255,255,255,.35); transition:transform .18s,filter .18s,box-shadow .18s; -webkit-tap-highlight-color:transparent; }
-    button:hover { filter:brightness(1.04); transform:translateY(-1px); }
-    button:active { transform:scale(.96); box-shadow:0 3px 10px rgba(171,81,119,.14); }
-    button:disabled { opacity:.6; cursor:not-allowed; }
-    .company-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:15px; margin-top:16px; }
-    .company-card { position:relative; min-width:0; padding:19px; border:1px solid transparent; border-radius:24px; background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(250,224,235,.84)) padding-box,linear-gradient(145deg,#fff 0%,#a5a7b0 22%,#fff 42%,#989aa4 62%,#fff 82%,#b1b2b9 100%) border-box; box-shadow:0 12px 24px rgba(145,73,104,.12); cursor:pointer; transition:transform .2s,box-shadow .2s,background .35s; overflow:hidden; }
-    .company-card::after { content:""; position:absolute; inset:-30%; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.55),transparent 58%); transform:scale(0); opacity:0; pointer-events:none; }
-    .company-card:hover { transform:translateY(-3px); box-shadow:0 16px 30px rgba(145,73,104,.18),0 0 0 1px rgba(158,160,169,.22); }
-    .company-card:active { transform:scale(.985); }
-    .company-card h3 { margin:0 0 5px; padding-right:42px; }
-    .favorite-button { position:absolute; z-index:1; top:12px; right:12px; padding:5px 10px; border:1px solid transparent; color:#a64e74; background:linear-gradient(#fff,#f9edf2) padding-box,linear-gradient(145deg,#fff,#a5a7b0,#fff) border-box; font-size:20px; line-height:1.2; box-shadow:0 3px 10px rgba(145,73,104,.12); }
-    .favorite-button.active { color:#c44778; }
-    .company-card p { margin:5px 0; overflow-wrap:anywhere; color:var(--muted); font-size:14px; }
-    .company-map { margin-top:16px; padding-top:12px; border-top:1px solid var(--line); }
-    .company-map h4 { margin:0; color:var(--dark); }
-    .company-map iframe { display:block; width:100%; height:300px; margin-top:10px; border:1px solid rgba(158,160,169,.55); border-radius:18px; background:#f7e8ef; }
-    .map-link { display:inline-flex; align-items:center; justify-content:center; margin-top:10px; padding:10px 16px; border:1px solid transparent; border-radius:999px; color:#fff; background:linear-gradient(#ce7198,#b9517c) padding-box,linear-gradient(145deg,#fff,#999ba5,#fff) border-box; font-weight:700; text-decoration:none; box-shadow:0 8px 18px rgba(171,81,119,.18); }
-    .map-link:hover { filter:brightness(1.05); }
-    .notice { font-size:12px; }
-    .career-chat { max-width:760px; margin:16px auto 0; padding:19px; border:1px solid transparent; border-radius:26px; background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(249,226,236,.84)) padding-box,linear-gradient(145deg,#fff,#a7a9b1,#fff,#999ba5,#fff) border-box; box-shadow:0 8px 24px rgba(145,73,104,.08); }
-    .chat-messages { display:grid; gap:12px; max-height:360px; overflow-y:auto; padding:5px; }
-    .chat-message { max-width:88%; padding:11px 15px; border:1px solid rgba(158,160,169,.35); border-radius:18px; white-space:pre-wrap; overflow-wrap:anywhere; }
-    .chat-message.assistant { justify-self:start; background:rgba(255,255,255,.92); }
-    .chat-message.user { justify-self:end; color:white; background:linear-gradient(135deg,#ce7198,#b9517c); }
-    .chat-choices { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
-    .chat-choices button { color:var(--dark); background:linear-gradient(#fff,#f8eaf1) padding-box,linear-gradient(145deg,#fff,#a7a9b1,#fff) border-box; }
-    .chat-entry { display:flex; gap:8px; margin-top:14px; }
-    .chat-entry input { flex:1; }
-    .chat-results { margin-top:18px; padding-top:14px; border-top:1px solid var(--line); }
-    .chat-results h3 { margin-top:0; }
-    .chat-results li { margin:8px 0; }
-    .chat-results a { color:#a64e74; font-weight:700; }
-    .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-    .water-ripple { position:fixed; z-index:9999; width:18px; height:18px; margin:-9px 0 0 -9px; border:2px solid rgba(255,255,255,.92); border-radius:50%; pointer-events:none; box-shadow:0 0 0 3px rgba(158,160,169,.2),0 0 18px rgba(255,255,255,.75),inset 0 0 8px rgba(196,95,136,.18); animation:water-ripple .68s cubic-bezier(.16,.7,.28,1) forwards; }
-    .water-ripple::before,.water-ripple::after { content:""; position:absolute; inset:-7px; border:1px solid rgba(167,169,177,.8); border-radius:50%; animation:water-ring .72s .05s ease-out forwards; }
-    .water-ripple::after { inset:-14px; border-color:rgba(255,255,255,.75); animation-delay:.12s; }
-    .water-drop { position:fixed; z-index:9998; width:5px; height:8px; margin:-4px 0 0 -2.5px; border-radius:50% 50% 60% 60%; pointer-events:none; background:radial-gradient(circle at 35% 25%,white 0 18%,rgba(196,95,136,.78) 36%,rgba(158,160,169,.5)); box-shadow:0 2px 5px rgba(158,160,169,.2); animation:water-drop .62s cubic-bezier(.2,.7,.35,1) forwards; }
-    .water-press { animation:water-press .38s ease-out; }
-    @keyframes water-ripple { 0% { transform:scale(.2); opacity:1; } 100% { transform:scale(7); opacity:0; } }
-    @keyframes water-ring { 0% { transform:scale(.15); opacity:.9; } 100% { transform:scale(2.2); opacity:0; } }
-    @keyframes water-drop { 0% { transform:translate(0,0) scale(.8); opacity:.9; } 100% { transform:translate(var(--dx),var(--dy)) scale(.15); opacity:0; } }
-    @keyframes water-press { 0% { filter:brightness(1); } 35% { filter:brightness(1.12) saturate(.9); } 100% { filter:brightness(1); } }
-    @media(max-width:600px) { body { padding:16px 10px 36px; } section { padding:21px 16px; border-radius:26px; } .company-grid { grid-template-columns:1fr; } .company-map iframe { height:260px; } .chat-entry { flex-direction:column; } .hero-heading-row { align-items:flex-start; } .favorites-open-button { width:100%; } .favorites-dialog { padding:18px; } }
-    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition-duration:.01ms!important; } .water-ripple,.water-ripple::before,.water-ripple::after,.water-drop { animation-duration:.01ms!important; } }
+    :root {
+      color-scheme: light;
+      --navy: #23333F;
+      --gray: #6E7478;
+      --cream: #F7F5F1;
+      --wine: #7B3F5A;
+      --green: #557B73;
+      --white: #FFFFFF;
+      --line: #DAD6CF;
+      --soft: #EFECE6;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 20px 72px;
+      color: var(--navy);
+      background: var(--cream);
+      font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+      line-height: 1.8;
+      letter-spacing: .02em;
+    }
+    main { max-width: 1080px; margin: 0 auto; }
+    section {
+      padding: 38px 40px;
+      margin-bottom: 24px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 8px 24px rgba(35,51,63,.06);
+    }
+    h1, h2, h3, h4 {
+      color: var(--navy);
+      font-family: "Noto Serif JP", serif;
+      line-height: 1.5;
+      letter-spacing: .02em;
+    }
+    h1 { margin: 0; font-size: clamp(30px, 5vw, 46px); font-weight: 600; }
+    h2 { margin: 0 0 8px; font-size: clamp(24px, 3vw, 32px); }
+    h3 { margin: 0 0 6px; }
+    p { margin: 8px 0; }
+    .hero-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .muted, .notice, .map-message { color: var(--gray); }
+    .notice { font-size: 12px; }
+
+    button, .map-link {
+      border: 1px solid var(--wine);
+      border-radius: 6px;
+      color: var(--white);
+      background: var(--wine);
+      font: 600 14px "Noto Sans JP", sans-serif;
+      cursor: pointer;
+      transition: background .18s, border-color .18s, transform .18s;
+    }
+    button { padding: 9px 14px; }
+    button:hover, .map-link:hover { background: #663448; border-color: #663448; }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+
+    .favorites-count {
+      display: inline-grid;
+      min-width: 22px;
+      height: 22px;
+      place-items: center;
+      margin-left: 5px;
+      border-radius: 50%;
+      color: var(--navy);
+      background: var(--white);
+      font-size: 12px;
+    }
+    .favorites-dialog {
+      width: min(680px, calc(100% - 28px));
+      max-height: 80vh;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--navy);
+      background: var(--cream);
+      box-shadow: 0 12px 36px rgba(35,51,63,.16);
+    }
+    .favorites-dialog::backdrop { background: rgba(35,51,63,.38); }
+    .favorites-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .favorites-dialog-header h2 { margin: 0; }
+    .favorites-list { display: grid; gap: 10px; max-height: 60vh; overflow: auto; margin-top: 12px; }
+    .favorite-item { padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
+    .favorite-item h3 { margin: 0 0 4px; }
+    .favorite-item p { margin: 3px 0; color: var(--gray); font-size: 14px; }
+    .favorite-item-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .favorite-remove-button { color: var(--wine); border-color: var(--line); background: var(--white); }
+
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 18px; }
+    .search-filter-group { display: grid; gap: 14px; }
+    label { display: grid; gap: 7px; }
+    input, select {
+      width: 100%;
+      min-width: 0;
+      padding: 12px 14px;
+      border: 1px solid #C9C5BD;
+      border-radius: 6px;
+      color: var(--navy);
+      background: var(--white);
+      font: 400 15px "Noto Sans JP", sans-serif;
+    }
+    input::placeholder { color: #9A9A96; }
+    :focus-visible { outline: 3px solid rgba(85,123,115,.32); outline-offset: 2px; }
+    .filter-group { display: grid; gap: 7px; }
+    .filter-label { margin: 0; font-size: 14px; font-weight: 600; }
+    .filter-buttons { display: flex; flex-wrap: wrap; gap: 7px; }
+    .filter-button {
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      color: var(--navy);
+      background: var(--white);
+      font-size: 13px;
+      box-shadow: none;
+    }
+    .filter-button[aria-pressed="true"] { color: var(--white); border-color: var(--green); background: var(--green); }
+
+    .company-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 18px; }
+    .company-card {
+      position: relative;
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+      box-shadow: 0 5px 16px rgba(35,51,63,.05);
+    }
+    .company-card h3 { padding-right: 44px; }
+    .company-card p { color: var(--gray); font-size: 14px; overflow-wrap: anywhere; }
+    .favorite-button {
+      position: absolute;
+      z-index: 1;
+      top: 12px;
+      right: 12px;
+      padding: 4px 8px;
+      border-color: var(--line);
+      color: var(--wine);
+      background: var(--white);
+      font-size: 18px;
+    }
+    .favorite-button.active { color: var(--white); border-color: var(--wine); background: var(--wine); }
+    .company-map { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .company-map h4 { margin: 0; }
+    .company-map iframe { display: block; width: 100%; height: 300px; margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--soft); }
+    .map-link { display: inline-flex; align-items: center; justify-content: center; margin-top: 10px; padding: 9px 14px; text-decoration: none; }
+
+    .career-chat { max-width: 760px; margin: 18px auto 0; padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+    .chat-messages { display: grid; gap: 10px; max-height: 360px; overflow-y: auto; }
+    .chat-message { max-width: 88%; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .chat-message.assistant { justify-self: start; background: var(--cream); }
+    .chat-message.user { justify-self: end; color: var(--white); border-color: var(--green); background: var(--green); }
+    .chat-choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .chat-choices button { color: var(--navy); border-color: var(--line); background: var(--white); }
+    .chat-entry { display: flex; gap: 8px; margin-top: 14px; }
+    .chat-entry input { flex: 1; }
+    .chat-results { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .chat-results a { color: var(--green); font-weight: 600; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 600px) {
+      body { padding: 16px 10px 36px; }
+      section { padding: 22px 16px; }
+      .hero-heading-row { align-items: flex-start; flex-direction: column; }
+      .favorites-open-button { width: 100%; }
+      .company-grid { grid-template-columns: 1fr; }
+      .company-map iframe { height: 260px; }
+      .chat-entry { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
   </style>
 </head>
 <body>
 <main>
   <section>
-    <div class="hero-heading-row"><h1>福井で見つける企業・仕事</h1><button id="favorites-open" class="favorites-open-button" type="button">♡ お気に入りリスト <span id="favorites-count" class="favorites-count" aria-label="お気に入り件数">0</span></button></div>
-    <p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p>
+    <div class="hero-heading-row">
+      <h1>福井で見つける企業・仕事</h1>
+      <button id="favorites-open" class="favorites-open-button" type="button">♡ お気に入りリスト <span id="favorites-count" class="favorites-count">0</span></button>
+    </div>
+    <p class="muted">福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p>
   </section>
+
   <dialog id="favorites-dialog" class="favorites-dialog" aria-labelledby="favorites-heading">
-    <div class="favorites-dialog-header"><h2 id="favorites-heading">お気に入りリスト</h2><button id="favorites-close" class="favorites-dialog-close" type="button">閉じる</button></div>
+    <div class="favorites-dialog-header">
+      <h2 id="favorites-heading">お気に入りリスト</h2>
+      <button id="favorites-close" type="button">閉じる</button>
+    </div>
     <div id="favorites-list" class="favorites-list"></div>
   </dialog>
+
   <section aria-labelledby="career-heading">
-    <h2 id="career-heading">あなたに合う仕事を一緒に考えよう</h2><p class="muted">少しだけ話してくれたら、あなたの考え方に合いそうな仕事や企業を提案します。</p>
+    <h2 id="career-heading">あなたに合う仕事を一緒に考えよう</h2>
+    <p class="muted">少しだけ話してくれたら、考え方に合いそうな仕事や企業を提案します。</p>
     <div class="career-chat">
       <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
       <div id="chat-choices" class="chat-choices" aria-label="回答を選択"></div>
-      <form id="chat-form" class="chat-entry"><label for="chat-input" class="visually-hidden">自由に入力</label><input id="chat-input" type="text" placeholder="自由に話してみてください"><button type="submit">送信</button></form>
-      <div id="chat-results" class="chat-results" hidden></div><button id="chat-reset" type="button" hidden>もう一度相談する</button>
-    </div><p class="notice">※回答をもとに、福井県の企業データから候補を簡単に絞り込みます。</p>
+      <form id="chat-form" class="chat-entry">
+        <label for="chat-input" class="visually-hidden">自由に入力</label>
+        <input id="chat-input" type="text" placeholder="自由に話してみてください">
+        <button type="submit">送信</button>
+      </form>
+      <div id="chat-results" class="chat-results" hidden></div>
+      <button id="chat-reset" type="button" hidden>もう一度相談する</button>
+    </div>
   </section>
+
   <section aria-labelledby="company-heading">
-    <h2 id="company-heading">福井県の企業を探す</h2><p class="muted">企業名・住所・事業内容から検索し、業種や市町村で絞り込めます。</p>
+    <h2 id="company-heading">福井県の企業を探す</h2>
+    <p class="muted">企業名・住所・事業内容から検索し、業種や市町村で絞り込めます。</p>
     <div class="filters">
       <div class="search-filter-group">
-        <label for="company-search">企業を検索<input id="company-search" type="search" placeholder="企業名・住所・事業内容" aria-label="企業名・住所・事業内容で検索"></label>
-        <div class="filter-group"><p class="filter-label">業種で絞り込む</p><div id="industry-filter-buttons" class="filter-buttons" role="group" aria-label="業種で絞り込む"></div></div>
-        <div class="filter-group"><p class="filter-label">市町村で絞り込む</p><div id="municipality-filter-buttons" class="filter-buttons" role="group" aria-label="福井県の市町村で絞り込む"></div></div>
+        <label for="company-search">企業を検索
+          <input id="company-search" type="search" placeholder="企業名・住所・事業内容">
+        </label>
+        <div class="filter-group"><p class="filter-label">業種で絞り込む</p><div id="industry-filter-buttons" class="filter-buttons"></div></div>
+        <div class="filter-group"><p class="filter-label">市町村で絞り込む</p><div id="municipality-filter-buttons" class="filter-buttons"></div></div>
       </div>
-      <label for="company-select">地図に表示する企業<select id="company-select" aria-label="地図に表示する企業"></select></label>
+      <label for="company-select">地図に表示する企業
+        <select id="company-select"></select>
+      </label>
     </div>
-    <p id="company-count" role="status" aria-live="polite"></p><div id="company-results" class="company-grid"></div>
-    <p class="notice">※住所が市町村までの登録の場合、その市町村で絞り込みます。地図はGoogleマップの住所検索結果を表示します。</p>
+    <p id="company-count" role="status" aria-live="polite"></p>
+    <div id="company-results" class="company-grid"></div>
+    <p class="notice">※住所が市町村までの登録の場合、その市町村で絞り込みます。</p>
   </section>
 </main>
 <script src="./companies.js"></script>
 <script>
 'use strict';
-const companyList=Array.isArray(companies)?companies:[];
-const select=document.getElementById('company-select');
-const search=document.getElementById('company-search');
-const industryButtons=document.getElementById('industry-filter-buttons');
-const municipalityButtons=document.getElementById('municipality-filter-buttons');
-const resultElement=document.getElementById('company-results');
-const countElement=document.getElementById('company-count');
-const favoritesOpenButton=document.getElementById('favorites-open');
-const favoritesCount=document.getElementById('favorites-count');
-const favoritesDialog=document.getElementById('favorites-dialog');
-const favoritesList=document.getElementById('favorites-list');
-const favoriteStorageKey='gakumachi-favorite-companies';
-function loadCompanyFavorites(){try{const saved=JSON.parse(localStorage.getItem(favoriteStorageKey)||'[]');return new Set(Array.isArray(saved)?saved.filter(key=>typeof key==='string'):[]);}catch{return new Set();}}
-const favoriteCompanies=loadCompanyFavorites();
-function getCompanyFavoriteKey(company){return JSON.stringify([company.name||'',company.address||'']);}
-function saveCompanyFavorites(){try{localStorage.setItem(favoriteStorageKey,JSON.stringify([...favoriteCompanies]));}catch(error){console.warn('お気に入りを保存できませんでした。',error);}}
-function updateFavoritesCount(){favoritesCount.textContent=String(favoriteCompanies.size);}
-function renderFavoritesList(){favoritesList.replaceChildren();const favorites=companyList.filter(company=>favoriteCompanies.has(getCompanyFavoriteKey(company)));if(!favorites.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='お気に入りの企業はまだ登録されていません。企業カードの♡ボタンから追加できます。';favoritesList.appendChild(empty);updateFavoritesCount();return;}favorites.forEach(company=>{const item=document.createElement('article');item.className='favorite-item';const name=document.createElement('h3');name.textContent=company.name||'企業名未登録';const address=document.createElement('p');address.textContent=company.address||'住所情報なし';const info=document.createElement('p');info.textContent=company.info||'';item.append(name,address,info);const actions=document.createElement('div');actions.className='favorite-item-actions';const removeButton=document.createElement('button');removeButton.type='button';removeButton.className='favorite-remove-button';removeButton.textContent='お気に入りから削除';removeButton.addEventListener('click',()=>{favoriteCompanies.delete(getCompanyFavoriteKey(company));saveCompanyFavorites();updateFavoritesCount();renderFavoritesList();renderCompanies();});actions.appendChild(removeButton);if(company.address){const mapLink=document.createElement('a');mapLink.className='map-link';mapLink.href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address)}`;mapLink.target='_blank';mapLink.rel='noopener';mapLink.textContent='地図を開く';actions.appendChild(mapLink);}item.appendChild(actions);favoritesList.appendChild(item);});updateFavoritesCount();}
-function toggleCompanyFavorite(company,button){const key=getCompanyFavoriteKey(company),isFavorite=favoriteCompanies.has(key);if(isFavorite)favoriteCompanies.delete(key);else favoriteCompanies.add(key);const favoriteActive=!isFavorite;button.textContent=favoriteActive?'♥':'♡';button.classList.toggle('active',favoriteActive);button.setAttribute('aria-pressed',String(favoriteActive));button.setAttribute('aria-label',`${company.name||'この企業'}を${favoriteActive?'お気に入りから削除':'お気に入りに追加'}`);saveCompanyFavorites();updateFavoritesCount();if(favoritesDialog.open)renderFavoritesList();}
-let activeIndex=null,selectedIndustry='',selectedMunicipality='';
-favoritesOpenButton.addEventListener('click',()=>{renderFavoritesList();favoritesDialog.showModal();});
-document.getElementById('favorites-close').addEventListener('click',()=>favoritesDialog.close());
-const chatMessages=document.getElementById('chat-messages'),chatChoices=document.getElementById('chat-choices'),chatForm=document.getElementById('chat-form'),chatInput=document.getElementById('chat-input'),chatResults=document.getElementById('chat-results'),chatReset=document.getElementById('chat-reset');
-const careerQuestions=[{text:'まず、あなたが「楽しい」と感じる仕事のタイプを選んでください。',choices:['頭を使って考える仕事','手を動かして作る仕事','人と関わる仕事','物やデータを整理する仕事']},{text:'次に、こんなときにやる気が出ますか？',choices:['新しいアイデアを考えるとき','ものづくりをしているとき','人の役に立てているとき','計画を立てて進めているとき']},{text:'最後に、働くうえで大事にしたいことはどれですか？',choices:['安定した仕事','成長できる環境','自分の考えを活かす','人間関係が良い','地域や社会に貢献']}];
-let careerAnswers=[],careerStep=0;
-function addChatMessage(text,speaker){const message=document.createElement('div');message.className=`chat-message ${speaker}`;message.textContent=text;chatMessages.appendChild(message);chatMessages.scrollTop=chatMessages.scrollHeight;}
-function showCareerQuestion(){if(careerStep>=careerQuestions.length)return showCareerRecommendations();const question=careerQuestions[careerStep];addChatMessage(question.text,'assistant');chatChoices.replaceChildren();question.choices.forEach(choice=>{const button=document.createElement('button');button.type='button';button.textContent=choice;button.addEventListener('click',()=>submitCareerAnswer(choice));chatChoices.appendChild(button);});}
-function submitCareerAnswer(answer){const clean=String(answer||'').trim();if(!clean||careerStep>=careerQuestions.length)return;careerAnswers.push(clean);addChatMessage(clean,'user');careerStep++;chatChoices.replaceChildren();setTimeout(showCareerQuestion,180);}
-function getCareerMatches(){const text=careerAnswers.join(' ').toLocaleLowerCase();const groups=[{words:['考える','アイデア','分析','情報','it','システム'],industries:['ソフトウェア・情報処理','IT・システム開発・情報処理','システム開発・情報処理','精密機器','研究']},{words:['作る','ものづくり','機械','技術','設計'],industries:['精密機器','鉱業・金属製品・鉄鋼','半導体・電子・電気機器','機械・製造業','建設・土木']},{words:['人','支える','医療','社会','地域','接する'],industries:['医療用機器・医療関連','福祉・介護','人材派遣・人材紹介','地域経済・企業支援','保険']},{words:['計画','安定','数字','金融','管理'],industries:['銀行','信用金庫・金融サービス','専門商社','物流・倉庫']},{words:['地域','社会','環境','自然','エネルギー','貢献'],industries:['環境・リサイクル','水処理・環境関連サービス','電力・ガス・エネルギー','建設・土木']},{words:['販売','食','接客','商売'],industries:['食品','流通・チェーンストア','専門店（食品関連）','通信販売・ネット販売']}];const ranked=new Map();groups.forEach(({words,industries})=>{const points=words.reduce((sum,word)=>sum+(text.includes(word)?2:0),0);if(points)industries.forEach(industry=>ranked.set(industry,(ranked.get(industry)||0)+points));});return [...ranked.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5).map(([industry])=>industry);}
-function showCareerRecommendations(){chatChoices.replaceChildren();chatInput.disabled=true;chatForm.querySelector('button').disabled=true;addChatMessage('ありがとうございます。あなたに合いそうな仕事や企業を探してみます。','assistant');const matches=getCareerMatches();const matching=companyList.filter(company=>matches.includes(company.info)).slice(0,6);chatResults.hidden=false;chatResults.replaceChildren();const title=document.createElement('h3');title.textContent='おすすめの企業候補';chatResults.appendChild(title);if(!matching.length){const p=document.createElement('p');p.textContent='今回は条件に合う企業が見つかりませんでした。業種や市町村で絞り込み直してください。';chatResults.appendChild(p);}else{const list=document.createElement('ul');matching.forEach(company=>{const li=document.createElement('li'),link=document.createElement('a');link.href=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(company.address||company.name)}`;link.target='_blank';link.rel='noopener';link.textContent=`${company.name}｜地図を開く`;li.appendChild(link);list.appendChild(li);});chatResults.appendChild(list);}chatReset.hidden=false;}
-chatForm.addEventListener('submit',event=>{event.preventDefault();const text=chatInput.value.trim();if(text)submitCareerAnswer(text);chatInput.value='';});
-chatReset.addEventListener('click',()=>{careerAnswers=[];careerStep=0;chatMessages.replaceChildren();chatResults.replaceChildren();chatResults.hidden=true;chatReset.hidden=true;chatInput.disabled=false;chatForm.querySelector('button').disabled=false;showCareerQuestion();});
-companyList.forEach((company,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=company.name;select.appendChild(option);});
-const industryCategories=[{label:'IT・情報通信',pattern:/\bIT\b|ソフトウェア|情報処理|システム|ICT|情報通信|コンピュータ/i},{label:'金融・保険',pattern:/銀行|信用金庫|金融|保険/i},{label:'製造・ものづくり',pattern:/製造|ものづくり|精密機器|機械|電子|金属|鉄鋼|機工/i},{label:'医療・福祉',pattern:/医療|福祉|介護/i},{label:'建設・不動産',pattern:/建設|土木|不動産/i},{label:'物流・通信',pattern:/物流|運輸|倉庫|通信販売|ネット販売/i},{label:'食品・飲食',pattern:/食品|飲食|レストラン/i},{label:'エネルギー・環境',pattern:/電力|ガス|エネルギー|環境|リサイクル/i}];
-const municipalities=[{label:'福井市',pattern:/福井市/},{label:'敦賀市',pattern:/敦賀市/},{label:'小浜市',pattern:/小浜市/},{label:'大野市',pattern:/大野市/},{label:'勝山市',pattern:/勝山市/},{label:'鯖江市',pattern:/鯖江市/},{label:'あわら市',pattern:/あわら市/},{label:'越前市',pattern:/越前市/},{label:'坂井市',pattern:/坂井市/},{label:'永平寺町',pattern:/永平寺町/},{label:'池田町',pattern:/池田町/},{label:'南越前町',pattern:/南越前町/},{label:'越前町',pattern:/越前町/},{label:'美浜町',pattern:/美浜町/},{label:'高浜町',pattern:/高浜町/},{label:'おおい町',pattern:/おおい町/},{label:'若狭町',pattern:/若狭町/},{label:'福井県',pattern:/福井県/}];
-function addFilterButtons(container,options,getValue,setValue){[{label:'すべて',value:''},...options.map(({label})=>({label,value:label}))].forEach(({label,value})=>{const button=document.createElement('button');button.type='button';button.className='filter-button';button.textContent=label;button.dataset.value=value;button.setAttribute('aria-pressed','false');button.addEventListener('click',()=>setValue(value));container.appendChild(button);});}
-function updateFilterButtons(){industryButtons.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedIndustry)));municipalityButtons.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedMunicipality)));}
-function setIndustry(value){selectedIndustry=value;updateFilterButtons();renderCompanies();}
-function setMunicipality(value){selectedMunicipality=value;updateFilterButtons();renderCompanies();}
-addFilterButtons(industryButtons,industryCategories,()=>selectedIndustry,setIndustry);addFilterButtons(municipalityButtons,municipalities,()=>selectedMunicipality,setMunicipality);
-function addMapToCard(card,company){const address=(company.address||'').trim(),mapSection=document.createElement('div');mapSection.className='company-map';const title=document.createElement('h4');title.textContent='地図情報';const mapMessage=document.createElement('p');mapMessage.className='map-message';if(!address){mapMessage.textContent='住所が登録されていません。住所を確認できないため地図を表示できません。';mapSection.append(title,mapMessage);}else{const query=encodeURIComponent(address),iframe=document.createElement('iframe');iframe.title=`${company.name}の地図`;iframe.loading='lazy';iframe.src=`https://www.google.com/maps?q=${query}&output=embed`;const link=document.createElement('a');link.className='map-link';link.href=`https://www.google.com/maps/search/?api=1&query=${query}`;link.target='_blank';link.rel='noopener';link.textContent='地図を開く';mapSection.append(title,iframe,link);}card.appendChild(mapSection);}
-function renderCompanies(){const keyword=search.value.trim().toLocaleLowerCase(),industry=industryCategories.find(({label})=>label===selectedIndustry),municipality=municipalities.find(({label})=>label===selectedMunicipality);const filtered=companyList.map((company,index)=>({company,index})).filter(({company})=>{const haystack=`${company.name||''} ${company.address||''} ${company.info||''}`.toLocaleLowerCase();if(keyword&&!haystack.includes(keyword))return false;if(industry&&!industry.pattern.test(`${company.info||''} ${company.address||''}`))return false;if(municipality&&!municipality.pattern.test(company.address||''))return false;return true;});countElement.textContent=`${filtered.length}件の企業が表示されています`;resultElement.replaceChildren();filtered.forEach(({company,index})=>{const card=document.createElement('article');card.className='company-card';card.dataset.companyIndex=String(index);const favoriteButton=document.createElement('button');favoriteButton.type='button';favoriteButton.className='favorite-button';const favoriteActive=favoriteCompanies.has(getCompanyFavoriteKey(company));favoriteButton.textContent=favoriteActive?'♥':'♡';favoriteButton.classList.toggle('active',favoriteActive);favoriteButton.setAttribute('aria-pressed',String(favoriteActive));favoriteButton.setAttribute('aria-label',`${company.name||'この企業'}を${favoriteActive?'お気に入りから削除':'お気に入りに追加'}`);favoriteButton.addEventListener('click',event=>{event.stopPropagation();toggleCompanyFavorite(company,favoriteButton);});const name=document.createElement('h3');name.textContent=company.name||'';const address=document.createElement('p');address.textContent=company.address||'';const info=document.createElement('p');info.textContent=company.info||'';card.append(favoriteButton,name,address,info);if(activeIndex===index)addMapToCard(card,company);card.addEventListener('click',()=>{activeIndex=activeIndex===index?null:index;renderCompanies();if(activeIndex===index)card.scrollIntoView({behavior:'smooth',block:'nearest'});});resultElement.appendChild(card);});}
+const companyList = Array.isArray(companies) ? companies : [];
+const search = document.getElementById('company-search');
+const industryButtons = document.getElementById('industry-filter-buttons');
+const municipalityButtons = document.getElementById('municipality-filter-buttons');
+const resultElement = document.getElementById('company-results');
+const countElement = document.getElementById('company-count');
+const select = document.getElementById('company-select');
+const favoritesOpenButton = document.getElementById('favorites-open');
+const favoritesCount = document.getElementById('favorites-count');
+const favoritesDialog = document.getElementById('favorites-dialog');
+const favoritesList = document.getElementById('favorites-list');
+const favoriteStorageKey = 'gakumachi-favorite-companies';
+
+function getFavoriteKey(company) { return JSON.stringify([company.name || '', company.address || '']); }
+function loadFavorites() { try { const saved = JSON.parse(localStorage.getItem(favoriteStorageKey) || '[]'); return new Set(Array.isArray(saved) ? saved : []); } catch { return new Set(); } }
+const favorites = loadFavorites();
+function saveFavorites() { try { localStorage.setItem(favoriteStorageKey, JSON.stringify([...favorites])); } catch {} }
+function updateFavoritesCount() { favoritesCount.textContent = String(favorites.size); }
+
+function renderFavorites() {
+  favoritesList.replaceChildren();
+  const items = companyList.filter(company => favorites.has(getFavoriteKey(company)));
+  if (!items.length) { const p = document.createElement('p'); p.className = 'muted'; p.textContent = 'お気に入りの企業はまだありません。'; favoritesList.appendChild(p); return; }
+  items.forEach(company => {
+    const item = document.createElement('article'); item.className = 'favorite-item';
+    const name = document.createElement('h3'); name.textContent = company.name;
+    const address = document.createElement('p'); address.textContent = company.address;
+    const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'favorite-remove-button'; remove.textContent = 'お気に入りから削除';
+    remove.addEventListener('click', () => { favorites.delete(getFavoriteKey(company)); saveFavorites(); updateFavoritesCount(); renderFavorites(); renderCompanies(); });
+    const actions = document.createElement('div'); actions.className = 'favorite-item-actions';
+    if (company.address) { const map = document.createElement('a'); map.className = 'map-link'; map.href = './map.html?name=' + encodeURIComponent(company.name); map.textContent = '地図を見る'; actions.appendChild(map); }
+    actions.appendChild(remove); item.append(name, address, actions); favoritesList.appendChild(item);
+  });
+}
+favoritesOpenButton.addEventListener('click', () => { renderFavorites(); favoritesDialog.showModal(); });
+document.getElementById('favorites-close').addEventListener('click', () => favoritesDialog.close());
+
+const industryCategories = [
+  {label:'IT・情報通信',pattern:/IT|ソフトウェア|情報処理|システム|情報通信|コンピュータ/i},
+  {label:'金融・保険',pattern:/銀行|信用金庫|金融|保険/i},
+  {label:'製造・ものづくり',pattern:/製造|精密機器|機械|電子|金属|鉄鋼|機工/i},
+  {label:'医療・福祉',pattern:/医療|福祉|介護/i},
+  {label:'建設・不動産',pattern:/建設|土木|不動産/i},
+  {label:'物流・通信',pattern:/物流|運輸|倉庫|通信販売|ネット販売/i},
+  {label:'食品・飲食',pattern:/食品|飲食|レストラン/i},
+  {label:'エネルギー・環境',pattern:/電力|ガス|エネルギー|環境|リサイクル/i}
+];
+const municipalities = ['福井市','敦賀市','小浜市','大野市','勝山市','鯖江市','あわら市','越前市','坂井市','永平寺町','池田町','南越前町','越前町','美浜町','高浜町','おおい町','若狭町'].map(label => ({label,pattern:new RegExp(label)}));
+let selectedIndustry = '', selectedMunicipality = '', activeIndex = null;
+
+function addFilterButtons(container, options, setter) {
+  [{label:'すべて',value:''}, ...options.map(option => ({label:option.label,value:option.label}))].forEach(({label,value}) => {
+    const button = document.createElement('button'); button.type='button'; button.className='filter-button'; button.dataset.value=value; button.textContent=label; button.setAttribute('aria-pressed','false');
+    button.addEventListener('click', () => setter(value)); container.appendChild(button);
+  });
+}
+function updateFilterButtons() {
+  industryButtons.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.value === selectedIndustry)));
+  municipalityButtons.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.value === selectedMunicipality)));
+}
+function setIndustry(value) { selectedIndustry=value; activeIndex=null; updateFilterButtons(); renderCompanies(); }
+function setMunicipality(value) { selectedMunicipality=value; activeIndex=null; updateFilterButtons(); renderCompanies(); }
+addFilterButtons(industryButtons, industryCategories, setIndustry);
+addFilterButtons(municipalityButtons, municipalities, setMunicipality);
+
+companyList.forEach((company,index) => { const option=document.createElement('option'); option.value=String(index); option.textContent=company.name; select.appendChild(option); });
+
+function addMapToCard(card, company) {
+  if (!company.address) return;
+  const section=document.createElement('div'); section.className='company-map';
+  const title=document.createElement('h4'); title.textContent='所在地';
+  const iframe=document.createElement('iframe'); iframe.loading='lazy'; iframe.title=company.name+'の地図'; iframe.src='https://www.google.com/maps?q='+encodeURIComponent(company.address)+'&output=embed';
+  const link=document.createElement('a'); link.className='map-link'; link.href='./map.html?name='+encodeURIComponent(company.name); link.textContent='地図ページで見る'; section.append(title, iframe, link); card.appendChild(section);
+}
+function renderCompanies() {
+  const keyword=search.value.trim().toLocaleLowerCase();
+  const industry=industryCategories.find(item=>item.label===selectedIndustry);
+  const municipality=municipalities.find(item=>item.label===selectedMunicipality);
+  const filtered=companyList.map((company,index)=>({company,index})).filter(({company})=>{
+    const haystack=`${company.name||''} ${company.address||''} ${company.info||''}`.toLocaleLowerCase();
+    if(keyword && !haystack.includes(keyword)) return false;
+    if(industry && !industry.pattern.test(`${company.info||''} ${company.address||''}`)) return false;
+    if(municipality && !municipality.pattern.test(company.address||'')) return false;
+    return true;
+  });
+  countElement.textContent=`${filtered.length}件の企業が表示されています`;
+  resultElement.replaceChildren();
+  filtered.forEach(({company,index})=>{
+    const card=document.createElement('article'); card.className='company-card'; card.dataset.companyIndex=String(index);
+    const favoriteButton=document.createElement('button'); favoriteButton.type='button'; favoriteButton.className='favorite-button';
+    const active=favorites.has(getFavoriteKey(company)); favoriteButton.textContent=active?'♥':'♡'; favoriteButton.classList.toggle('active',active);
+    favoriteButton.addEventListener('click',event=>{event.stopPropagation();const key=getFavoriteKey(company);const isActive=favorites.has(key);isActive?favorites.delete(key):favorites.add(key);favoriteButton.textContent=isActive?'♡':'♥';favoriteButton.classList.toggle('active',!isActive);saveFavorites();updateFavoritesCount();});
+    const name=document.createElement('h3'); name.textContent=company.name||'';
+    const address=document.createElement('p'); address.textContent=company.address||'';
+    const info=document.createElement('p'); info.textContent=company.info||'';
+    card.append(favoriteButton,name,address,info);
+    if(activeIndex===index) addMapToCard(card,company);
+    card.addEventListener('click',()=>{activeIndex=activeIndex===index?null:index;renderCompanies();if(activeIndex===index)card.scrollIntoView({behavior:'smooth',block:'nearest'});});
+    resultElement.appendChild(card);
+  });
+}
 select.addEventListener('change',()=>{activeIndex=Number(select.value);renderCompanies();resultElement.querySelector(`[data-company-index="${activeIndex}"]`)?.scrollIntoView({behavior:'smooth',block:'center'});});
 search.addEventListener('input',renderCompanies);
-function createWaterEffect(x,y,target){if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const ripple=document.createElement('span');ripple.className='water-ripple';ripple.style.left=`${x}px`;ripple.style.top=`${y}px`;document.body.appendChild(ripple);ripple.addEventListener('animationend',()=>ripple.remove());for(let i=0;i<7;i++){const drop=document.createElement('span');drop.className='water-drop';const angle=(Math.PI*2*i/7)+(Math.random()*35);const distance=20+Math.random()*24;drop.style.left=`${x}px`;drop.style.top=`${y}px`;drop.style.setProperty('--dx',`${Math.cos(angle)*distance}px`);drop.style.setProperty('--dy',`${Math.sin(angle)*distance}px`);document.body.appendChild(drop);drop.addEventListener('animationend',()=>drop.remove());}if(target){target.classList.remove('water-press');void target.offsetWidth;target.classList.add('water-press');setTimeout(()=>target.classList.remove('water-press'),400);}}
-document.addEventListener('pointerdown',event=>{const target=event.target.closest('button,.filter-button,.company-card,input,select')||event.target;if(target!==document.documentElement)createWaterEffect(event.clientX,event.clientY,target);},{passive:true});
-updateFavoritesCount();showCareerQuestion();renderCompanies();
+
+const chatMessages=document.getElementById('chat-messages'), chatChoices=document.getElementById('chat-choices'), chatForm=document.getElementById('chat-form'), chatInput=document.getElementById('chat-input'), chatResults=document.getElementById('chat-results'), chatReset=document.getElementById('chat-reset');
+const careerQuestions=[
+  {text:'まず、あなたが楽しいと感じる仕事のタイプを選んでください。',choices:['頭を使って考える仕事','手を動かして作る仕事','人を支える仕事','数字や計画を扱う仕事']},
+  {text:'職場で大切にしたいことは何ですか？',choices:['地域や社会に貢献する','安定して続けられる','挑戦や成長がある','チームで協力する']},
+  {text:'得意なことや興味に近いものは？',choices:['自然・環境','IT・ものづくり','人・医療・福祉','販売・接客']}
+];
+let careerAnswers=[], careerStep=0;
+function addChatMessage(text,speaker){const message=document.createElement('div');message.className=`chat-message ${speaker}`;message.textContent=text;chatMessages.appendChild(message);chatMessages.scrollTop=chatMessages.scrollHeight;}
+function showCareerQuestion(){if(careerStep>=careerQuestions.length)return showCareerRecommendations();const question=careerQuestions[careerStep];addChatMessage(question.text,'assistant');chatChoices.replaceChildren();question.choices.forEach(choice=>{const button=document.createElement('button');button.type='button';button.textContent=choice;button.addEventListener('click',()=>submitCareerAnswer(choice));chatChoices.appendChild(button);});}
+function submitCareerAnswer(answer){careerAnswers.push(answer);addChatMessage(answer,'user');careerStep++;chatChoices.replaceChildren();setTimeout(showCareerQuestion,180);}
+function showCareerRecommendations(){
+  chatChoices.replaceChildren();chatInput.disabled=true;chatForm.querySelector('button').disabled=true;
+  const text=careerAnswers.join(' ').toLowerCase();const words=[['考える','it|システム|情報処理'],['作る','製造|機械|精密|建設'],['支える','福祉|介護|医療'],['数字','金融|保険|管理'],['地域','環境|エネルギー|地域'],['販売','食品|販売|接客']];
+  const patterns=words.filter(([word])=>text.includes(word)).map(([,pattern])=>new RegExp(pattern,'i'));
+  const matches=companyList.filter(company=>patterns.length===0||patterns.some(pattern=>pattern.test(`${company.info||''} ${company.address||''}`))).slice(0,6);
+  addChatMessage('ありがとうございます。興味に近い企業をいくつか選びました。','assistant');chatResults.hidden=false;chatResults.replaceChildren();const title=document.createElement('h3');title.textContent='おすすめの企業';chatResults.appendChild(title);
+  if(!matches.length){const p=document.createElement('p');p.textContent='該当する企業が見つかりませんでした。検索から確認してください。';chatResults.appendChild(p);}else{const list=document.createElement('ul');matches.forEach(company=>{const li=document.createElement('li');const a=document.createElement('a');a.href='./map.html?name='+encodeURIComponent(company.name);a.textContent=company.name+' — '+(company.info||'');li.appendChild(a);list.appendChild(li);});chatResults.appendChild(list);}chatReset.hidden=false;
+}
+chatForm.addEventListener('submit',event=>{event.preventDefault();const text=chatInput.value.trim();if(text&&careerStep<careerQuestions.length)submitCareerAnswer(text);chatInput.value='';});
+chatReset.addEventListener('click',()=>{careerAnswers=[];careerStep=0;chatMessages.replaceChildren();chatResults.replaceChildren();chatResults.hidden=true;chatReset.hidden=true;chatInput.disabled=false;chatForm.querySelector('button').disabled=false;showCareerQuestion();});
+
+updateFavoritesCount(); updateFilterButtons(); showCareerQuestion(); renderCompanies();
 </script>
 </body>
 </html>
