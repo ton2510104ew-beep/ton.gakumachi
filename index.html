@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#d9f6f2">
+  <meta name="theme-color" content="#f7e9ef">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;500;700&display=swap" rel="stylesheet">
   <title>福井で見つける企業・仕事 | ガクマチ</title>
   <style>
-    :root { color-scheme:light; --dark:#31576a; --text:#4d6673; --muted:#7b9299; --primary:#b78ca8; --line:rgba(183,140,168,.24); --glass:rgba(255,252,248,.78); }
+    :root { color-scheme:light; --dark:#563d4a; --text:#5d5159; --muted:#8a7a83; --primary:#ba7896; --line:rgba(151,145,153,.3); --glass:rgba(255,253,254,.82); --silver:#a7a5ad; --silver-light:#e4e1e6; --rose:#c77f9d; }
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; }
-    body { min-height:100vh; margin:0; padding:34px 18px 56px; color:var(--text); font-family:"M PLUS 1p","Hiragino Sans","Yu Gothic",sans-serif; letter-spacing:.025em; line-height:1.75; background:radial-gradient(ellipse at 8% 8%,rgba(255,255,255,.95),transparent 24%),radial-gradient(ellipse at 92% 20%,rgba(245,200,215,.35),transparent 29%),linear-gradient(160deg,#fffaf7 0%,#f7eff4 58%,#edf6f4 100%); }
-    body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.25; background-image:radial-gradient(circle at 20% 30%,rgba(255,255,255,.9) 0 1px,transparent 2px),radial-gradient(circle at 75% 65%,rgba(183,140,168,.22) 0 1px,transparent 2px); background-size:38px 38px,47px 47px; }
+    body { min-height:100vh; margin:0; padding:34px 18px 56px; color:var(--text); font-family:"M PLUS 1p","Hiragino Sans","Yu Gothic",sans-serif; letter-spacing:.025em; line-height:1.75; background:radial-gradient(ellipse at 8% 8%,rgba(255,255,255,.98),transparent 24%),radial-gradient(ellipse at 92% 20%,rgba(225,202,214,.42),transparent 29%),radial-gradient(ellipse at 12% 90%,rgba(235,228,234,.62),transparent 32%),linear-gradient(160deg,#fff9fb 0%,#f6eaf0 56%,#eeebf0 100%); }
+    body::before { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.3; background-image:radial-gradient(circle at 20% 30%,rgba(255,255,255,.95) 0 1px,transparent 2px),radial-gradient(circle at 75% 65%,rgba(167,165,173,.28) 0 1px,transparent 2px); background-size:38px 38px,47px 47px; }
     main { max-width:1050px; margin:auto; }
-    section { position:relative; isolation:isolate; overflow:hidden; padding:30px; margin-bottom:26px; border:1px solid rgba(255,255,255,.92); border-radius:30px; background:var(--glass); box-shadow:0 18px 45px rgba(161,125,150,.11),inset 0 1px 0 rgba(255,255,255,.9); backdrop-filter:blur(14px); }
-    section::before { content:""; position:absolute; z-index:-1; top:-90px; right:-60px; width:210px; height:210px; border:1px solid rgba(255,255,255,.65); border-radius:50%; background:radial-gradient(circle at 55% 55%,rgba(255,255,255,.72),rgba(238,199,213,.12)); }
+    section { position:relative; isolation:isolate; overflow:hidden; padding:30px; margin-bottom:26px; border:1px solid rgba(255,255,255,.96); border-radius:30px; background:var(--glass); box-shadow:0 18px 45px rgba(111,83,100,.13),inset 0 1px 0 rgba(255,255,255,.98),0 0 0 1px rgba(190,186,195,.13); backdrop-filter:blur(16px); }
+    section::before { content:""; position:absolute; z-index:-1; top:-90px; right:-60px; width:210px; height:210px; border:1px solid rgba(255,255,255,.78); border-radius:50%; background:radial-gradient(circle at 55% 55%,rgba(255,255,255,.82),rgba(213,190,204,.2)); }
     section>* { position:relative; }
     h1,h2,h3 { color:var(--dark); font-family:"M PLUS 1p","Hiragino Sans","Yu Gothic",sans-serif; }
     h1 { margin:0; font-size:clamp(29px,5vw,44px); line-height:1.35; letter-spacing:.06em; }
@@ -24,67 +24,67 @@
     h3 { letter-spacing:.035em; }
     .hero-heading-row { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
     .favorites-open-button { flex:0 0 auto; }
-    .favorites-count { display:inline-grid; min-width:1.6em; height:1.6em; place-items:center; margin-left:5px; padding:0 .35em; border-radius:999px; color:#9d728f; background:#fff; font-size:.8em; }
-    .favorites-dialog { width:min(680px,calc(100% - 28px)); max-height:min(80vh,720px); padding:24px; border:1px solid rgba(255,255,255,.95); border-radius:26px; color:var(--text); background:linear-gradient(145deg,#fffdfb,#f7eff4); box-shadow:0 24px 70px rgba(75,55,72,.25); }
-    .favorites-dialog::backdrop { background:rgba(49,52,65,.4); backdrop-filter:blur(4px); }
+    .favorites-count { display:inline-grid; min-width:1.6em; height:1.6em; place-items:center; margin-left:5px; padding:0 .35em; border-radius:999px; color:#8c5871; background:linear-gradient(145deg,#fff,#eeebf0); font-size:.8em; box-shadow:inset 0 0 0 1px rgba(167,165,173,.24); }
+    .favorites-dialog { width:min(680px,calc(100% - 28px)); max-height:min(80vh,720px); padding:24px; border:1px solid rgba(255,255,255,.98); border-radius:26px; color:var(--text); background:linear-gradient(145deg,#fffafd,#f2eaf0); box-shadow:0 24px 70px rgba(75,55,72,.25),0 0 0 1px rgba(167,165,173,.22); }
+    .favorites-dialog::backdrop { background:rgba(54,44,52,.42); backdrop-filter:blur(5px); }
     .favorites-dialog-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
     .favorites-dialog-header h2 { margin:0; }
     .favorites-dialog-close { flex:0 0 auto; }
     .favorites-list { display:grid; gap:12px; max-height:60vh; overflow:auto; }
-    .favorite-item { padding:15px; border:1px solid var(--line); border-radius:18px; background:rgba(255,255,255,.8); }
+    .favorite-item { padding:15px; border:1px solid var(--line); border-radius:18px; background:rgba(255,255,255,.88); box-shadow:0 6px 18px rgba(111,83,100,.07); }
     .favorite-item h3 { margin:0 0 5px; }
     .favorite-item p { margin:4px 0; overflow-wrap:anywhere; color:var(--muted); font-size:14px; }
     .favorite-item-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-    .favorite-remove-button { color:#9d5875; background:linear-gradient(135deg,#fffdfb,#f3dee7); }
+    .favorite-remove-button { color:#8c5871; background:linear-gradient(135deg,#fffafd,#e8e5eb); }
     .muted,.map-message,.notice { color:var(--muted); }
     .filters { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; align-items:start; }
     .search-filter-group { display:grid; gap:12px; min-width:0; }
     label { display:grid; gap:7px; }
-    input,select { width:100%; min-width:0; padding:13px 15px; border:1px solid rgba(183,140,168,.32); border-radius:16px; background:rgba(255,255,255,.88); color:var(--text); font:inherit; box-shadow:inset 0 1px 0 white; }
-    input::placeholder { color:#9daaae; }
-    :focus-visible { outline:3px solid rgba(183,140,168,.38); outline-offset:3px; }
+    input,select { width:100%; min-width:0; padding:13px 15px; border:1px solid rgba(167,165,173,.45); border-radius:16px; background:rgba(255,255,255,.92); color:var(--text); font:inherit; box-shadow:inset 0 1px 0 white,0 3px 10px rgba(111,83,100,.04); }
+    input::placeholder { color:#9c8f97; }
+    :focus-visible { outline:3px solid rgba(199,127,157,.4); outline-offset:3px; }
     .filter-group { display:grid; gap:7px; }
     .filter-label { margin:0; color:var(--dark); font-size:14px; font-weight:700; }
     .filter-buttons { display:flex; flex-wrap:wrap; gap:8px; }
-    .filter-button { padding:8px 13px; border:1px solid rgba(183,140,168,.28); border-radius:999px; color:var(--dark); background:rgba(255,255,255,.88); font:inherit; font-size:13px; box-shadow:0 3px 9px rgba(183,140,168,.08); }
-    .filter-button[aria-pressed="true"] { border-color:transparent; color:white; background:linear-gradient(135deg,#d9aabf,#a97f9b); }
-    button { position:relative; overflow:hidden; padding:10px 17px; border:1px solid rgba(255,255,255,.55); border-radius:999px; color:white; background:linear-gradient(135deg,#d9aabf,#b78ca8 72%,#9d728f); font:inherit; font-weight:700; cursor:pointer; box-shadow:0 8px 18px rgba(183,140,168,.16); transition:transform .18s,filter .18s,box-shadow .18s; -webkit-tap-highlight-color:transparent; }
-    button:hover { filter:brightness(1.04); transform:translateY(-1px); }
-    button:active { transform:scale(.96); box-shadow:0 3px 10px rgba(183,140,168,.14); }
+    .filter-button { padding:8px 13px; border:1px solid rgba(167,165,173,.42); border-radius:999px; color:var(--dark); background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(242,239,243,.88)); font:inherit; font-size:13px; box-shadow:0 3px 9px rgba(111,83,100,.07),inset 0 1px 0 white; }
+    .filter-button[aria-pressed="true"] { border-color:rgba(255,255,255,.72); color:white; background:linear-gradient(135deg,#d99ab3,#a7a5ad); box-shadow:0 6px 15px rgba(160,113,139,.2); }
+    button { position:relative; overflow:hidden; padding:10px 17px; border:1px solid rgba(255,255,255,.78); border-radius:999px; color:white; background:linear-gradient(130deg,#d58eaa 0%,#bb7896 58%,#9997a1 100%); font:inherit; font-weight:700; cursor:pointer; box-shadow:0 8px 18px rgba(154,105,131,.2),inset 0 1px 0 rgba(255,255,255,.35); transition:transform .18s,filter .18s,box-shadow .18s; -webkit-tap-highlight-color:transparent; }
+    button:hover { filter:brightness(1.05); transform:translateY(-1px); box-shadow:0 10px 22px rgba(154,105,131,.25),inset 0 1px 0 rgba(255,255,255,.4); }
+    button:active { transform:scale(.96); box-shadow:0 3px 10px rgba(154,105,131,.16); }
     button:disabled { opacity:.6; cursor:not-allowed; }
     .company-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:15px; margin-top:16px; }
-    .company-card { position:relative; min-width:0; padding:19px; border:1px solid rgba(255,255,255,.9); border-radius:24px; background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(249,232,239,.76)); box-shadow:0 12px 24px rgba(161,125,150,.10); cursor:pointer; transition:transform .2s,box-shadow .2s,background .35s; overflow:hidden; }
-    .company-card::after { content:""; position:absolute; inset:-30%; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.55),transparent 58%); transform:scale(0); opacity:0; pointer-events:none; }
-    .company-card:hover { transform:translateY(-3px); box-shadow:0 16px 30px rgba(161,125,150,.14); }
+    .company-card { position:relative; min-width:0; padding:19px; border:1px solid rgba(255,255,255,.96); border-radius:24px; background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(241,229,237,.82)); box-shadow:0 12px 24px rgba(111,83,100,.1),inset 0 1px 0 white,0 0 0 1px rgba(167,165,173,.12); cursor:pointer; transition:transform .2s,box-shadow .2s,background .35s; overflow:hidden; }
+    .company-card::after { content:""; position:absolute; inset:-30%; border-radius:50%; background:radial-gradient(circle,rgba(255,255,255,.65),transparent 58%); transform:scale(0); opacity:0; pointer-events:none; }
+    .company-card:hover { transform:translateY(-3px); box-shadow:0 18px 34px rgba(111,83,100,.16),0 0 0 1px rgba(167,165,173,.2); }
     .company-card:active { transform:scale(.985); }
     .company-card h3 { margin:0 0 5px; padding-right:42px; }
-    .favorite-button { position:absolute; z-index:1; top:12px; right:12px; padding:5px 10px; color:#a66f8d; background:rgba(255,255,255,.9); font-size:20px; line-height:1.2; box-shadow:0 3px 10px rgba(183,140,168,.12); }
-    .favorite-button.active { color:#c45e7d; }
+    .favorite-button { position:absolute; z-index:1; top:12px; right:12px; padding:5px 10px; color:#a66b87; background:linear-gradient(145deg,#fff,#f0edf1); font-size:20px; line-height:1.2; box-shadow:0 3px 10px rgba(111,83,100,.12),inset 0 0 0 1px rgba(167,165,173,.18); }
+    .favorite-button.active { color:#c45e82; }
     .company-card p { margin:5px 0; overflow-wrap:anywhere; color:var(--muted); font-size:14px; }
     .company-map { margin-top:16px; padding-top:12px; border-top:1px solid var(--line); }
     .company-map h4 { margin:0; color:var(--dark); }
-    .company-map iframe { display:block; width:100%; height:300px; margin-top:10px; border:1px solid var(--line); border-radius:18px; background:#eef4f3; }
-    .map-link { display:inline-flex; align-items:center; justify-content:center; margin-top:10px; padding:10px 16px; border:1px solid rgba(255,255,255,.55); border-radius:999px; color:#fff; background:linear-gradient(135deg,#d9aabf,#a97f9b); font-weight:700; text-decoration:none; box-shadow:0 8px 18px rgba(183,140,168,.16); }
+    .company-map iframe { display:block; width:100%; height:300px; margin-top:10px; border:1px solid var(--line); border-radius:18px; background:#f0edf1; }
+    .map-link { display:inline-flex; align-items:center; justify-content:center; margin-top:10px; padding:10px 16px; border:1px solid rgba(255,255,255,.78); border-radius:999px; color:#fff; background:linear-gradient(130deg,#d58eaa,#a7a5ad); font-weight:700; text-decoration:none; box-shadow:0 8px 18px rgba(154,105,131,.18); }
     .map-link:hover { filter:brightness(1.05); }
     .notice { font-size:12px; }
-    .career-chat { max-width:760px; margin:16px auto 0; padding:19px; border:1px solid rgba(255,255,255,.94); border-radius:26px; background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(247,232,239,.72)); }
+    .career-chat { max-width:760px; margin:16px auto 0; padding:19px; border:1px solid rgba(255,255,255,.98); border-radius:26px; background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(239,229,237,.84)); box-shadow:inset 0 1px 0 white,0 8px 24px rgba(111,83,100,.07); }
     .chat-messages { display:grid; gap:12px; max-height:360px; overflow-y:auto; padding:5px; }
-    .chat-message { max-width:88%; padding:11px 15px; border:1px solid rgba(255,255,255,.85); border-radius:18px; white-space:pre-wrap; overflow-wrap:anywhere; }
-    .chat-message.assistant { justify-self:start; background:rgba(255,255,255,.86); }
-    .chat-message.user { justify-self:end; color:white; background:linear-gradient(135deg,#d9aabf,#ad819d); }
+    .chat-message { max-width:88%; padding:11px 15px; border:1px solid rgba(255,255,255,.92); border-radius:18px; white-space:pre-wrap; overflow-wrap:anywhere; box-shadow:0 3px 10px rgba(111,83,100,.05); }
+    .chat-message.assistant { justify-self:start; background:rgba(255,255,255,.92); }
+    .chat-message.user { justify-self:end; color:white; background:linear-gradient(135deg,#ca87a2,#9997a1); }
     .chat-choices { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
-    .chat-choices button { color:var(--dark); background:linear-gradient(135deg,#fffdfb,#f3dee7); }
+    .chat-choices button { color:var(--dark); border-color:rgba(167,165,173,.42); background:linear-gradient(145deg,#fff,#eeebf0); }
     .chat-entry { display:flex; gap:8px; margin-top:14px; }
     .chat-entry input { flex:1; }
     .chat-results { margin-top:18px; padding-top:14px; border-top:1px solid var(--line); }
     .chat-results h3 { margin-top:0; }
     .chat-results li { margin:8px 0; }
-    .chat-results a { color:var(--primary); font-weight:700; }
+    .chat-results a { color:#a65f7f; font-weight:700; }
     .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-    .water-ripple { position:fixed; z-index:9999; width:18px; height:18px; margin:-9px 0 0 -9px; border:2px solid rgba(255,255,255,.92); border-radius:50%; pointer-events:none; box-shadow:0 0 0 3px rgba(183,140,168,.16),0 0 18px rgba(255,255,255,.75),inset 0 0 8px rgba(183,140,168,.18); animation:water-ripple .68s cubic-bezier(.16,.7,.28,1) forwards; }
-    .water-ripple::before,.water-ripple::after { content:""; position:absolute; inset:-7px; border:1px solid rgba(222,184,203,.9); border-radius:50%; animation:water-ring .72s .05s ease-out forwards; }
-    .water-ripple::after { inset:-14px; border-color:rgba(255,255,255,.65); animation-delay:.12s; }
-    .water-drop { position:fixed; z-index:9998; width:5px; height:8px; margin:-4px 0 0 -2.5px; border-radius:50% 50% 60% 60%; pointer-events:none; background:radial-gradient(circle at 35% 25%,white 0 18%,rgba(183,140,168,.78) 36%,rgba(157,114,143,.42)); box-shadow:0 2px 5px rgba(183,140,168,.18); animation:water-drop .62s cubic-bezier(.2,.7,.35,1) forwards; }
+    .water-ripple { position:fixed; z-index:9999; width:18px; height:18px; margin:-9px 0 0 -9px; border:2px solid rgba(255,255,255,.96); border-radius:50%; pointer-events:none; box-shadow:0 0 0 3px rgba(167,165,173,.2),0 0 18px rgba(255,255,255,.8),inset 0 0 8px rgba(199,127,157,.2); animation:water-ripple .68s cubic-bezier(.16,.7,.28,1) forwards; }
+    .water-ripple::before,.water-ripple::after { content:""; position:absolute; inset:-7px; border:1px solid rgba(167,165,173,.72); border-radius:50%; animation:water-ring .72s .05s ease-out forwards; }
+    .water-ripple::after { inset:-14px; border-color:rgba(255,255,255,.78); animation-delay:.12s; }
+    .water-drop { position:fixed; z-index:9998; width:5px; height:8px; margin:-4px 0 0 -2.5px; border-radius:50% 50% 60% 60%; pointer-events:none; background:radial-gradient(circle at 35% 25%,white 0 18%,rgba(199,127,157,.78) 36%,rgba(153,151,161,.48)); box-shadow:0 2px 5px rgba(167,165,173,.22); animation:water-drop .62s cubic-bezier(.2,.7,.35,1) forwards; }
     .water-press { animation:water-press .38s ease-out; }
     @keyframes water-ripple { 0% { transform:scale(.2); opacity:1; } 100% { transform:scale(7); opacity:0; } }
     @keyframes water-ring { 0% { transform:scale(.15); opacity:.9; } 100% { transform:scale(2.2); opacity:0; } }
@@ -101,7 +101,7 @@
     <p>福井県内の企業を検索できます。企業を選ぶと、所在地を地図上に表示します。</p>
   </section>
   <dialog id="favorites-dialog" class="favorites-dialog" aria-labelledby="favorites-heading">
-    <div class="favorites-dialog-header"><h2 id="favorites-heading">お気に入りリスト</h2><button id="favorites-close" class="favorites-dialog-close" type="button">閉じる</button></div>
+    <div class="favorites-dialog-header"><h2 id="favorites-heading">お気に入り��スト</h2><button id="favorites-close" class="favorites-dialog-close" type="button">閉じる</button></div>
     <div id="favorites-list" class="favorites-list"></div>
   </dialog>
   <section aria-labelledby="career-heading">
@@ -163,7 +163,7 @@ function showCareerRecommendations(){chatChoices.replaceChildren();chatInput.dis
 chatForm.addEventListener('submit',event=>{event.preventDefault();const text=chatInput.value.trim();if(text)submitCareerAnswer(text);chatInput.value='';});
 chatReset.addEventListener('click',()=>{careerAnswers=[];careerStep=0;chatMessages.replaceChildren();chatResults.replaceChildren();chatResults.hidden=true;chatReset.hidden=true;chatInput.disabled=false;chatForm.querySelector('button').disabled=false;showCareerQuestion();});
 companyList.forEach((company,index)=>{const option=document.createElement('option');option.value=String(index);option.textContent=company.name;select.appendChild(option);});
-const industryCategories=[{label:'IT・情報通信',pattern:/\bIT\b|ソフトウェア|情報処理|システム|ICT|情報通信|コンピュータ/i},{label:'金融・保険',pattern:/銀行|信用金庫|金融|保険/i},{label:'製造・ものづくり',pattern:/製造|ものづくり|精密機器|機械|電子|金属|鉄鋼|機工/i},{label:'医療・福祉',pattern:/医療|福祉|介護/i},{label:'建設・不動産',pattern:/建設|土木|不動産/i},{label:'物流・通信',pattern:/物流|運輸|倉庫|通信販売|ネット販売/i},{label:'食品・飲食',pattern:/食品|飲食|レストラン/i},{label:'エネルギー・環境',pattern:/電力|ガス|エネルギー|環境|リサイクル/i}];
+const industryCategories=[{label:'IT・情報通信',pattern:/\bIT\b|ソフトウェア|情報処理|システム|ICT|情報通信|コンピュータ/i},{label:'金融・保険',pattern:/銀行|信���金庫|金融|保険/i},{label:'製造・ものづくり',pattern:/製造|ものづくり|精密機器|機械|電子|金属|鉄鋼|機工/i},{label:'医療・福祉',pattern:/医療|福祉|介護/i},{label:'建設・不動産',pattern:/建設|土木|不動産/i},{label:'物流・通信',pattern:/物流|運輸|倉庫|通信販売|ネット販売/i},{label:'食品・飲食',pattern:/食品|飲食|レストラン/i},{label:'エネルギー・環境',pattern:/電力|ガス|エネルギー|環境|リサイクル/i}];
 const municipalities=[{label:'福井市',pattern:/福井市/},{label:'敦賀市',pattern:/敦賀市/},{label:'小浜市',pattern:/小浜市/},{label:'大野市',pattern:/大野市/},{label:'勝山市',pattern:/勝山市/},{label:'鯖江市',pattern:/鯖江市/},{label:'あわら市',pattern:/あわら市/},{label:'越前市',pattern:/越前市/},{label:'坂井市',pattern:/坂井市/},{label:'永平寺町',pattern:/永平寺町/},{label:'池田町',pattern:/池田町/},{label:'南越前町',pattern:/南越前町/},{label:'越前町',pattern:/越前町/},{label:'美浜町',pattern:/美浜町/},{label:'高浜町',pattern:/高浜町/},{label:'おおい町',pattern:/おおい町/},{label:'若狭町',pattern:/若狭町/},{label:'福井県',pattern:/福井県/}];
 function addFilterButtons(container,options,getValue,setValue){[{label:'すべて',value:''},...options.map(({label})=>({label,value:label}))].forEach(({label,value})=>{const button=document.createElement('button');button.type='button';button.className='filter-button';button.textContent=label;button.dataset.value=value;button.setAttribute('aria-pressed','false');button.addEventListener('click',()=>setValue(value));container.appendChild(button);});}
 function updateFilterButtons(){industryButtons.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedIndustry)));municipalityButtons.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.value===selectedMunicipality)));}
