@@ -121,6 +121,10 @@ const careerQuestions=[
   {text:'まず、あなたが「楽しい」と感じる仕事のタイプを選んでください。',choices:['頭を使って考える仕事','手を動かして作る仕事','人を支える仕事','数字や計画を扱う仕事']},
   {text:'職場で大切にしたいことは何ですか？',choices:['地域や社会に貢献する','安定して続けられる','挑戦や成長がある','チームで協力する']},
   {text:'得意なことや興味に近いものは？',choices:['自然・環境','IT・ものづくり','人・医療・福祉','販売・接客']}
+  {text:'仕事で楽しかった具体的な経験はありますか？いつ、何をして、どこが楽しかったですか？',choices:[]},
+  {text:'避けたい業務や負担に感じる状況はありますか？理由も教えてください。',choices:[]},
+  {text:'通勤、勤務時間、在宅、休日、収入など、譲れない条件はありますか？',choices:[]},
+  {text:'今気になっている職種や業界はありますか？反対に候補から外したいものも教えてください。',choices:[]}
 ];
 let careerAnswers=[],careerStep=0;
 function addChatMessage(text,speaker){const message=document.createElement('div');message.className=`chat-message ${speaker}`;message.textContent=text;chatMessages.appendChild(message);chatMessages.scrollTop=chatMessages.scrollHeight;}
